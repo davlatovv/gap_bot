@@ -1,3 +1,5 @@
+import secrets
+
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from middlewares.language_middleware import setup_middleware
@@ -13,3 +15,8 @@ __all__ = ["bot", "storage", "dp", "db"]
 
 i18n = setup_middleware(dp)
 _ = i18n.gettext
+
+random_token = secrets.token_hex(16)
+
+
+

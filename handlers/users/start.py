@@ -4,11 +4,13 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types import Message, ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton
 
 from data.config import LANGUAGES
+from handlers.users.create_group import choose_name
 from keyboards.default import get_language_keyboard
-from keyboards.default.menu import menu
+from keyboards.default.menu import menu, accept, money, menu_for_join
 from loader import dp, _
-from states.states import UserRegistry
-from text import user_language, user_name, user_phone, contact, confirm_number, accept_registration, wrong_registration, main_menu
+from states.states import UserRegistry, CreateGroup, JoinToGroup
+from text import user_language, user_name, user_phone, contact, confirm_number, accept_registration, \
+    main_menu, yes, no, refuse_registration, create_group, join_group, choose_from_button, right_sms, wrong_sms
 from utils.db_api.db_commands import DBCommands
 
 
@@ -47,24 +49,53 @@ async def authorization_name(message: Message, state: FSMContext):
 
 @dp.message_handler(content_types=types.ContentType.CONTACT, state=UserRegistry.user_sms)
 async def authorization_phone(message: Message, state: FSMContext):
-    await message.answer(text=_(confirm_number))
+    await message.answer(text=_(confirm_number), reply_markup=ReplyKeyboardRemove())
     # send sms phone number
     await state.update_data(phone=message.contact.phone_number)
-    await state.set_state(UserRegistry.user_menu)
+    await state.set_state(UserRegistry.user_sms_accept)
 
 
-@dp.message_handler(state=UserRegistry.user_menu)
+@dp.message_handler(state=UserRegistry.user_sms_accept)
 async def accept_sms(message: Message, state: FSMContext):
     if message.text == "1":
+        await message.answer("Теперь вам нужно подтвердить пользовательское соглашение", reply_markup=accept())
+        await state.update_data(sms=message.text)
+        await state.set_state(UserRegistry.user_approve)
+    else:
+        await message.answer(_(wrong_sms))
+        await state.set_state(UserRegistry.user_sms_accept)
+
+
+@dp.message_handler(state=UserRegistry.user_approve)
+async def approve(message: Message, state: FSMContext):
+    if message.text == yes:
         data = await state.get_data()
         await DBCommands.create_user(user_id=data.get("user_id"),
                                      name=data.get("name"),
                                      nickname=data.get("nickname"),
                                      phone=data.get("phone"),
                                      language=data.get("language"),
-                                     sms=1)
-        await state.finish()
+                                     sms=int(data.get("sms")),
+                                     accept=1)
         await message.answer(_(accept_registration), reply_markup=menu())
+        await state.set_state(UserRegistry.choose)
+    elif message.text == no:
+        await message.answer(_(refuse_registration), reply_markup=ReplyKeyboardRemove())
+        await state.finish()
     else:
-        await message.answer(_(wrong_registration))
-        await state.reset_state()
+        await message.answer(_(choose_from_button))
+
+
+@dp.message_handler(state=UserRegistry.choose)
+async def go_to_menu(message: Message, state: FSMContext):
+    if message.text == create_group:
+        await choose_name(message, state)
+        await state.set_state(CreateGroup.name)
+    elif message.text == join_group:
+        await message.answer("Введите токен для присоеденения")
+        await state.set_state(JoinToGroup.join)
+    else:
+        await message.answer(_(choose_from_button))
+
+
+

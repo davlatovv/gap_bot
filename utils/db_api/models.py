@@ -36,6 +36,7 @@ class Gap(db.Model):
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, ForeignKey("user.id"))
     user = relationship("User")
+    name = Column(String(255))
     number_of_members = Column(BigInteger)
     amount = Column(String(255))
     location = Column(String(255))
