@@ -13,11 +13,15 @@ class UserRegistry(StatesGroup):
 class CreateGroup(StatesGroup):
     name = State()
     money = State()
-    period = State()
     members = State()
+    location = State()
+    link = State()
+    start = State()
+    period = State()
+    private = State()
     accept = State()
     token = State()
-    start = State()
+
     list_members = State()
     info = State()
     settings = State()

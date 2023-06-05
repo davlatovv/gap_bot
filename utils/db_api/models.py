@@ -34,7 +34,7 @@ class Sms(db.Model):
 class Gap(db.Model):
     __tablename__ = "gap"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    user_id = Column(BigInteger, ForeignKey("user.id"))
+    user_id = Column(BigInteger, ForeignKey("user.user_id"))
     user = relationship("User")
     name = Column(String(255))
     number_of_members = Column(BigInteger)
@@ -44,18 +44,18 @@ class Gap(db.Model):
     private = Column(Integer)
     start = Column(String(255))
     period = Column(String(255))
+    token = Column(String(255))
     date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 
-class RoleOfGap(db.Model):
-    __tablename__ = "role_of_gap"
+class Member(db.Model):
+    __tablename__ = "member"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     gap_id = Column(BigInteger, ForeignKey('gap.id'))
     gap = relationship("Gap")
-    user_id = Column(BigInteger, ForeignKey("user.id"))
+    member = Column(BigInteger, ForeignKey("user.user_id"))
     user = relationship("User")
-    get_money = Column(Integer)
     date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 

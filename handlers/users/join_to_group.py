@@ -4,11 +4,13 @@ from aiogram.types import Message
 from keyboards.default.menu import menu_for_join
 from loader import dp
 from states.states import CreateGroup, JoinToGroup
+from utils.db_api.db_commands import DBCommands
 
 
 @dp.message_handler(state=JoinToGroup.join)
 async def join_group(message: Message, state: FSMContext):
-    if message.text == "a":
+    if DBCommands.search_group(message.text):
+        await DBCommands.add_member(message.from_user.id)
         await message.answer("Вы вошли в круг", reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.menu)
     else:

@@ -109,6 +109,33 @@ def accept():
     return keyboard
 
 
+def location():
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text="Отправьте локацию", request_location=True),
+            ]
+        ],
+        resize_keyboard=True
+    )
+    return keyboard
+
+
+def private():
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text="Закрытый"),
+                KeyboardButton(text="Открытый")
+            ]
+        ],
+        resize_keyboard=True
+    )
+    return keyboard
+
+
+
+
 
 
 

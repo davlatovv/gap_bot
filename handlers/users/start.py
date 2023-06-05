@@ -6,7 +6,7 @@ from aiogram.types import Message, ReplyKeyboardRemove, ReplyKeyboardMarkup, Key
 from data.config import LANGUAGES
 from handlers.users.create_group import choose_name
 from keyboards.default import get_language_keyboard
-from keyboards.default.menu import menu, accept, money, menu_for_join
+from keyboards.default.menu import menu, accept, money, menu_for_join, menu_for_create
 from loader import dp, _
 from states.states import UserRegistry, CreateGroup, JoinToGroup
 from text import user_language, user_name, user_phone, contact, confirm_number, accept_registration, \
@@ -16,7 +16,11 @@ from utils.db_api.db_commands import DBCommands
 
 @dp.message_handler(CommandStart(), state="*")
 async def start(message: Message, state: FSMContext):
-    if await DBCommands.get_user(message.from_user.id):
+    if await DBCommands.get_gap(message.from_user.id):
+        await message.answer("menu", reply_markup=menu_for_create())
+    elif await DBCommands.get_join(message.from_user.id):
+        await message.answer("menu", reply_markup=menu_for_join())
+    elif await DBCommands.get_user(message.from_user.id):
         await message.answer(_(main_menu), reply_markup=(menu()))
         await state.finish()
     else:
@@ -90,7 +94,7 @@ async def approve(message: Message, state: FSMContext):
 async def go_to_menu(message: Message, state: FSMContext):
     if message.text == create_group:
         await choose_name(message, state)
-        await state.set_state(CreateGroup.name)
+        # await state.set_state(CreateGroup.name)
     elif message.text == join_group:
         await message.answer("Введите токен для присоеденения")
         await state.set_state(JoinToGroup.join)
