@@ -5,24 +5,28 @@ from aiogram.types import Message, ReplyKeyboardRemove, ReplyKeyboardMarkup, Key
 
 from data.config import LANGUAGES
 from handlers.users.create_group import choose_name
+from handlers.users.join_to_group import join_group
 from keyboards.default import get_language_keyboard
 from keyboards.default.menu import menu, accept, money, menu_for_join, menu_for_create
 from loader import dp, _
 from states.states import UserRegistry, CreateGroup, JoinToGroup
 from text import user_language, user_name, user_phone, contact, confirm_number, accept_registration, \
-    main_menu, yes, no, refuse_registration, create_group, join_group, choose_from_button, right_sms, wrong_sms
+    main_menu, yes, no, refuse_registration, create_group, join_group, choose_from_button, right_sms, wrong_sms, \
+    create_back, join_back
 from utils.db_api.db_commands import DBCommands
 
 
 @dp.message_handler(CommandStart(), state="*")
 async def start(message: Message, state: FSMContext):
     if await DBCommands.get_gap(message.from_user.id):
-        await message.answer("menu", reply_markup=menu_for_create())
+        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        await state.set_state(CreateGroup.choose)
     elif await DBCommands.get_join(message.from_user.id):
-        await message.answer("menu", reply_markup=menu_for_join())
+        await message.answer(_(main_menu), reply_markup=menu_for_join())
+        await state.set_state(JoinToGroup.choose)
     elif await DBCommands.get_user(message.from_user.id):
         await message.answer(_(main_menu), reply_markup=(menu()))
-        await state.finish()
+        await state.set_state(UserRegistry.choose)
     else:
         await state.reset_state()
         await message.answer(_(user_language), reply_markup=get_language_keyboard())
@@ -91,13 +95,18 @@ async def approve(message: Message, state: FSMContext):
 
 
 @dp.message_handler(state=UserRegistry.choose)
-async def go_to_menu(message: Message, state: FSMContext):
+async def choose_menu(message: Message, state: FSMContext):
     if message.text == create_group:
         await choose_name(message, state)
-        # await state.set_state(CreateGroup.name)
     elif message.text == join_group:
         await message.answer("Введите токен для присоеденения")
         await state.set_state(JoinToGroup.join)
+    elif message.text == _(create_back):
+        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        await state.set_state(CreateGroup.choose)
+    elif message.text == _(join_back):
+        await message.answer(_(main_menu), reply_markup=menu_for_join())
+        await state.set_state(JoinToGroup.choose)
     else:
         await message.answer(_(choose_from_button))
 

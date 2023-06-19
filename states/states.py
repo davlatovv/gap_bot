@@ -21,16 +21,29 @@ class CreateGroup(StatesGroup):
     private = State()
     accept = State()
     token = State()
+    menu = State()
 
     list_members = State()
     info = State()
     settings = State()
     my_gap = State()
+    my_gap_to = State()
     choose_gap = State()
     choose = State()
     complain = State()
+    complain_to = State()
 
 
 class JoinToGroup(StatesGroup):
     join = State()
-    menu = State()
+    choose = State()
+    list_members = State()
+    info = State()
+    settings = State()
+    complain = State()
+    choose_gap = State()
+    my_gap = State()
+
+
+
+

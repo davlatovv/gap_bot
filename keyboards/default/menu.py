@@ -1,6 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from loader import _
-from text import create_group, join_group, start, list_members, info, settings, complain, choose_gap, my_gap
+from text import create_group, join_group, start, list_members, info, settings, complain, choose_gap, my_gap, onse_week, \
+    onse_month, yes, no, send_location, close, open, create_back
 
 
 def menu():
@@ -20,14 +21,14 @@ def money():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text="100к"),
-                KeyboardButton(text="200к"),
-                KeyboardButton(text="300к"),
+                KeyboardButton(text="100.000"),
+                KeyboardButton(text="200.000"),
+                KeyboardButton(text="300.000"),
             ],
             [
-                KeyboardButton(text="500к"),
-                KeyboardButton(text="1000к"),
-                KeyboardButton(text="2000к")
+                KeyboardButton(text="500.000"),
+                KeyboardButton(text="1.000.000"),
+                KeyboardButton(text="2.000.000")
             ],
             [
                 KeyboardButton(text="Другая сумма"),
@@ -43,12 +44,11 @@ def period():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text="Раз в неделю"),
-                KeyboardButton(text="Раз в в месяц"),
+                KeyboardButton(text=_(onse_week)),
+                KeyboardButton(text=_(onse_month)),
             ],
             [
-                KeyboardButton(text="Другой день"),
-                KeyboardButton(text="Назад"),
+                KeyboardButton(text=_(create_back)),
             ]
         ],
         resize_keyboard=True
@@ -82,13 +82,14 @@ def menu_for_join():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text="список участников"),
-                KeyboardButton(text="общая информация"),
-                KeyboardButton(text="настройки")
+                KeyboardButton(text=_(list_members)),
+                KeyboardButton(text=_(info)),
+                KeyboardButton(text=_(settings))
             ],
             [
-                KeyboardButton(text="выбор круга"),
-                KeyboardButton(text="мои круги")
+                KeyboardButton(text=_(complain)),
+                KeyboardButton(text=_(choose_gap)),
+                KeyboardButton(text=_(my_gap))
             ]
         ],
         resize_keyboard=True
@@ -100,8 +101,8 @@ def accept():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text="✅"),
-                KeyboardButton(text="❌")
+                KeyboardButton(text=yes),
+                KeyboardButton(text=no)
             ]
         ],
         resize_keyboard=True
@@ -113,7 +114,10 @@ def location():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text="Отправьте локацию", request_location=True),
+                KeyboardButton(text=_(send_location), request_location=True)
+            ],
+            [
+                KeyboardButton(text=_(create_back))
             ]
         ],
         resize_keyboard=True
@@ -125,13 +129,30 @@ def private():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text="Закрытый"),
-                KeyboardButton(text="Открытый")
+                KeyboardButton(text=_(close)),
+                KeyboardButton(text=_(open))
+            ],
+            [
+                KeyboardButton(text=_(create_back))
             ]
         ],
         resize_keyboard=True
     )
     return keyboard
+
+
+def back_state():
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text=_(create_back))
+            ]
+        ],
+        resize_keyboard=True
+    )
+    return keyboard
+
+
 
 
 
