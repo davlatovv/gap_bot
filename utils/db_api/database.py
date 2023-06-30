@@ -28,7 +28,7 @@ async def create_tables(db):
 async def create_db():
     try:
         db = await connect_to_db()
-        # await drop_tables(db)
+        await drop_tables(db)
         await create_tables(db)
     except Exception as e:
         logging.error(f"Failed to create database: {e}")

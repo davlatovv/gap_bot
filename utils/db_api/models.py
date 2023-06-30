@@ -43,7 +43,8 @@ class Gap(db.Model):
     location = Column(String(255))
     link = Column(String(255))
     private = Column(Integer)
-    start = Column(String(255))
+    start_date = Column(String(255))
+    start = Column(BigInteger, default=0)
     period = Column(BigInteger)
     token = Column(String(255))
     date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
@@ -53,9 +54,10 @@ class Gap(db.Model):
 class Member(db.Model):
     __tablename__ = "member"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    gap_id = Column(BigInteger, ForeignKey('gap.id'))
+    id_queue = Column(BigInteger, autoincrement=True, unique=False)
+    gap_id = Column(BigInteger, ForeignKey('gap.id'), unique=False)
     gap = relationship("Gap")
-    member = Column(BigInteger, ForeignKey("user.user_id"))
+    member = Column(BigInteger, ForeignKey("user.user_id"), unique=False)
     user = relationship("User")
     date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
@@ -64,9 +66,11 @@ class Member(db.Model):
 class Confirmation(db.Model):
     __tablename__ = "confirmation"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
+    gap_id = Column(BigInteger)
     member_recieve = Column(BigInteger)
     member_get = Column(BigInteger)
     accept = Column(Integer)
+    date = Column(String(255))
     date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 

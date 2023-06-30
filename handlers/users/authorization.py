@@ -18,17 +18,18 @@ from utils.db_api.db_commands import DBCommands
 
 @dp.message_handler(CommandStart(), state="*")
 async def start(message: Message, state: FSMContext):
-    if await DBCommands.get_gap(message.from_user.id):
+    await state.reset_state()
+    gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
+    if await DBCommands.get_gap_now(user_id=message.from_user.id, gap_id=gap_id) is True:
         await message.answer(_(main_menu), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
-    elif await DBCommands.get_join(message.from_user.id):
+    elif await DBCommands.get_join(message.from_user.id, gap_id=gap_id) is True:
         await message.answer(_(main_menu), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     elif await DBCommands.get_user(message.from_user.id):
         await message.answer(_(main_menu), reply_markup=(menu()))
         await state.set_state(UserRegistry.choose)
     else:
-        await state.reset_state()
         await message.answer(_(user_language), reply_markup=get_language_keyboard())
         await state.update_data(user_id=message.from_user.id, nickname=message.from_user.username)
         await state.set_state(UserRegistry.user_name)

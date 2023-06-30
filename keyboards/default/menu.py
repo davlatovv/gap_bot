@@ -84,7 +84,6 @@ def menu_for_join():
             [
                 KeyboardButton(text=_(list_members)),
                 KeyboardButton(text=_(info)),
-                KeyboardButton(text=_(settings))
             ],
             [
                 KeyboardButton(text=_(complain)),

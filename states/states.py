@@ -39,10 +39,10 @@ class JoinToGroup(StatesGroup):
     choose = State()
     list_members = State()
     info = State()
-    settings = State()
     complain = State()
     choose_gap = State()
     my_gap = State()
+    my_gap_to = State()
 
 
 
