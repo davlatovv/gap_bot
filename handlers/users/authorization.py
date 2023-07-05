@@ -100,7 +100,7 @@ async def choose_menu(message: Message, state: FSMContext):
     if message.text == create_group:
         await choose_name(message, state)
     elif message.text == join_group:
-        await message.answer("Введите токен для присоеденения")
+        await message.answer("Введите токен для присоеденения", reply_markup=ReplyKeyboardRemove())
         await state.set_state(JoinToGroup.join)
     elif message.text == _(create_back):
         await message.answer(_(main_menu), reply_markup=menu_for_create())

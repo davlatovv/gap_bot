@@ -1,4 +1,6 @@
 import asyncio
+
+import aioschedule as aioschedule
 import schedule
 from aiogram import Bot, Dispatcher, types
 from handlers import dp
@@ -62,6 +64,14 @@ import time
 import asyncio
 
 
+async def scheduler():
+    await DBCommands.process_gaps()
+    aioschedule.every().day.at('00:01').do(DBCommands.process_gaps)
+    while True:
+        await aioschedule.run_pending()
+        await asyncio.sleep(86400)
+
+
 async def on_startup(dp):
     import filters
     import middlewares
@@ -73,13 +83,7 @@ async def on_startup(dp):
 
     await create_db()
 
-
-async def process():
-    await DBCommands.process_gaps()
-
-
-def run_process_gaps():
-    asyncio.run(process())
+    asyncio.create_task(scheduler())
 
 
 if __name__ == '__main__':
@@ -87,15 +91,13 @@ if __name__ == '__main__':
     from handlers import dp
 
     executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
-    schedule.every().day.at("02:24").do(run_process_gaps)
 
 
-    async def schedule_jobs():
-        while True:
-            schedule.run_pending()
-            await asyncio.sleep(1)
 
 
-    asyncio.create_task(schedule_jobs())
-    loop = asyncio.get_event_loop()
-    loop.run_forever()
+
+
+
+
+
+

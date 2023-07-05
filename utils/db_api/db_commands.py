@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 from typing import List
 
-from sqlalchemy import and_, select
+from sqlalchemy import and_, select, join, desc, func
 
+from text import no, yes
 from .models import User, Gap, Member, UserInGap, Confirmation
 
 
@@ -14,7 +15,6 @@ class DBCommands:
 
         for gap in gaps:
             queue_members = await DBCommands.queue(gap_id=gap.id)
-            await gap.update(start_date=today).apply()
 
             if gap.start_date == today:
                 new_date = (datetime.today() + timedelta(days=gap.period)).strftime('%d/%m/%Y')
@@ -29,38 +29,17 @@ class DBCommands:
                         await update_id.update(id_queue=last_id.id_queue).apply()
                     else:
                         confirm = Confirmation(gap_id=gap.id, member_recieve=queue_members[0], member_get=member,
-                                               date=new_date)
+                                               date=new_date, accept=0)
                         await confirm.create()
 
                         update_id = await Member.query.where(
                             and_(Member.gap_id == gap.id, Member.member == member)).gino.first()
                         await update_id.update(id_queue=update_id.id_queue - 1).apply()
 
-    # @staticmethod
-    # async def process_gaps():
-    #     today = datetime.today().strftime('%d-%m-%Y')
-    #     gaps = await Gap.query.gino.all()
-    #     for gap in gaps:
-    #         queue_members = await DBCommands.queue(gap_id=gap.id)
-    #         if gap.start_date == today:
-    #             new_date = gap.start_date + timedelta(days=gap.period)
-    #             gap.update(start_date=new_date)
-    #             for member in queue_members:
-    #                 if member is queue_members[0]:
-    #                     update_id = await Member.query.where(and_(Member.gap_id == gap.id, Member.member == member)).gino.first()
-    #                     last_id = await Member.query.where(and_(Member.gap_id == gap.id, Member.member == queue_members[-1])).gino.first()
-    #                     await update_id.update(id=last_id.id)
-    #                 else:
-    #                     confirm = Confirmation(gap_id=gap.id, member_recieve=queue_members[0], member_get=member, date=new_date)
-    #                     await confirm.create()
-    #                     update_id = await Member.query.where(and_(Member.gap_id == gap.id, Member.member == member)).gino.first()
-    #                     await update_id.update(id=update_id.id+1)
-
-
-
-
-
-
+    @staticmethod
+    async def get_queue(gap_id: int):
+        queue = await Member.query.where(Member.gap_id == gap_id).order_by(desc(Member.id_queue)).gino.first()
+        return queue
 
     @staticmethod
     async def get_user(user_id) -> User:
@@ -92,7 +71,7 @@ class DBCommands:
 
     @staticmethod
     async def get_join(user_id, gap_id) -> bool:
-        member = await Member.query.where(and_(Member.member == user_id, Member.gap_id != gap_id)).gino.first()
+        member = await Member.query.where(and_(Member.member == user_id, Member.gap_id == gap_id)).gino.first()
         if member:
             return True
 
@@ -126,12 +105,16 @@ class DBCommands:
         return gap
 
     @staticmethod
-    async def add_member(member: int, gap_id: int) -> bool:
+    async def add_member(member: int, gap_id: int, id_queue: int) -> bool:
         validate = await Gap.query.where(Gap.id == gap_id).gino.first()
-        members = await Member.query.where(Member.gap_id == gap_id).gino.scalar()
+        members = await select([func.count(Member.id)]).where(Member.gap_id == gap_id).gino.scalar()
         if members is None or validate.number_of_members > members:
-            member_obj = Member(member=member, gap_id=gap_id)
+            member_obj = Member(member=member, gap_id=gap_id, id_queue=id_queue)
             await member_obj.create()
+            if validate.user_id != member:
+                confirm = Confirmation(gap_id=gap_id, member_recieve=validate.user_id, member_get=member,
+                                       date=validate.start_date, accept=0)
+                await confirm.create()
             return True
         else:
             return False
@@ -147,11 +130,10 @@ class DBCommands:
         return gap
 
     @staticmethod
-    async def get_all_members(gap_id: int, user_id: int) -> List[str]:
-        members = await Member.query.where(Member.gap_id == gap_id).gino.all()
-        member_ids = [member.member for member in members if member.member != user_id]
-        member_names = [await User.query.where(User.user_id == user_id).gino.first() for user_id in member_ids]
-        return [name.name for name in member_names]
+    async def get_users_name_from_gap_id(gap_id: int, user_id: int) -> List[str]:
+        query = await select([User.name]).select_from(join(Member, User, User.user_id == Member.member)).where(and_(Member.gap_id == gap_id, Member.member != user_id)).gino.all()
+        result = [row[0] for row in query]
+        return result
 
     @staticmethod
     async def get_all_members_queue(gap_id: int) -> List[str]:
@@ -161,12 +143,10 @@ class DBCommands:
         return [name.name for name in member_names]
 
     @staticmethod
-    async def do_complain(name: str):
-        user = await User.query.where(User.name == name).gino.first()
+    async def do_complain(name: str, gap_id: int):
+        user = await User.query.select_from(join(Member, User, User.user_id == Member.member)).where(and_(Member.gap_id == gap_id, User.name == name)).gino.first()
         if user:
             await user.update(complain=user.complain + 1).apply()
-        else:
-            return "Такого пользователя нет в базе данных"
 
     @staticmethod
     async def select_user_in_gap_id(user_id: int):
@@ -201,9 +181,24 @@ class DBCommands:
     @staticmethod
     async def start_button(gap_id):
         gap = await Gap.query.where(Gap.id == gap_id).gino.first()
-        await gap.update(start=gap.start+1).apply()
+        await gap.update(start=1).apply()
         return gap
 
+    @staticmethod
+    async def get_confirmation(gap_id, start_date):
+        names = []
+        accepts = []
+        confirmation = await Confirmation.query.where(and_(Confirmation.gap_id == gap_id, Confirmation.date == start_date)).gino.all()
+        confirm = await Confirmation.query.where(and_(Confirmation.gap_id == gap_id, Confirmation.date == start_date)).gino.first()
+        receiver = await User.query.where(User.user_id == confirm.member_recieve).gino.first()
+        for user in confirmation:
+            us = await User.query.where(User.user_id == user.member_get).gino.first()
+            names.append(us.name)
+            if user.accept is not 1:
+                accepts.append(no)
+            else:
+                accepts.append(yes)
+        return {"receiver": receiver.name, "names": names, "accepts": accepts}
 
 
 

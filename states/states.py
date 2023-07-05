@@ -24,6 +24,7 @@ class CreateGroup(StatesGroup):
     menu = State()
 
     list_members = State()
+    list_members_to = State()
     info = State()
     settings = State()
     my_gap = State()
@@ -38,11 +39,14 @@ class JoinToGroup(StatesGroup):
     join = State()
     choose = State()
     list_members = State()
+    list_members_to = State()
     info = State()
     complain = State()
-    choose_gap = State()
+    complain_to = State()
     my_gap = State()
     my_gap_to = State()
+    choose_gap = State()
+
 
 
 

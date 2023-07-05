@@ -6,7 +6,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ContentT
 
 from keyboards.default.menu import money, period, accept, menu_for_create, location, private, menu, back_state, \
     menu_for_join
-from loader import dp, random_token, _, keyboard
+from loader import dp, random_token, _
 from states.states import CreateGroup, UserRegistry, JoinToGroup
 from text import create_back, your_token, check_info, my_gap, start, list_members, \
     info, complain, choose_gap, settings, choose_from_button, send_money, send_members, send_name, send_location, \
@@ -179,7 +179,7 @@ async def get_token(message: Message, state: FSMContext):
                                       )
         gap = await DBCommands.search_group(data.get('token'))
         await DBCommands.update_user_in_gap_id(user_id=message.from_user.id, gap_id=gap.id)
-        await DBCommands.add_member(member=message.from_user.id, gap_id=gap.id)
+        await DBCommands.add_member(member=message.from_user.id, gap_id=gap.id, id_queue=1)
         await message.answer(_(your_token) + data.get('token'), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
 
@@ -210,28 +210,61 @@ async def start_func(message: Message, state: FSMContext):
     await state.reset_state()
     try:
         gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
-        gap = await DBCommands.start_button(gap_id)
-        await message.answer("Вы успешно начали гап" + gap.start_date)
-
+        gap = await DBCommands.get_gap_from_id(gap_id=gap_id)
+        if gap.start is not 1:
+            await DBCommands.start_button(gap_id)
+            await message.answer("Вы успешно начали гап " + gap.start_date)
+            await state.set_state(CreateGroup.choose)
+        else:
+            await message.answer("Вы уже стартовали гап")
+            await state.set_state(CreateGroup.choose)
     except Exception as ex:
         await message.answer("Повторите" + str(ex))
-
 
 
 @dp.message_handler(state=CreateGroup.list_members, text=_(list_members))
 async def list_members_func(message: Message, state: FSMContext):
     await state.reset_state()
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
-    queue = await DBCommands.queue(gap_id)
-    row = []
-    for i, member in enumerate(queue):
-        row.append(KeyboardButton(member))
-        if i % 2 == 1 or i == len(queue) - 1:
-            keyboard.row(*row)
-            row = []
+    users = await DBCommands.get_users_name_from_gap_id(gap_id=gap_id, user_id=message.from_user.id)
+    gap = await DBCommands.get_gap_from_id(gap_id)
+    if gap.start is not 1:
+        if not users:
+            await message.answer("Нет участинков")
+            await state.set_state(CreateGroup.choose)
+        else:
+            if len(users) % 2 == 0:
+                for i in range(0, len(users), 2):
+                    keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i+1]))
+                keyboard.add(KeyboardButton(_(create_back)))
+            else:
+                for i in range(0, len(users) - 1, 2):
+                    keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
+                keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_(create_back)))
+            await message.answer("Участники", reply_markup=keyboard)
+            await state.set_state(CreateGroup.complain_to)
+    else:
+        info = ""
+        result = await DBCommands.get_confirmation(gap_id=gap_id, start_date=gap.start_date)
+        info += "Получатель: " + result['receiver'] + "\n"
+        info += "Отправители     Статус\n"
+        for i, j in zip(result['names'], result['accepts']):
+            info += i + "    " + j + "\n"
+        await message.answer(info)
+        await state.set_state(CreateGroup.choose)
 
-    keyboard.add(KeyboardButton(_(create_back)))
-    await message.answer("Участники", reply_markup=keyboard)
+
+@dp.message_handler(state=CreateGroup.list_members_to)
+async def list_members_func_to(message: Message, state: FSMContext):
+    if message.text == _(create_back):
+        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        await state.set_state(CreateGroup.choose)
+    else:
+        gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
+        await DBCommands.do_complain(message.text, gap_id=gap_id)
+        await message.answer("Ваша жалоба принята")
+        await state.set_state(CreateGroup.list_members)
 
 
 @dp.message_handler(state=CreateGroup.info, text=_(info))
@@ -248,7 +281,8 @@ async def info_func(message: Message, state: FSMContext):
                          "Линк: " + gap.link + "\n" +
                          "Приватность: " + status + "\n" +
                          "Локация: ")
-    await message.answer_location(latitude=float(gap.location["latitude"]), longitude=float(gap.location["longitude"]))
+    await message.answer_location(latitude=float(json.loads(gap.location)['latitude']), longitude=float(json.loads(gap.location)['longitude']))
+    await state.set_state(CreateGroup.choose)
 
 
 @dp.message_handler(state=CreateGroup.settings, text=_(settings))
@@ -256,31 +290,29 @@ async def settings_func(message: Message, state: FSMContext):
     await state.reset_state()
     gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
     await message.answer("settings")
+    await state.set_state(CreateGroup.choose)
 
 
 @dp.message_handler(state=CreateGroup.complain, text=_(complain))
 async def complain_func(message: Message, state: FSMContext):
     await state.reset_state()
-    info = ""
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
-    all_members = await DBCommands.get_all_members(gap_id=gap_id, user_id=message.from_user.id)
-    complains = [await DBCommands.get_user_with_name(name) for name in all_members]
-    if complains is []:
+    users = await DBCommands.get_users_name_from_gap_id(gap_id=gap_id, user_id=message.from_user.id)
+    if not users:
         await message.answer("Нет участинков")
-    for i in complains:
-        info += i.name
-        info += str(i.complain)
-    await message.answer(info)
-    row = []
-    for i, member in enumerate(all_members):
-        row.append(KeyboardButton(member))
-        if i % 2 == 1 or i == len(all_members) - 1:
-            keyboard.row(*row)
-            row = []
-
-    keyboard.add(KeyboardButton(_(create_back)))
-    await message.answer("Участники", reply_markup=keyboard)
-    await state.set_state(CreateGroup.complain_to)
+        await state.set_state(CreateGroup.choose)
+    else:
+        if len(users) % 2 == 0:
+            for i in range(0, len(users), 2):
+                keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i+1]))
+            keyboard.add(KeyboardButton(_(create_back)))
+        else:
+            for i in range(0, len(users) - 1, 2):
+                keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
+            keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_(create_back)))
+        await message.answer("Участники", reply_markup=keyboard)
+        await state.set_state(CreateGroup.complain_to)
 
 
 @dp.message_handler(state=CreateGroup.complain_to)
@@ -290,15 +322,9 @@ async def complain_to_func(message: Message, state: FSMContext):
         await state.set_state(CreateGroup.choose)
     else:
         gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
-        await DBCommands.do_complain(message.text)
+        await DBCommands.do_complain(message.text, gap_id=gap_id)
         await message.answer("Ваша жалоба принята")
-
-
-@dp.message_handler(state=CreateGroup.choose_gap, text=_(choose_gap))
-async def choose_gap_func(message: Message, state: FSMContext):
-    await state.reset_state()
-    await message.answer(_(main_menu), reply_markup=menu().add(KeyboardButton(_(create_back))))
-    await state.set_state(UserRegistry.choose)
+        await state.set_state(CreateGroup.complain)
 
 
 @dp.message_handler(state=CreateGroup.my_gap, text=_(my_gap))
@@ -307,7 +333,7 @@ async def my_gap_func(message: Message, state: FSMContext):
     gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
     gap_names = await DBCommands.select_all_gaps(message.from_user.id, gap_id)
     gaps_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-    if gap_names is not []:
+    if gap_names:
         for names in gap_names:
             gaps_keyboard.add(KeyboardButton(names))
         gaps_keyboard.add(_(create_back))
@@ -315,6 +341,7 @@ async def my_gap_func(message: Message, state: FSMContext):
         await state.set_state(CreateGroup.my_gap_to)
     else:
         await message.answer("У вас только 1 группа")
+        await state.set_state(CreateGroup.choose)
 
 
 @dp.message_handler(state=CreateGroup.my_gap_to)
@@ -329,6 +356,12 @@ async def my_gap_func_to(message: Message, state: FSMContext):
         await message.answer(_(main_menu), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
 
+
+@dp.message_handler(state=CreateGroup.choose_gap, text=_(choose_gap))
+async def choose_gap_func(message: Message, state: FSMContext):
+    await state.reset_state()
+    await message.answer(_(main_menu), reply_markup=menu().add(KeyboardButton(_(create_back))))
+    await state.set_state(UserRegistry.choose)
 
 actions_create = {
     _(start): (start_func, CreateGroup.start),
