@@ -5,13 +5,10 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ContentType, ReplyKeyboardRemove
 
 from keyboards.default.menu import money, period, accept, menu_for_create, location, private, menu, back_state, \
-    menu_for_join
+    menu_for_join, setting
 from loader import dp, random_token, _
 from states.states import CreateGroup, UserRegistry, JoinToGroup
-from text import create_back, your_token, check_info, my_gap, start, list_members, \
-    info, complain, choose_gap, settings, choose_from_button, send_money, send_members, send_name, send_location, \
-    send_link, send_start, send_period, send_private, onse_week, digit, onse_month, accept_registration, create_group, \
-    join_group, main_menu, public, privates, no, invalid_date_format
+from text import *
 from utils.db_api.db_commands import DBCommands
 
 
@@ -26,7 +23,11 @@ async def choose_name(message: Message, state: FSMContext):
 
 @dp.message_handler(text=_(create_back), state=CreateGroup.money)
 async def go_back_to_name(message: Message, state: FSMContext):
-    await message.answer(_(main_menu), reply_markup=menu())
+    gap = await DBCommands.get_gap_from_id(await DBCommands.select_user_in_gap_id(message.from_user.id))
+    if gap.user_id == message.from_user.id:
+        await message.answer(_(main_menu), reply_markup=menu().add(KeyboardButton(_(create_back))))
+    else:
+        await message.answer(_(main_menu), reply_markup=menu().add(KeyboardButton(_(join_back))))
     await state.set_state(UserRegistry.choose)
 
 
@@ -45,9 +46,13 @@ async def go_back_to_money(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.members)
 async def choose_money(message: Message, state: FSMContext):
-    await message.answer(_(send_members), reply_markup=back_state())
-    await state.update_data(money=message.text)
-    await state.set_state(CreateGroup.location)
+    if message.text == _(other_money):
+        await message.answer("Введите сумму:")
+        await state.set_state(CreateGroup.members)
+    elif message.text.isdigit() or re.match(r'\d{1,3}.\d{1,3}.\d{3}', message.text) or re.match(r'\d{1,3}.\d{3}', message.text):
+        await message.answer(_(send_members), reply_markup=back_state())
+        await state.update_data(money=message.text)
+        await state.set_state(CreateGroup.location)
 
 
 @dp.message_handler(text=_(create_back), state=CreateGroup.location)
@@ -211,7 +216,7 @@ async def start_func(message: Message, state: FSMContext):
     try:
         gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
         gap = await DBCommands.get_gap_from_id(gap_id=gap_id)
-        if gap.start is not 1:
+        if gap.start != 1:
             await DBCommands.start_button(gap_id)
             await message.answer("Вы успешно начали гап " + gap.start_date)
             await state.set_state(CreateGroup.choose)
@@ -229,7 +234,7 @@ async def list_members_func(message: Message, state: FSMContext):
     gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_gap_id(gap_id=gap_id, user_id=message.from_user.id)
     gap = await DBCommands.get_gap_from_id(gap_id)
-    if gap.start is not 1:
+    if gap.start != 1:
         if not users:
             await message.answer("Нет участинков")
             await state.set_state(CreateGroup.choose)
@@ -276,7 +281,7 @@ async def info_func(message: Message, state: FSMContext):
     await message.answer("Имя круга: " + gap.name + "\n" +
                          "Число участников: " + str(gap.number_of_members) + "\n" +
                          "Сумма: " + gap.amount + "\n" +
-                         "Дата начала: " + gap.start_date + "\n" +
+                         "Дата встречи: " + gap.start_date + "\n" +
                          "Переодичность: " + str(gap.period) + "\n" +
                          "Линк: " + gap.link + "\n" +
                          "Приватность: " + status + "\n" +
@@ -288,9 +293,69 @@ async def info_func(message: Message, state: FSMContext):
 @dp.message_handler(state=CreateGroup.settings, text=_(settings))
 async def settings_func(message: Message, state: FSMContext):
     await state.reset_state()
-    gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
-    await message.answer("settings")
-    await state.set_state(CreateGroup.choose)
+    gap = await DBCommands.get_gap_from_id(await DBCommands.select_user_in_gap_id(message.from_user.id))
+    await state.update_data(gap_id=gap.id)
+    status = "Закрытый" if gap.private == 0 else "Открытый"
+    await message.answer(
+        "Имя круга: " + gap.name + "\n" +
+        "Число участников: " + str(gap.number_of_members) + "\n" +
+        "Сумма: " + gap.amount + "\n" +
+        "Дата встречи: " + gap.start_date + "\n" +
+        "Переодичность: " + str(gap.period) + "\n" +
+        "Линк: " + gap.link + "\n" +
+        "Приватность: " + status + "\n" +
+        "Локация: ", reply_markup=setting()
+    )
+    await message.answer_location(
+        latitude=float(json.loads(gap.location)['latitude']),
+        longitude=float(json.loads(gap.location)['longitude'])
+    )
+    await state.set_state(CreateGroup.settings_to)
+
+
+@dp.message_handler(state=CreateGroup.settings_to)
+async def settings_fun_to(message: Message, state: FSMContext):
+    mapping = {
+        change_name: ("name", "Введите имя"),
+        change_date: ("date", "Введите дату встречи дд/мм/гггг"),
+        change_period: ("period", "Введите период"),
+        change_link: ("link", "Введите линк"),
+        change_location: ("location", "Отправьте локацию"),
+        create_back: (None, _(main_menu))
+    }
+
+    setting_data = mapping.get(message.text)
+    if setting_data:
+        setting, prompt = setting_data
+        if setting:
+            await state.update_data(setting=setting)
+            await message.answer(prompt)
+            await state.set_state(CreateGroup.settings_save)
+        else:
+            await message.answer(prompt, reply_markup=menu_for_create())
+            await state.set_state(CreateGroup.choose)
+    else:
+        await message.answer(_(choose_from_button))
+        await state.set_state(CreateGroup.settings_to)
+
+
+@dp.message_handler(state=CreateGroup.settings_save, content_types=ContentType.ANY)
+async def settings_fun_save(message: Message, state: FSMContext):
+    data = await state.get_data()
+    data_setting = data.get("setting")
+    setting_value = message.text
+
+    if data_setting == "date" and not re.match(r'\d{2}/\d{2}/\d{4}', setting_value):
+        await message.answer("Вы ввели неверную дату")
+    elif data_setting == "location" and message.location:
+        setting_value = json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude})
+
+    if await DBCommands.settings_update(data.get("gap_id"), data_setting, setting_value):
+        await message.answer("Успешно изменено")
+    else:
+        await message.answer("Не получилось изменить")
+
+    await state.set_state(CreateGroup.settings_to)
 
 
 @dp.message_handler(state=CreateGroup.complain, text=_(complain))

@@ -27,6 +27,8 @@ class CreateGroup(StatesGroup):
     list_members_to = State()
     info = State()
     settings = State()
+    settings_to = State()
+    settings_save = State()
     my_gap = State()
     my_gap_to = State()
     choose_gap = State()

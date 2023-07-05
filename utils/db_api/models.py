@@ -2,8 +2,7 @@ from utils.db_api.database import db
 from sqlalchemy import (Column, Integer, BigInteger, Sequence,
                         String, TIMESTAMP, Boolean, JSON, ForeignKey, UniqueConstraint)
 from sqlalchemy.orm import relationship
-from sqlalchemy import sql
-from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy import Column, Integer, String
 
 
 class User(db.Model):

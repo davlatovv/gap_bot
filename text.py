@@ -40,6 +40,7 @@ info = "Общая информация"
 list_members = "Список участников"
 privates = "Закрытый"
 public = "Открытый"
+other_money = "Другая сумма"
 
 # join_group.py
 join_group = "Присоедениться"
@@ -57,3 +58,11 @@ onse_week = "Раз в неделю"
 onse_month = "Раз в в месяц"
 close = "Закрытый"
 open = "Открытый"
+
+
+# settings
+change_name = "Изменить имя"
+change_date = "Изменить дату встречи"
+change_period = "Изменить переодичность"
+change_link = "Изменить линк"
+change_location = "Изменить локацию"

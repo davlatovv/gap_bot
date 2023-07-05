@@ -1,7 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from loader import _
-from text import create_group, join_group, start, list_members, info, settings, complain, choose_gap, my_gap, onse_week, \
-    onse_month, yes, no, send_location, close, open, create_back
+from text import *
 
 
 def menu():
@@ -15,6 +14,28 @@ def menu():
         resize_keyboard=True
     )
     return keyboard
+
+
+def setting():
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text=_(change_name)),
+                KeyboardButton(text=_(change_date))
+            ],
+            [
+                KeyboardButton(text=_(change_period)),
+                KeyboardButton(text=_(change_link))
+            ],
+            [
+                KeyboardButton(text=_(change_location)),
+                KeyboardButton(text=_(create_back))
+            ]
+        ],
+        resize_keyboard=True
+    )
+    return keyboard
+
 
 
 def money():
@@ -31,8 +52,8 @@ def money():
                 KeyboardButton(text="2.000.000")
             ],
             [
-                KeyboardButton(text="Другая сумма"),
-                KeyboardButton(text="Назад"),
+                KeyboardButton(text=_(other_money)),
+                KeyboardButton(text=_(create_back)),
             ]
         ],
         resize_keyboard=True
