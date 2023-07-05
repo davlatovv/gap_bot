@@ -29,9 +29,9 @@ class CreateGroup(StatesGroup):
     settings = State()
     settings_to = State()
     settings_save = State()
-    my_gap = State()
-    my_gap_to = State()
-    choose_gap = State()
+    my_group = State()
+    my_group_to = State()
+    choose_group = State()
     choose = State()
     complain = State()
     complain_to = State()
@@ -45,9 +45,9 @@ class JoinToGroup(StatesGroup):
     info = State()
     complain = State()
     complain_to = State()
-    my_gap = State()
-    my_gap_to = State()
-    choose_gap = State()
+    my_group = State()
+    my_group_to = State()
+    choose_group = State()
 
 
 

@@ -1,6 +1,5 @@
 from utils.db_api.database import db
-from sqlalchemy import (Column, Integer, BigInteger, Sequence,
-                        String, TIMESTAMP, Boolean, JSON, ForeignKey, UniqueConstraint)
+from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String
 
@@ -31,8 +30,8 @@ class Sms(db.Model):
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 
-class Gap(db.Model):
-    __tablename__ = "gap"
+class Group(db.Model):
+    __tablename__ = "group"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, ForeignKey("user.user_id"))
     user = relationship("User")
@@ -54,8 +53,8 @@ class Member(db.Model):
     __tablename__ = "member"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     id_queue = Column(BigInteger, autoincrement=True, unique=False)
-    gap_id = Column(BigInteger, ForeignKey('gap.id'), unique=False)
-    gap = relationship("Gap")
+    group_id = Column(BigInteger, ForeignKey('group.id'), unique=False)
+    group = relationship("Group")
     member = Column(BigInteger, ForeignKey("user.user_id"), unique=False)
     user = relationship("User")
     date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
@@ -65,7 +64,7 @@ class Member(db.Model):
 class Confirmation(db.Model):
     __tablename__ = "confirmation"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    gap_id = Column(BigInteger)
+    group_id = Column(BigInteger)
     member_recieve = Column(BigInteger)
     member_get = Column(BigInteger)
     accept = Column(Integer)
@@ -74,12 +73,12 @@ class Confirmation(db.Model):
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 
-class UserInGap(db.Model):
-    __tablename__ = "user_in_gap"
+class UserInGroup(db.Model):
+    __tablename__ = "user_in_group"
     user_id = Column(BigInteger, ForeignKey("user.user_id"), primary_key=True, unique=True)
     user = relationship("User")
-    gap_id = Column(BigInteger, ForeignKey('gap.id'), unique=False)
-    gap = relationship("Gap")
+    group_id = Column(BigInteger, ForeignKey('group.id'), unique=False)
+    group = relationship("Group")
     date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(),
                           onupdate=db.func.current_timestamp())

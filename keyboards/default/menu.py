@@ -90,8 +90,8 @@ def menu_for_create():
             ],
             [
                 KeyboardButton(text=_(complain)),
-                KeyboardButton(text=_(choose_gap)),
-                KeyboardButton(text=_(my_gap))
+                KeyboardButton(text=_(choose_group)),
+                KeyboardButton(text=_(my_group))
             ]
         ],
         resize_keyboard=True
@@ -108,8 +108,8 @@ def menu_for_join():
             ],
             [
                 KeyboardButton(text=_(complain)),
-                KeyboardButton(text=_(choose_gap)),
-                KeyboardButton(text=_(my_gap))
+                KeyboardButton(text=_(choose_group)),
+                KeyboardButton(text=_(my_group))
             ]
         ],
         resize_keyboard=True

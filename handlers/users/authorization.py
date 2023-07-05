@@ -19,11 +19,11 @@ from utils.db_api.db_commands import DBCommands
 @dp.message_handler(CommandStart(), state="*")
 async def start(message: Message, state: FSMContext):
     await state.reset_state()
-    gap_id = await DBCommands.select_user_in_gap_id(message.from_user.id)
-    if await DBCommands.get_gap_now(user_id=message.from_user.id, gap_id=gap_id) is True:
+    group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
+    if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group_id) is True:
         await message.answer(_(main_menu), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
-    elif await DBCommands.get_join(message.from_user.id, gap_id=gap_id) is True:
+    elif await DBCommands.get_join(message.from_user.id, group_id=group_id) is True:
         await message.answer(_(main_menu), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     elif await DBCommands.get_user(message.from_user.id):
