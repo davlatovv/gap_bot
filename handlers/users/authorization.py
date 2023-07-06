@@ -23,7 +23,7 @@ async def start(message: Message, state: FSMContext):
     if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group_id) is True:
         await message.answer(_(main_menu), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
-    elif await DBCommands.get_join(message.from_user.id, group_id=group_id) is True:
+    elif await DBCommands.get_user_from_table_member(message.from_user.id, group_id=group_id):
         await message.answer(_(main_menu), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     elif await DBCommands.get_user(message.from_user.id):

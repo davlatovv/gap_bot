@@ -42,6 +42,26 @@ class DBCommands:
         return queue
 
     @staticmethod
+    async def update_status(user_id: int, group_id: int, date: str, status: int):
+        confirmation = await Confirmation.query.where(and_(Confirmation.member_get == user_id,
+                                                           Confirmation.group_id == group_id,
+                                                           Confirmation.date == date)).gino.first()
+        return confirmation.update(accept=status).apply()
+
+    @staticmethod
+    async def change_queue(user_id_from, user_id_to, group_id):
+        memeber_to = await Member.query.where(and_(Member.group_id == group_id, Member.member == user_id_to)).gino.first()
+        memeber_from = await Member.query.where(and_(Member.group_id == group_id, Member.member == user_id_from)).gino.first()
+
+        if memeber_to and memeber_from:
+            queue_to, queue_from = memeber_from.id_queue, memeber_to.id_queue
+            await memeber_to.update(id_queue=queue_to).apply()
+            await memeber_from.update(id_queue=queue_from).apply()
+            return True
+
+        return False
+
+    @staticmethod
     async def get_user(user_id) -> User:
         user = await User.query.where(User.user_id == user_id).gino.first()
         return user
@@ -52,8 +72,8 @@ class DBCommands:
         return user
 
     @staticmethod
-    async def get_group(user_id) -> Group:
-        group = await Group.query.where(Group.user_id == user_id).gino.first()
+    async def get_user_from_member(user_id: int, group_id: int) -> Member:
+        group = await Member.query.where(and_(Member.member == user_id, Member.group_id == group_id)).gino.first()
         return group
 
     @staticmethod
@@ -70,10 +90,9 @@ class DBCommands:
             return False
 
     @staticmethod
-    async def get_join(user_id, group_id) -> bool:
+    async def get_user_from_table_member(user_id: int, group_id: int) -> Member:
         member = await Member.query.where(and_(Member.member == user_id, Member.group_id == group_id)).gino.first()
-        if member:
-            return True
+        return member
 
     @staticmethod
     async def create_user(user_id,
@@ -135,12 +154,12 @@ class DBCommands:
         result = [row[0] for row in query]
         return result
 
-    @staticmethod
-    async def get_all_members_queue(group_id: int) -> List[str]:
-        members = await Member.query.where(Member.group_id == group_id).gino.all()
-        member_ids = [member.member for member in members]
-        member_names = [await User.query.where(User.user_id == user_id).gino.first() for user_id in member_ids]
-        return [name.name for name in member_names]
+    # @staticmethod
+    # async def get_all_members_queue(group_id: int) -> List[str]:
+    #     members = await Member.query.where(Member.group_id == group_id).gino.all()
+    #     member_ids = [member.member for member in members]
+    #     member_names = [await User.query.where(User.user_id == user_id).gino.first() for user_id in member_ids]
+    #     return [name.name for name in member_names]
 
     @staticmethod
     async def do_complain(name: str, group_id: int):

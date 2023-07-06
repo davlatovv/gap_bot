@@ -25,6 +25,7 @@ class CreateGroup(StatesGroup):
 
     list_members = State()
     list_members_to = State()
+    list_members_save = State()
     info = State()
     settings = State()
     settings_to = State()
@@ -42,6 +43,7 @@ class JoinToGroup(StatesGroup):
     choose = State()
     list_members = State()
     list_members_to = State()
+    list_members_save = State()
     info = State()
     complain = State()
     complain_to = State()

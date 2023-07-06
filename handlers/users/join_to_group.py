@@ -2,10 +2,10 @@ import json
 import logging
 
 from aiogram.dispatcher import FSMContext
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 
 from keyboards.default.menu import menu_for_join, menu, menu_for_create
-from loader import dp, _
+from loader import dp, _, bot
 from states.states import JoinToGroup, UserRegistry, CreateGroup
 from text import *
 from utils.db_api.db_commands import DBCommands
@@ -51,7 +51,13 @@ async def join_list_members_func(message: Message, state: FSMContext):
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
-    if group.start is not 1:
+    receiver = await DBCommands.get_queue(group_id=group_id)
+    result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
+    text = "Получатель: " + result['receiver'] + "\n"
+    text += "Отправители     Статус\n"
+    for i, j in zip(result['names'], result['accepts']):
+        text += i + "    " + j + "\n"
+    if group.start != 1 or receiver.member == message.from_user.id:
         if not users:
             await message.answer("Нет участинков")
             await state.set_state(JoinToGroup.choose)
@@ -64,28 +70,52 @@ async def join_list_members_func(message: Message, state: FSMContext):
                 for i in range(0, len(users) - 1, 2):
                     keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
                 keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_(join_back)))
-            await message.answer("Участники", reply_markup=keyboard)
-            await state.set_state(JoinToGroup.complain_to)
+            await message.answer(text, reply_markup=keyboard)
+            await state.set_state(JoinToGroup.list_members_to)
     else:
-        result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
-        text = "Получатель: " + result['receiver'] + "\n"
-        text += "Отправители     Статус\n"
-        for i, j in zip(result['names'], result['accepts']):
-            text += i + "    " + j + "\n"
         await message.answer(text)
         await state.set_state(JoinToGroup.choose)
 
 
 @dp.message_handler(state=JoinToGroup.list_members_to)
 async def list_members_func_to(message: Message, state: FSMContext):
+    receiver = await DBCommands.get_queue(await DBCommands.select_user_in_group_id(message.from_user.id))
+    group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+    to_user = await DBCommands.get_user_with_name(message.text)
+    from_user = await DBCommands.get_user(message.from_user.id)
+    user_queue = await DBCommands.get_user_from_table_member(user_id=message.from_user.id, group_id=group.id)
     if message.text == _(join_back):
         await message.answer(_(main_menu), reply_markup=menu_for_create())
         await state.set_state(JoinToGroup.choose)
+    elif receiver.member == message.from_user.id:
+        await state.update_data(status_user=to_user, group_id=group.id, date=group.start_date)
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        keyboard.add(KeyboardButton(yes), KeyboardButton(no))
+        await message.answer("Сделал ли он оплату ?",reply_markup=keyboard)
+        await state.set_state(JoinToGroup.list_members_save)
     else:
-        group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
-        await DBCommands.do_complain(message.text, group_id=group_id)
-        await message.answer("Ваша жалоба принята")
-        await state.set_state(JoinToGroup.list_members)
+        button_yes = InlineKeyboardButton("Да", callback_data=str({"text": "yes",
+                                                                   "from_user": from_user.user_id,
+                                                                   "group": group.id}))
+        button_no = InlineKeyboardButton("Нет", callback_data=str({"text": "no",
+                                                                   "from_user": from_user.user_id,
+                                                                   "group": group.id}))
+        keyboard = InlineKeyboardMarkup().add(button_yes, button_no)
+        await bot.send_message(chat_id=to_user.user_id,
+                               text=from_user.name + "хочет поменяться его очередь " + str(user_queue.id_queue), reply_markup=keyboard)
+        await message.answer("Ваш запрос ушел, ждем ответа")
+
+
+@dp.message_handler(state=JoinToGroup.list_members_save)
+async def list_members_func_save(message: Message, state: FSMContext):
+    data = await state.get_data()
+    if message.text == yes:
+        await DBCommands.update_status(user_id=data['status_user'],group_id=data['group_id'], date=data['date'], status=1)
+        await message.answer("Вы подтвердили платеж")
+    if message.text == no:
+        await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
+        await message.answer("Вы отменили платеж")
+    await state.set_state(JoinToGroup.list_members)
 
 
 @dp.message_handler(state=JoinToGroup.info, text=_(info))
@@ -101,6 +131,7 @@ async def join_info_func(message: Message, state: FSMContext):
                          "Переодичность: " + str(group.period) + "\n" +
                          "Линк: " + group.link + "\n" +
                          "Приватность: " + status + "\n" +
+                         "Токен: " + group.token + "\n" +
                          "Локация: ")
     await message.answer_location(latitude=float(json.loads(group.location)['latitude']),
                                   longitude=float(json.loads(group.location)['longitude']))

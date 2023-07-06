@@ -2,17 +2,16 @@ import json
 import re
 
 from aiogram.dispatcher import FSMContext
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ContentType, ReplyKeyboardRemove
-
-from keyboards.default.menu import money, period, accept, menu_for_create, location, private, menu, back_state, \
-    menu_for_join, setting
-from loader import dp, random_token, _
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ContentType, InlineKeyboardMarkup, \
+    InlineKeyboardButton
+from keyboards.default.menu import *
+from loader import dp, random_token, _, bot, is_date_greater_than_today
 from states.states import CreateGroup, UserRegistry, JoinToGroup
 from text import *
 from utils.db_api.db_commands import DBCommands
 
 
-'''>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>REGISTRATION group<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'''
+'''>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>REGISTRATION GROUP<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'''
 
 
 @dp.message_handler(state=CreateGroup.name)
@@ -24,7 +23,9 @@ async def choose_name(message: Message, state: FSMContext):
 @dp.message_handler(text=_(create_back), state=CreateGroup.money)
 async def go_back_to_name(message: Message, state: FSMContext):
     group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
-    if group.user_id == message.from_user.id:
+    if not group:
+        await message.answer(_(main_menu), reply_markup=menu())
+    elif group.user_id == message.from_user.id:
         await message.answer(_(main_menu), reply_markup=menu().add(KeyboardButton(_(create_back))))
     else:
         await message.answer(_(main_menu), reply_markup=menu().add(KeyboardButton(_(join_back))))
@@ -106,7 +107,7 @@ async def go_back_to_start(message: Message, state: FSMContext):
 @dp.message_handler(state=CreateGroup.period)
 async def choose_period(message: Message, state: FSMContext):
     date_pattern = r'\d{2}/\d{2}/\d{4}'
-    if re.match(date_pattern, message.text):
+    if re.match(date_pattern, message.text) and is_date_greater_than_today(message.text) is True:
         await message.answer(_(send_period), reply_markup=period())
         await state.update_data(start=message.text)
         await state.set_state(CreateGroup.private)
@@ -233,43 +234,73 @@ async def list_members_func(message: Message, state: FSMContext):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
-    group = await DBCommands.get_group_from_id(group_id)
-    if group.start != 1:
-        if not users:
-            await message.answer("Нет участинков")
-            await state.set_state(CreateGroup.choose)
-        else:
+    if not users:
+        await message.answer("Нет участинков")
+        await state.set_state(CreateGroup.choose)
+    else:
+        group = await DBCommands.get_group_from_id(group_id)
+        receiver = await DBCommands.get_queue(group_id=group_id)
+        result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
+        text = "Получатель: " + result['receiver'] + "\n"
+        text += "Отправители     Статус\n"
+        for i, j in zip(result['names'], result['accepts']):
+            text += i + "    " + j + "\n"
+        if group.start != 1 or receiver.member == message.from_user.id:
             if len(users) % 2 == 0:
                 for i in range(0, len(users), 2):
-                    keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i+1]))
+                    keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
                 keyboard.add(KeyboardButton(_(create_back)))
             else:
                 for i in range(0, len(users) - 1, 2):
                     keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
                 keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_(create_back)))
-            await message.answer("Участники", reply_markup=keyboard)
-            await state.set_state(CreateGroup.complain_to)
-    else:
-        info = ""
-        result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
-        info += "Получатель: " + result['receiver'] + "\n"
-        info += "Отправители     Статус\n"
-        for i, j in zip(result['names'], result['accepts']):
-            info += i + "    " + j + "\n"
-        await message.answer(info)
-        await state.set_state(CreateGroup.choose)
+            await message.answer(text, reply_markup=keyboard)
+            await state.set_state(CreateGroup.list_members_to)
+        else:
+            await message.answer(text)
+            await state.set_state(CreateGroup.choose)
 
 
 @dp.message_handler(state=CreateGroup.list_members_to)
 async def list_members_func_to(message: Message, state: FSMContext):
+    receiver = await DBCommands.get_queue(await DBCommands.select_user_in_group_id(message.from_user.id))
+    group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+    to_user = await DBCommands.get_user_with_name(message.text)
+    from_user = await DBCommands.get_user(message.from_user.id)
+    user_queue = await DBCommands.get_user_from_table_member(user_id=message.from_user.id, group_id=group.id)
     if message.text == _(create_back):
         await message.answer(_(main_menu), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
+    elif receiver.member == message.from_user.id:
+        await state.update_data(status_user=to_user, group_id=group.id, date=group.start_date)
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        keyboard.add(KeyboardButton(yes), KeyboardButton(no))
+        await message.answer("Сделал ли он оплату ?", reply_markup=keyboard)
+        await state.set_state(CreateGroup.list_members_save)
     else:
-        group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
-        await DBCommands.do_complain(message.text, group_id=group_id)
-        await message.answer("Ваша жалоба принята")
-        await state.set_state(CreateGroup.list_members)
+        button_yes = InlineKeyboardButton("Да", callback_data=str({"text": "yes",
+                                                                   "from_user": from_user.user_id,
+                                                                   "group": group.id}))
+        button_no = InlineKeyboardButton("Нет", callback_data=str({"text": "no",
+                                                                   "from_user": from_user.user_id,
+                                                                   "group": group.id}))
+        keyboard = InlineKeyboardMarkup().add(button_yes, button_no)
+        await bot.send_message(chat_id=to_user.user_id,
+                               text=from_user.name + "хочет поменяться его очередь " + str(user_queue.id_queue),
+                               reply_markup=keyboard)
+        await message.answer("Ваш запрос ушел, ждем ответа")
+
+
+@dp.message_handler(state=CreateGroup.list_members_save)
+async def list_members_func_save(message: Message, state: FSMContext):
+    data = await state.get_data()
+    if message.text == yes:
+        await DBCommands.update_status(user_id=data['status_user'],group_id=data['group_id'], date=data['date'], status=1)
+        await message.answer("Вы подтвердили платеж")
+    if message.text == no:
+        await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
+        await message.answer("Вы отменили платеж")
+    await state.set_state(CreateGroup.list_members)
 
 
 @dp.message_handler(state=CreateGroup.info, text=_(info))
@@ -285,6 +316,7 @@ async def info_func(message: Message, state: FSMContext):
                          "Переодичность: " + str(group.period) + "\n" +
                          "Линк: " + group.link + "\n" +
                          "Приватность: " + status + "\n" +
+                         "Токен: " + group.token + "\n" +
                          "Локация: ")
     await message.answer_location(latitude=float(json.loads(group.location)['latitude']), longitude=float(json.loads(group.location)['longitude']))
     await state.set_state(CreateGroup.choose)

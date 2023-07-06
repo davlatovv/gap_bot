@@ -1,8 +1,8 @@
 import secrets
+from datetime import datetime
+
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.types import Message, ReplyKeyboardMarkup
-from datetime import datetime, timedelta
 from middlewares.language_middleware import setup_middleware
 from data import config
 from utils.db_api.database import db
@@ -19,5 +19,14 @@ _ = i18n.gettext
 random_token = secrets.token_hex(16)
 
 
-
+def is_date_greater_than_today(date_string):
+    try:
+        input_date = datetime.strptime(date_string, "%d/%m/%Y").date()
+        today = datetime.now().date()
+        if input_date > today:
+            return True
+        else:
+            return False
+    except ValueError:
+        return False
 
