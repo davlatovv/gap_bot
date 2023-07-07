@@ -37,7 +37,12 @@ class DBCommands:
                         await update_id.update(id_queue=update_id.id_queue - 1).apply()
 
     @staticmethod
-    async def get_queue(group_id: int):
+    async def get_queue_first(group_id: int):
+        queue = await Member.query.where(Member.group_id == group_id).order_by(asc(Member.id_queue)).gino.first()
+        return queue
+
+    @staticmethod
+    async def get_queue_last(group_id: int):
         queue = await Member.query.where(Member.group_id == group_id).order_by(desc(Member.id_queue)).gino.first()
         return queue
 
@@ -46,7 +51,7 @@ class DBCommands:
         confirmation = await Confirmation.query.where(and_(Confirmation.member_get == user_id,
                                                            Confirmation.group_id == group_id,
                                                            Confirmation.date == date)).gino.first()
-        return confirmation.update(accept=status).apply()
+        return await confirmation.update(accept=status).apply()
 
     @staticmethod
     async def change_queue(user_id_from, user_id_to, group_id):
@@ -171,7 +176,6 @@ class DBCommands:
     async def settings_update(group_id, key, value):
         value = int(value) if value.isdigit() else value
         group = await Group.update.values(**{key: value}).where(Group.id == group_id).gino.status()
-        print(group)
         if group:
             return True
 

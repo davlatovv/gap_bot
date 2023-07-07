@@ -22,7 +22,7 @@ async def back_function_join(message: Message, state: FSMContext):
 async def join_group(message: Message, state: FSMContext):
     try:
         group = await DBCommands.search_group(message.text)
-        queue = await DBCommands.get_queue(group_id=group.id)
+        queue = await DBCommands.get_queue_last(group_id=group.id)
         add_mem = await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=queue.id_queue + 1)
         if group is not None:
             if add_mem is True:
@@ -51,17 +51,17 @@ async def join_list_members_func(message: Message, state: FSMContext):
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
-    receiver = await DBCommands.get_queue(group_id=group_id)
-    result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
-    text = "Получатель: " + result['receiver'] + "\n"
-    text += "Отправители     Статус\n"
-    for i, j in zip(result['names'], result['accepts']):
-        text += i + "    " + j + "\n"
-    if group.start != 1 or receiver.member == message.from_user.id:
-        if not users:
-            await message.answer("Нет участинков")
-            await state.set_state(JoinToGroup.choose)
-        else:
+    if not users:
+        await message.answer("Нет участинков")
+        await state.set_state(JoinToGroup.choose)
+    else:
+        receiver = await DBCommands.get_queue_first(group_id=group_id)
+        result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
+        text = "Получатель: " + result['receiver'] + "\n"
+        text += "Отправители     Статус\n"
+        for i, j in zip(result['names'], result['accepts']):
+            text += i + "    " + j + "\n"
+        if receiver.member == message.from_user.id or group.start != 1:
             if len(users) % 2 == 0:
                 for i in range(0, len(users), 2):
                     keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
@@ -72,14 +72,14 @@ async def join_list_members_func(message: Message, state: FSMContext):
                 keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_(join_back)))
             await message.answer(text, reply_markup=keyboard)
             await state.set_state(JoinToGroup.list_members_to)
-    else:
-        await message.answer(text)
-        await state.set_state(JoinToGroup.choose)
+        else:
+            await message.answer(text)
+            await state.set_state(JoinToGroup.choose)
 
 
 @dp.message_handler(state=JoinToGroup.list_members_to)
 async def list_members_func_to(message: Message, state: FSMContext):
-    receiver = await DBCommands.get_queue(await DBCommands.select_user_in_group_id(message.from_user.id))
+    receiver = await DBCommands.get_queue_first(await DBCommands.select_user_in_group_id(message.from_user.id))
     group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
     to_user = await DBCommands.get_user_with_name(message.text)
     from_user = await DBCommands.get_user(message.from_user.id)

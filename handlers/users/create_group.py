@@ -234,18 +234,18 @@ async def list_members_func(message: Message, state: FSMContext):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
+    group = await DBCommands.get_group_from_id(group_id)
     if not users:
         await message.answer("Нет участинков")
         await state.set_state(CreateGroup.choose)
     else:
-        group = await DBCommands.get_group_from_id(group_id)
-        receiver = await DBCommands.get_queue(group_id=group_id)
+        receiver = await DBCommands.get_queue_first(group_id=group_id)
         result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
         text = "Получатель: " + result['receiver'] + "\n"
         text += "Отправители     Статус\n"
         for i, j in zip(result['names'], result['accepts']):
             text += i + "    " + j + "\n"
-        if group.start != 1 or receiver.member == message.from_user.id:
+        if receiver.member == message.from_user.id or group.start != 1:
             if len(users) % 2 == 0:
                 for i in range(0, len(users), 2):
                     keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
@@ -263,7 +263,7 @@ async def list_members_func(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.list_members_to)
 async def list_members_func_to(message: Message, state: FSMContext):
-    receiver = await DBCommands.get_queue(await DBCommands.select_user_in_group_id(message.from_user.id))
+    receiver = await DBCommands.get_queue_first(await DBCommands.select_user_in_group_id(message.from_user.id))
     group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
     to_user = await DBCommands.get_user_with_name(message.text)
     from_user = await DBCommands.get_user(message.from_user.id)
@@ -272,7 +272,7 @@ async def list_members_func_to(message: Message, state: FSMContext):
         await message.answer(_(main_menu), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
     elif receiver.member == message.from_user.id:
-        await state.update_data(status_user=to_user, group_id=group.id, date=group.start_date)
+        await state.update_data(status_user=to_user.user_id, group_id=group.id, date=group.start_date)
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
         keyboard.add(KeyboardButton(yes), KeyboardButton(no))
         await message.answer("Сделал ли он оплату ?", reply_markup=keyboard)
@@ -294,12 +294,23 @@ async def list_members_func_to(message: Message, state: FSMContext):
 @dp.message_handler(state=CreateGroup.list_members_save)
 async def list_members_func_save(message: Message, state: FSMContext):
     data = await state.get_data()
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
+    users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
+    if len(users) % 2 == 0:
+        for i in range(0, len(users), 2):
+            keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
+        keyboard.add(KeyboardButton(_(create_back)))
+    else:
+        for i in range(0, len(users) - 1, 2):
+            keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
+        keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_(create_back)))
     if message.text == yes:
-        await DBCommands.update_status(user_id=data['status_user'],group_id=data['group_id'], date=data['date'], status=1)
-        await message.answer("Вы подтвердили платеж")
+        await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
+        await message.answer("Вы подтвердили платеж", reply_markup=keyboard)
     if message.text == no:
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
-        await message.answer("Вы отменили платеж")
+        await message.answer("Вы отменили платеж", reply_markup=keyboard)
     await state.set_state(CreateGroup.list_members)
 
 
@@ -349,7 +360,7 @@ async def settings_func(message: Message, state: FSMContext):
 async def settings_fun_to(message: Message, state: FSMContext):
     mapping = {
         change_name: ("name", "Введите имя"),
-        change_date: ("date", "Введите дату встречи дд/мм/гггг"),
+        change_date: ("start_date", "Введите дату встречи дд/мм/гггг"),
         change_period: ("period", "Введите период"),
         change_link: ("link", "Введите линк"),
         change_location: ("location", "Отправьте локацию"),
@@ -375,17 +386,18 @@ async def settings_fun_to(message: Message, state: FSMContext):
 async def settings_fun_save(message: Message, state: FSMContext):
     data = await state.get_data()
     data_setting = data.get("setting")
-    setting_value = message.text
+    setting_value = json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}) \
+        if data_setting == "location" and message.location else message.text
 
-    if data_setting == "date" and not re.match(r'\d{2}/\d{2}/\d{4}', setting_value):
+    if data_setting == "start_date" and not re.match(r'\d{2}/\d{2}/\d{4}', setting_value):
         await message.answer("Вы ввели неверную дату")
-    elif data_setting == "location" and message.location:
-        setting_value = json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude})
-
-    if await DBCommands.settings_update(data.get("group_id"), data_setting, setting_value):
-        await message.answer("Успешно изменено")
+    elif data_setting == "location" and not message.location:
+        await message.answer("Вы ввели неверно локацию")
     else:
-        await message.answer("Не получилось изменить")
+        if await DBCommands.settings_update(data.get("group_id"), data_setting, setting_value):
+            await message.answer("Успешно изменено")
+        else:
+            await message.answer("Не получилось изменить")
 
     await state.set_state(CreateGroup.settings_to)
 
