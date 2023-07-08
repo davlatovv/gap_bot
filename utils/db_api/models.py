@@ -15,6 +15,20 @@ class User(db.Model):
     accept = Column(Integer)
     sms = Column(Integer)
     complain = Column(Integer, default=0)
+    subscribe = Column(Integer, default=1)
+    end_date = Column(String(255))
+    date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
+    date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
+
+class SubscribeUsers(db.Model):
+    __tablename__ = "subscribe_users"
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    user_id = Column(BigInteger, ForeignKey("user.user_id"), unique=False)
+    user = relationship("User")
+    amount = Column(String(255))
+    start_date = Column(String(255))
+    end_date = Column(String(255))
     date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 

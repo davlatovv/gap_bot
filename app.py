@@ -1,5 +1,4 @@
 import aioschedule as aioschedule
-from utils.db_api.db_commands import DBCommands
 from utils.notify_admins import on_startup_notify
 from utils.set_bot_commands import set_default_commands
 from utils.db_api.database import create_db
@@ -7,8 +6,13 @@ import asyncio
 
 
 async def scheduler():
+    from utils.db_api.db_commands import DBCommands
+
     await DBCommands.process_groups()
+    await DBCommands.process_subscribe()
+    aioschedule.every().day.at('20:13').do(DBCommands.process_subscribe)
     aioschedule.every().day.at('00:01').do(DBCommands.process_groups)
+    print("go go")
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(86400)

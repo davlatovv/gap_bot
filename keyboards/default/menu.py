@@ -37,7 +37,6 @@ def setting():
     return keyboard
 
 
-
 def money():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
@@ -78,24 +77,20 @@ def period():
 
 
 def menu_for_create():
-    keyboard = ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                KeyboardButton(text=_(start))
-            ],
-            [
-                KeyboardButton(text=_(list_members)),
-                KeyboardButton(text=_(info)),
-                KeyboardButton(text=_(settings))
-            ],
-            [
-                KeyboardButton(text=_(complain)),
-                KeyboardButton(text=_(choose_group)),
-                KeyboardButton(text=_(my_group))
-            ]
-        ],
-        resize_keyboard=True
-    )
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(KeyboardButton(text=_(start)))
+    keyboard.add(KeyboardButton(text=_(list_members)), KeyboardButton(text=_(info)),
+                 KeyboardButton(text=_(settings)))
+    keyboard.add(KeyboardButton(text=_(complain)), KeyboardButton(text=_(choose_group)),
+                 KeyboardButton(text=_(my_group)))
+    return keyboard
+
+
+def menu_for_create_without_start():
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(KeyboardButton(text=_(list_members)), KeyboardButton(text=_(info)), KeyboardButton(text=_(settings)))
+    keyboard.add(KeyboardButton(text=_(complain)), KeyboardButton(text=_(choose_group)),
+                 KeyboardButton(text=_(my_group)))
     return keyboard
 
 
@@ -171,6 +166,9 @@ def back_state():
         resize_keyboard=True
     )
     return keyboard
+
+
+
 
 
 

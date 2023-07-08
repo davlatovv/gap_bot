@@ -4,7 +4,7 @@ import logging
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 
-from keyboards.default.menu import menu_for_join, menu, menu_for_create
+from keyboards.default.menu import menu_for_join, menu, menu_for_create, menu_for_create_without_start
 from loader import dp, _, bot
 from states.states import JoinToGroup, UserRegistry, CreateGroup
 from text import *
@@ -85,7 +85,7 @@ async def list_members_func_to(message: Message, state: FSMContext):
     from_user = await DBCommands.get_user(message.from_user.id)
     user_queue = await DBCommands.get_user_from_table_member(user_id=message.from_user.id, group_id=group.id)
     if message.text == _(join_back):
-        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        await message.answer(_(main_menu), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     elif receiver.member == message.from_user.id:
         await state.update_data(status_user=to_user, group_id=group.id, date=group.start_date)
@@ -163,7 +163,7 @@ async def join_complain_func(message: Message, state: FSMContext):
 @dp.message_handler(state=JoinToGroup.complain_to)
 async def join_complain_to_func(message: Message, state: FSMContext):
     if message.text == _(join_back):
-        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        await message.answer(_(main_menu), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     else:
         group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
@@ -195,7 +195,10 @@ async def my_group_func_to(message: Message, state: FSMContext):
     group = await DBCommands.search_group_by_name(message.text)
     await DBCommands.update_user_in_group_id(message.from_user.id, group.id)
     if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group.id) is True:
-        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        if group.start == 0:
+            await message.answer(_(main_menu), reply_markup=menu_for_create())
+        else:
+            await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
         await state.set_state(CreateGroup.choose)
     else:
         await message.answer(_(main_menu), reply_markup=menu_for_join())

@@ -3,6 +3,7 @@ from datetime import datetime
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+
 from middlewares.language_middleware import setup_middleware
 from data import config
 from utils.db_api.database import db

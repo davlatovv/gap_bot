@@ -5,11 +5,9 @@ from aiogram.contrib.middlewares.i18n import I18nMiddleware
 from data.config import I18N_DOMAIN, LOCALES_DIR
 from utils.db_api.db_commands import DBCommands
 
-db = DBCommands()
-
 
 async def get_lang(user_id):
-    user = await db.get_user(user_id)
+    user = await DBCommands.get_user(user_id)
     if user:
         return user.language
 

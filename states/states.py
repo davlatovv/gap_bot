@@ -52,6 +52,10 @@ class JoinToGroup(StatesGroup):
     choose_group = State()
 
 
+class Subscribe(StatesGroup):
+    subscribe = State()
+
+
 
 
 

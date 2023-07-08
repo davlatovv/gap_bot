@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
 from typing import List
-
-from sqlalchemy import and_, select, join, desc, func
-
+from states.states import Subscribe
 from text import no, yes
 from .models import *
 
@@ -35,6 +33,30 @@ class DBCommands:
                         update_id = await Member.query.where(
                             and_(Member.group_id == group.id, Member.member == member)).gino.first()
                         await update_id.update(id_queue=update_id.id_queue - 1).apply()
+
+    @staticmethod
+    async def process_subscribe():
+        from aiogram.dispatcher import FSMContext
+        from aiogram.types import ReplyKeyboardMarkup
+        from loader import bot, _
+        today = datetime.today().strftime('%d-%m-%Y')
+        print(today)
+        users = await User.query.where(and_(User.subscribe == 1, User.end_date == today)).gino.all()
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        for user in users:
+            print(user)
+            await user.update(subscribe=0).apply()
+            await bot.send_message(chat_id=user.user_id, text="Ваше время истекло, теперь приобретите подписку", reply_markup=keyboard.add(_("ПОДПИСКА")))
+            await FSMContext.set_state(Subscribe.subscribe)
+
+    @staticmethod
+    async def creat_subscribe(user_id,
+                          amount,
+                          start_date,
+                          end_date,):
+        subscribe = SubscribeUsers(user_id=user_id, amount=amount, start_date=start_date, end_date=end_date)
+        await subscribe.create()
+        return subscribe
 
     @staticmethod
     async def get_queue_first(group_id: int):
@@ -107,8 +129,9 @@ class DBCommands:
                           nickname=None,
                           sms=None,
                           accept=None) -> User:
+        new_date = (datetime.today() + timedelta(days=30)).strftime('%d-%m-%Y')
         user = User(user_id=user_id, name=name, nickname=nickname, phone=phone,
-                    language=language, sms=sms, accept=accept)
+                    language=language, sms=sms, accept=accept, end_date=new_date)
         await user.create()
         return user
 
@@ -158,6 +181,13 @@ class DBCommands:
         query = await select([User.name]).select_from(join(Member, User, User.user_id == Member.member)).where(and_(Member.group_id == group_id, Member.member != user_id)).gino.all()
         result = [row[0] for row in query]
         return result
+
+    @staticmethod
+    async def get_users_id_from_group_id(group_id: int, user_id: int) -> List[str]:
+        query = await select([User.user_id]).select_from(join(Member, User, User.user_id == Member.member)).where(and_(Member.group_id == group_id, Member.member != user_id)).gino.all()
+        result = [row[0] for row in query]
+        return result
+
 
     # @staticmethod
     # async def get_all_members_queue(group_id: int) -> List[str]:

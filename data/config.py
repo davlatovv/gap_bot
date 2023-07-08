@@ -9,11 +9,12 @@ BOT_TOKEN = str(os.getenv("BOT_TOKEN"))
 
 ADMINS = os.getenv("ADMIN_ID").split(",")
 
+PM_TOKEN = str(os.getenv("PM_TOKEN"))
+
 PG_USER = str(os.getenv("PGUSER"))
 PG_PASS = str(os.getenv("PGPASSWORD"))
 DATABASE = str(os.getenv("DATABASE"))
 PGHOST = str(os.getenv("PGHOST"))
-PM_TOKEN = str(os.getenv("PAYME_TOKEN"))
 
 
 POSTGRES_URI = f"postgresql://{PG_USER}:{PG_PASS}@{PGHOST}/{DATABASE}"

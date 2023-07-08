@@ -7,9 +7,9 @@ from data.config import LANGUAGES
 from handlers.users.create_group import choose_name
 from handlers.users.join_to_group import join_group
 from keyboards.default import get_language_keyboard
-from keyboards.default.menu import menu, accept, money, menu_for_join, menu_for_create
+from keyboards.default.menu import menu, accept, money, menu_for_join, menu_for_create, menu_for_create_without_start
 from loader import dp, _
-from states.states import UserRegistry, CreateGroup, JoinToGroup
+from states.states import UserRegistry, CreateGroup, JoinToGroup, Subscribe
 from text import user_language, user_name, user_phone, contact, confirm_number, accept_registration, \
     main_menu, yes, no, refuse_registration, create_group, join_group, choose_from_button, right_sms, wrong_sms, \
     create_back, join_back
@@ -20,13 +20,24 @@ from utils.db_api.db_commands import DBCommands
 async def start(message: Message, state: FSMContext):
     await state.reset_state()
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
-    if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group_id) is True:
+    user = await DBCommands.get_user(message.from_user.id)
+    if user is not None and user.subscribe == 0:
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        await message.answer(text=_("Ваше время истекло, теперь приобретите подписку"), reply_markup=keyboard.add(_("ПОДПИСКА")))
+        await state.set_state(Subscribe.subscribe)
+    elif await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group_id) is True:
+        group = await DBCommands.get_group_from_id(group_id=group_id)
+        if group.start == 0:
+            await message.answer(_(main_menu), reply_markup=menu_for_create())
+        else:
+            await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
+            await state.set_state(CreateGroup.choose)
         await message.answer(_(main_menu), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
     elif await DBCommands.get_user_from_table_member(message.from_user.id, group_id=group_id):
         await message.answer(_(main_menu), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
-    elif await DBCommands.get_user(message.from_user.id):
+    elif user:
         await message.answer(_(main_menu), reply_markup=(menu()))
         await state.set_state(UserRegistry.choose)
     else:
@@ -97,13 +108,17 @@ async def approve(message: Message, state: FSMContext):
 
 @dp.message_handler(state=UserRegistry.choose)
 async def choose_menu(message: Message, state: FSMContext):
+    group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
     if message.text == create_group:
         await choose_name(message, state)
     elif message.text == join_group:
         await message.answer("Введите токен для присоеденения", reply_markup=ReplyKeyboardRemove())
         await state.set_state(JoinToGroup.join)
     elif message.text == _(create_back):
-        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        if group.start == 0:
+            await message.answer(_(main_menu), reply_markup=menu_for_create())
+        else:
+            await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
         await state.set_state(CreateGroup.choose)
     elif message.text == _(join_back):
         await message.answer(_(main_menu), reply_markup=menu_for_join())

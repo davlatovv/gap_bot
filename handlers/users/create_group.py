@@ -2,7 +2,7 @@ import json
 import re
 
 from aiogram.dispatcher import FSMContext
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ContentType, InlineKeyboardMarkup, \
+from aiogram.types import Message, ContentType, InlineKeyboardMarkup, \
     InlineKeyboardButton
 from keyboards.default.menu import *
 from loader import dp, random_token, _, bot, is_date_greater_than_today
@@ -205,7 +205,11 @@ async def choose_create(message: Message, state: FSMContext):
 @dp.message_handler(text=_(create_back), state="*")
 async def back_function_create(message: Message, state: FSMContext):
     await state.reset_state()
-    await message.answer(_(main_menu), reply_markup=menu_for_create())
+    group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+    if group.start == 0:
+        await message.answer(_(main_menu), reply_markup=menu_for_create())
+    else:
+        await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
     await state.set_state(CreateGroup.choose)
 
 '''>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MENU<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'''
@@ -217,13 +221,13 @@ async def start_func(message: Message, state: FSMContext):
     try:
         group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
         group = await DBCommands.get_group_from_id(group_id=group_id)
+        for user in await DBCommands.get_users_id_from_group_id(group_id=group_id, user_id=message.from_user.id):
+            await bot.send_message(chat_id=user, text="Создатель гапа " + group.name + "стартовал")
         if group.start != 1:
             await DBCommands.start_button(group_id)
-            await message.answer("Вы успешно начали гап " + group.start_date)
+            await message.answer("Вы успешно начали гап " + group.start_date, reply_markup=menu_for_create_without_start())
             await state.set_state(CreateGroup.choose)
-        else:
-            await message.answer("Вы уже стартовали гап")
-            await state.set_state(CreateGroup.choose)
+
     except Exception as ex:
         await message.answer("Повторите" + str(ex))
 
@@ -269,7 +273,10 @@ async def list_members_func_to(message: Message, state: FSMContext):
     from_user = await DBCommands.get_user(message.from_user.id)
     user_queue = await DBCommands.get_user_from_table_member(user_id=message.from_user.id, group_id=group.id)
     if message.text == _(create_back):
-        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        if group.start == 0:
+            await message.answer(_(main_menu), reply_markup=menu_for_create())
+        else:
+            await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
         await state.set_state(CreateGroup.choose)
     elif receiver.member == message.from_user.id:
         await state.update_data(status_user=to_user.user_id, group_id=group.id, date=group.start_date)
@@ -308,10 +315,10 @@ async def list_members_func_save(message: Message, state: FSMContext):
     if message.text == yes:
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
         await message.answer("Вы подтвердили платеж", reply_markup=keyboard)
-    if message.text == no:
-        await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
+    elif message.text == no:
+        await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=0)
         await message.answer("Вы отменили платеж", reply_markup=keyboard)
-    await state.set_state(CreateGroup.list_members)
+    await state.set_state(CreateGroup.list_members_to)
 
 
 @dp.message_handler(state=CreateGroup.info, text=_(info))
@@ -426,14 +433,17 @@ async def complain_func(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.complain_to)
 async def complain_to_func(message: Message, state: FSMContext):
+    group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
     if message.text == _(create_back):
-        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        if group.start == 0:
+            await message.answer(_(main_menu), reply_markup=menu_for_create())
+        else:
+            await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
         await state.set_state(CreateGroup.choose)
     else:
-        group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
-        await DBCommands.do_complain(message.text, group_id=group_id)
+        await DBCommands.do_complain(message.text, group_id=group.id)
         await message.answer("Ваша жалоба принята")
-        await state.set_state(CreateGroup.complain)
+        await state.set_state(CreateGroup.complain_to)
 
 
 @dp.message_handler(state=CreateGroup.my_group, text=_(my_group))
@@ -459,7 +469,10 @@ async def my_group_func_to(message: Message, state: FSMContext):
     group = await DBCommands.search_group_by_name(message.text)
     await DBCommands.update_user_in_group_id(message.from_user.id, group.id)
     if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group.id) is True:
-        await message.answer(_(main_menu), reply_markup=menu_for_create())
+        if group.start == 0:
+            await message.answer(_(main_menu), reply_markup=menu_for_create())
+        else:
+            await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
         await state.set_state(CreateGroup.choose)
     else:
         await message.answer(_(main_menu), reply_markup=menu_for_join())
