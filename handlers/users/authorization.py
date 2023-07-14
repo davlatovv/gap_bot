@@ -10,9 +10,7 @@ from keyboards.default import get_language_keyboard
 from keyboards.default.menu import menu, accept, money, menu_for_join, menu_for_create, menu_for_create_without_start
 from loader import dp, _
 from states.states import UserRegistry, CreateGroup, JoinToGroup, Subscribe
-from text import user_language, user_name, user_phone, contact, confirm_number, accept_registration, \
-    main_menu, yes, no, refuse_registration, create_group, join_group, choose_from_button, right_sms, wrong_sms, \
-    create_back, join_back
+from text import *
 from utils.db_api.db_commands import DBCommands
 
 
@@ -23,7 +21,7 @@ async def start(message: Message, state: FSMContext):
     user = await DBCommands.get_user(message.from_user.id)
     if user is not None and user.subscribe == 0:
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-        await message.answer(text=_("Ваше время истекло, теперь приобретите подписку"), reply_markup=keyboard.add(_("ПОДПИСКА")))
+        await message.answer(text=_(subscribe_time_is_up), reply_markup=keyboard.add(_(subscribe)))
         await state.set_state(Subscribe.subscribe)
     elif await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group_id) is True:
         group = await DBCommands.get_group_from_id(group_id=group_id)
@@ -78,7 +76,7 @@ async def authorization_phone(message: Message, state: FSMContext):
 @dp.message_handler(state=UserRegistry.user_sms_accept)
 async def accept_sms(message: Message, state: FSMContext):
     if message.text == "1":
-        await message.answer("Теперь вам нужно подтвердить пользовательское соглашение", reply_markup=accept())
+        await message.answer(_(confirm_the_user_agreement), reply_markup=accept())
         await state.update_data(sms=message.text)
         await state.set_state(UserRegistry.user_approve)
     else:
@@ -112,7 +110,7 @@ async def choose_menu(message: Message, state: FSMContext):
     if message.text == create_group:
         await choose_name(message, state)
     elif message.text == join_group:
-        await message.answer("Введите токен для присоеденения", reply_markup=ReplyKeyboardRemove())
+        await message.answer(_(enter_token_to_join), reply_markup=ReplyKeyboardRemove())
         await state.set_state(JoinToGroup.join)
     elif message.text == _(create_back):
         if group.start == 0:

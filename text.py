@@ -16,6 +16,9 @@ refuse_registration = "Вы отклонили пользовательское 
                       "Нажмите /start если хотите заново зарегестрироваться"
 wrong_sms = "Вы ввели не тот смс, попробуйте еще раз"
 right_sms = "Вы ввели правильно смс"
+subscribe_time_is_up = "Ваше время истекло, теперь приобретите подписку"
+confirm_the_user_agreement = "Теперь вам нужно подтвердить пользовательское соглашение"
+enter_token_to_join = "Введите токен для присоеденения"
 
 # create_group.py
 create_back = "⬅️Назад"
@@ -46,7 +49,8 @@ other_money = "Другая сумма"
 join_group = "Присоедениться"
 join_back = "⬅️ Назад"
 
-
+# subscribe.py
+subscribe = "ПОДПИСКА"
 
 
 
@@ -66,3 +70,4 @@ change_date = "Изменить дату встречи"
 change_period = "Изменить переодичность"
 change_link = "Изменить линк"
 change_location = "Изменить локацию"
+change_language = "Изменить язык"
