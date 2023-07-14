@@ -4,6 +4,9 @@ import re
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, ContentType, InlineKeyboardMarkup, \
     InlineKeyboardButton
+
+from data.config import LANGUAGES
+from keyboards.default import get_language_keyboard
 from keyboards.default.menu import *
 from loader import dp, random_token, _, bot, is_date_greater_than_today
 from states.states import CreateGroup, UserRegistry, JoinToGroup
@@ -190,28 +193,6 @@ async def get_token(message: Message, state: FSMContext):
         await state.set_state(CreateGroup.choose)
 
 
-'''>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>BRIDGE<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'''
-
-
-@dp.message_handler(state=CreateGroup.choose)
-async def choose_create(message: Message, state: FSMContext):
-    if message.text in actions_create:
-        action, new_state = actions_create[message.text]
-        await action(message, state)
-    else:
-        await message.answer(_(choose_from_button))
-
-
-@dp.message_handler(text=_(create_back), state="*")
-async def back_function_create(message: Message, state: FSMContext):
-    await state.reset_state()
-    group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
-    if group.start == 0:
-        await message.answer(_(main_menu), reply_markup=menu_for_create())
-    else:
-        await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
-    await state.set_state(CreateGroup.choose)
-
 '''>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MENU<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'''
 
 
@@ -371,14 +352,18 @@ async def settings_fun_to(message: Message, state: FSMContext):
         change_period: ("period", "Введите период"),
         change_link: ("link", "Введите линк"),
         change_location: ("location", "Отправьте локацию"),
+        change_language: ("language", "Изменить язык"),
         create_back: (None, _(main_menu))
     }
 
     setting_data = mapping.get(message.text)
     if setting_data:
+        print(setting_data)
         setting, prompt = setting_data
-        if setting:
-            await state.update_data(setting=setting)
+        if setting == 'language':
+            await message.answer(prompt, reply_markup=get_language_keyboard())
+            await state.set_state(CreateGroup.settings_save)
+        elif setting:
             await message.answer(prompt)
             await state.set_state(CreateGroup.settings_save)
         else:
@@ -395,17 +380,18 @@ async def settings_fun_save(message: Message, state: FSMContext):
     data_setting = data.get("setting")
     setting_value = json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}) \
         if data_setting == "location" and message.location else message.text
-
     if data_setting == "start_date" and not re.match(r'\d{2}/\d{2}/\d{4}', setting_value):
         await message.answer("Вы ввели неверную дату")
     elif data_setting == "location" and not message.location:
         await message.answer("Вы ввели неверно локацию")
     else:
-        if await DBCommands.settings_update(data.get("group_id"), data_setting, setting_value):
+        if LANGUAGES[message.text]:
+            await DBCommands.language_update(message.from_user.id, LANGUAGES[message.text])
+            await message.answer("Успешно изменено", reply_markup=setting())
+        elif await DBCommands.settings_update(data.get("group_id"), data_setting, setting_value):
             await message.answer("Успешно изменено")
         else:
             await message.answer("Не получилось изменить")
-
     await state.set_state(CreateGroup.settings_to)
 
 
@@ -485,6 +471,19 @@ async def choose_group_func(message: Message, state: FSMContext):
     await message.answer(_(main_menu), reply_markup=menu().add(KeyboardButton(_(create_back))))
     await state.set_state(UserRegistry.choose)
 
+
+'''>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>BRIDGE<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'''
+
+
+@dp.message_handler(state=CreateGroup.choose)
+async def choose_create(message: Message, state: FSMContext):
+    if message.text in actions_create:
+        action, new_state = actions_create[message.text]
+        await action(message, state)
+    else:
+        await message.answer(_(choose_from_button))
+
+
 actions_create = {
     _(start): (start_func, CreateGroup.start),
     _(list_members): (list_members_func, CreateGroup.list_members),
@@ -495,5 +494,15 @@ actions_create = {
     _(my_group): (my_group_func, CreateGroup.my_group)
 }
 
+
+@dp.message_handler(text=_(create_back), state="*")
+async def back_function_create(message: Message, state: FSMContext):
+    await state.reset_state()
+    group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+    if group.start == 0:
+        await message.answer(_(main_menu), reply_markup=menu_for_create())
+    else:
+        await message.answer(_(main_menu), reply_markup=menu_for_create_without_start())
+    await state.set_state(CreateGroup.choose)
 
 

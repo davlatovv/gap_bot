@@ -12,7 +12,6 @@ async def scheduler():
     await DBCommands.process_subscribe()
     aioschedule.every().day.at('20:13').do(DBCommands.process_subscribe)
     aioschedule.every().day.at('00:01').do(DBCommands.process_groups)
-    print("go go")
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(86400)

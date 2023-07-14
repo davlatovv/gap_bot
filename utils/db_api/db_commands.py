@@ -136,6 +136,11 @@ class DBCommands:
         return user
 
     @staticmethod
+    async def language_update(user_id, language):
+        user = await User.query.where(User.user_id == user_id).gino.first()
+        await user.update(language=language).apply()
+
+    @staticmethod
     async def create_group(user_id=int,
                            name=str,
                            members=int,
@@ -187,14 +192,6 @@ class DBCommands:
         query = await select([User.user_id]).select_from(join(Member, User, User.user_id == Member.member)).where(and_(Member.group_id == group_id, Member.member != user_id)).gino.all()
         result = [row[0] for row in query]
         return result
-
-
-    # @staticmethod
-    # async def get_all_members_queue(group_id: int) -> List[str]:
-    #     members = await Member.query.where(Member.group_id == group_id).gino.all()
-    #     member_ids = [member.member for member in members]
-    #     member_names = [await User.query.where(User.user_id == user_id).gino.first() for user_id in member_ids]
-    #     return [name.name for name in member_names]
 
     @staticmethod
     async def do_complain(name: str, group_id: int):

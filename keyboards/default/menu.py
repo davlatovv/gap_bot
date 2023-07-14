@@ -29,6 +29,9 @@ def setting():
             ],
             [
                 KeyboardButton(text=_(change_location)),
+                KeyboardButton(text=_(change_language))
+            ],
+            [
                 KeyboardButton(text=_(create_back))
             ]
         ],
