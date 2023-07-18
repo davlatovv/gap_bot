@@ -27,17 +27,17 @@ async def join_group(message: Message, state: FSMContext):
         if group is not None:
             if add_mem is True:
                 await DBCommands.update_user_in_group_id(message.from_user.id, group_id=group.id)
-                await message.answer("Вы вошли в круг", reply_markup=menu_for_join())
+                await message.answer(_(you_are_logged_in), reply_markup=menu_for_join())
                 await state.set_state(JoinToGroup.choose)
             else:
-                await message.answer("Количесвто учвстников ограничено")
+                await message.answer(_(the_number_of_members_is_limited))
     except Exception as ex:
-        logging.error("Join to group error: " + str(ex))
+        logging.error(_(something_went_wrong) + str(ex))
         group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
         if group.user_id == message.from_user.id:
-            await message.answer("Нет такого круга", reply_markup=menu().add(KeyboardButton(_(create_back))))
+            await message.answer(_(no_such_group), reply_markup=menu().add(KeyboardButton(_(create_back))))
         else:
-            await message.answer("Нет такого круга", reply_markup=menu().add(KeyboardButton(_(join_back))))
+            await message.answer(_(no_such_group), reply_markup=menu().add(KeyboardButton(_(join_back))))
         await state.set_state(UserRegistry.choose)
 
 
@@ -52,7 +52,7 @@ async def join_list_members_func(message: Message, state: FSMContext):
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
     if not users:
-        await message.answer("Нет участинков")
+        await message.answer(_(no_such_members))
         await state.set_state(JoinToGroup.choose)
     else:
         receiver = await DBCommands.get_queue_first(group_id=group_id)
@@ -91,19 +91,19 @@ async def list_members_func_to(message: Message, state: FSMContext):
         await state.update_data(status_user=to_user, group_id=group.id, date=group.start_date)
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
         keyboard.add(KeyboardButton(yes), KeyboardButton(no))
-        await message.answer("Сделал ли он оплату ?",reply_markup=keyboard)
+        await message.answer(_(did_he_make_the_payment), reply_markup=keyboard)
         await state.set_state(JoinToGroup.list_members_save)
     else:
-        button_yes = InlineKeyboardButton("Да", callback_data=str({"text": "yes",
+        button_yes = InlineKeyboardButton(_(yes_letter), callback_data=str({"text": "yes",
                                                                    "from_user": from_user.user_id,
                                                                    "group": group.id}))
-        button_no = InlineKeyboardButton("Нет", callback_data=str({"text": "no",
+        button_no = InlineKeyboardButton(_(no_letter), callback_data=str({"text": "no",
                                                                    "from_user": from_user.user_id,
                                                                    "group": group.id}))
         keyboard = InlineKeyboardMarkup().add(button_yes, button_no)
         await bot.send_message(chat_id=to_user.user_id,
-                               text=from_user.name + "хочет поменяться его очередь " + str(user_queue.id_queue), reply_markup=keyboard)
-        await message.answer("Ваш запрос ушел, ждем ответа")
+                               text=from_user.name + _(wants_to_change_his_turn) + str(user_queue.id_queue), reply_markup=keyboard)
+        await message.answer(_(your_request_has_gone_waiting_for_a_response))
 
 
 @dp.message_handler(state=JoinToGroup.list_members_save)
@@ -111,10 +111,10 @@ async def list_members_func_save(message: Message, state: FSMContext):
     data = await state.get_data()
     if message.text == yes:
         await DBCommands.update_status(user_id=data['status_user'],group_id=data['group_id'], date=data['date'], status=1)
-        await message.answer("Вы подтвердили платеж")
+        await message.answer(_(you_have_confirmed_the_payment))
     if message.text == no:
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
-        await message.answer("Вы отменили платеж")
+        await message.answer(_(you_canceled_a_payment))
     await state.set_state(JoinToGroup.list_members)
 
 
@@ -123,7 +123,7 @@ async def join_info_func(message: Message, state: FSMContext):
     await state.reset_state()
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
-    status = "Закрытый" if group.private == 0 else "Открытый"
+    status = _(close) if group.private == 0 else _(open)
     await message.answer("Имя круга: " + group.name + "\n" +
                          "Число участников: " + str(group.number_of_members) + "\n" +
                          "Сумма: " + group.amount + "\n" +
@@ -145,7 +145,7 @@ async def join_complain_func(message: Message, state: FSMContext):
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     if not users:
-        await message.answer("Нет участинков")
+        await message.answer(_(no_such_members))
         await state.set_state(JoinToGroup.choose)
     else:
         if len(users) % 2 == 0:
@@ -156,7 +156,7 @@ async def join_complain_func(message: Message, state: FSMContext):
             for i in range(0, len(users) - 1, 2):
                 keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
             keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_(join_back)))
-        await message.answer("Участники", reply_markup=keyboard)
+        await message.answer(_(members_of_your_group), reply_markup=keyboard)
         await state.set_state(JoinToGroup.complain_to)
 
 
@@ -168,7 +168,7 @@ async def join_complain_to_func(message: Message, state: FSMContext):
     else:
         group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
         await DBCommands.do_complain(message.text, group_id=group_id)
-        await message.answer("Ваша жалоба принята")
+        await message.answer(_(your_complaint_has_been_accepted))
         await state.set_state(JoinToGroup.complain)
 
 
@@ -182,10 +182,10 @@ async def join_my_group_func(message: Message, state: FSMContext):
         for names in group_names:
             groups_keyboard.add(KeyboardButton(names))
         groups_keyboard.add(_(create_back))
-        await message.answer("my_group", reply_markup=groups_keyboard)
+        await message.answer(_(my_group), reply_markup=groups_keyboard)
         await state.set_state(JoinToGroup.my_group_to)
     else:
-        await message.answer("У вас только 1 группа")
+        await message.answer(_(you_had_only_one_group))
         await state.set_state(JoinToGroup.choose)
 
 

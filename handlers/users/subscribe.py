@@ -7,10 +7,11 @@ from data.config import PM_TOKEN
 from keyboards.default.menu import menu_for_create, menu_for_create_without_start, menu_for_join
 from loader import dp, bot, _
 from states.states import Subscribe
+from text import *
 from utils.db_api.db_commands import DBCommands
 
 
-@dp.message_handler(state=Subscribe.subscribe, text=_("ПОДПИСКА"))
+@dp.message_handler(state=Subscribe.subscribe, text=_(subscribe))
 async def cmd_pay(message: Message, state: FSMContext):
     user = await DBCommands.get_user(message.from_user.id)
     amount = 50000
@@ -18,15 +19,15 @@ async def cmd_pay(message: Message, state: FSMContext):
     if user.subscribe == 0:
         await bot.send_invoice(
             chat_id=message.chat.id,
-            title=_('⭐️Глаз Бога'),
-            description=_("""ℹ️Оформляя подписку «Глаз Бога», Вы действительно приобретаете Божью силу-видеть всё👀 
+            title=_('Подписка'),
+            description=_("""ℹ️Оформляя подписку , Вы действительно приобретаете Божью силу-видеть всё👀 
 У Вас появляется возможность видеть информацию обо всех, кто Вас отметил: имя, фамилия и фото профиля👤"""),
             payload='original',
             provider_token="1650291590:TEST:1688830268069_csOgmBx73k0IzB0j",
             start_parameter='original',
             currency='UZS',
             prices=[
-                LabeledPrice(label=_('⭐️Глаз Бога'), amount=amount),
+                LabeledPrice(label=_('Подписка'), amount=amount),
             ],
             photo_url="https://i.ibb.co/V9Kw68Q/photo-2023-02-18-16-52-46.jpg",
             need_name=False,
