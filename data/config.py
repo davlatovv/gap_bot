@@ -9,7 +9,7 @@ BOT_TOKEN = str(os.getenv("BOT_TOKEN"))
 
 ADMINS = os.getenv("ADMIN_ID").split(",")
 
-PM_TOKEN = str(os.getenv("PM_TOKEN"))
+PAYME_TOKEN = str(os.getenv("PAYME_TOKEN"))
 
 PG_USER = str(os.getenv("PGUSER"))
 PG_PASS = str(os.getenv("PGPASSWORD"))
