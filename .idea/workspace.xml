@@ -4,14 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c37fb928-04b3-4bdf-86c5-78a58af10e71" name="Changes" comment="add create group and join group menu">
+    <list default="true" id="c37fb928-04b3-4bdf-86c5-78a58af10e71" name="Changes" comment="Add change language to setting creater">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/users/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/users/create_group.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/create_group.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/users/join_to_group.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/join_to_group.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/users/start.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/authorization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/users/authorization.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/authorization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/users/subscribe.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/subscribe.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/keyboards/default/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/keyboards/default/menu.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/bot.pot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/bot.mo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/bot.po" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/bot.mo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/bot.po" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/uz/LC_MESSAGES/bot.mo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/uz/LC_MESSAGES/bot.po" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/states/states.py" beforeDir="false" afterPath="$PROJECT_DIR$/states/states.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/text.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/db_api/db_commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/db_api/db_commands.py" afterDir="false" />
@@ -32,8 +39,13 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectId" id="2QNE82aihWdRAhG7uTdUfQMmnDQ" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -53,6 +65,12 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\zafar\Desktop\TelegramBots\gap" />
+      <recent name="C:\Users\zafar\Desktop\TelegramBots\gap\data" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="gap" />
@@ -101,7 +119,25 @@
       <workItem from="1686486177351" duration="1267000" />
       <workItem from="1686791370447" duration="5497000" />
       <workItem from="1686950437399" duration="11060000" />
-      <workItem from="1687098730866" duration="32154000" />
+      <workItem from="1687098730866" duration="35863000" />
+      <workItem from="1687281851489" duration="18028000" />
+      <workItem from="1687971253176" duration="5643000" />
+      <workItem from="1688143898210" duration="11593000" />
+      <workItem from="1688301823238" duration="11935000" />
+      <workItem from="1688456149955" duration="3889000" />
+      <workItem from="1688537106990" duration="17241000" />
+      <workItem from="1688635213834" duration="15029000" />
+      <workItem from="1688708342213" duration="7499000" />
+      <workItem from="1688803986906" duration="15843000" />
+      <workItem from="1688828123373" duration="3160000" />
+      <workItem from="1688888976332" duration="4185000" />
+      <workItem from="1689146104330" duration="18000" />
+      <workItem from="1689181653389" duration="956000" />
+      <workItem from="1689330086091" duration="9322000" />
+      <workItem from="1689510151138" duration="668000" />
+      <workItem from="1689771260273" duration="383000" />
+      <workItem from="1689837517784" duration="597000" />
+      <workItem from="1690009061468" duration="19782000" />
     </task>
     <task id="LOCAL-00001" summary="First commit with registration">
       <created>1685600535105</created>
@@ -124,7 +160,77 @@
       <option name="project" value="LOCAL" />
       <updated>1685931421683</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add and update all">
+      <created>1687136707811</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1687136707811</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add and update all 2.0.">
+      <created>1688161486055</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1688161486055</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add and update all 3.0.">
+      <created>1688537247870</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1688537247870</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Do settings and update create_group">
+      <created>1688559890153</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1688559890153</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Rename all gap to group">
+      <created>1688560801427</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1688560801427</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add accept money and change queue">
+      <created>1688652388287</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1688652388287</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Bugfix settings, change location and date">
+      <created>1688710501129</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1688710501129</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add payment and subscribe update logging and bugfix">
+      <created>1688831253203</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1688831253203</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add text to variable">
+      <created>1689339124027</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1689339124028</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add change language to setting creater">
+      <created>1689339150217</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1689339150217</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,17 +251,20 @@
     <MESSAGE value="First commit with registration" />
     <MESSAGE value="Add registration" />
     <MESSAGE value="add create group and join group menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="add create group and join group menu" />
+    <MESSAGE value="add and update all" />
+    <MESSAGE value="add and update all 2.0." />
+    <MESSAGE value="add and update all 3.0." />
+    <MESSAGE value="Do settings and update create_group" />
+    <MESSAGE value="Rename all gap to group" />
+    <MESSAGE value="Add accept money and change queue" />
+    <MESSAGE value="Bugfix settings, change location and date" />
+    <MESSAGE value="Add payment and subscribe update logging and bugfix" />
+    <MESSAGE value="add text to variable" />
+    <MESSAGE value="Add change language to setting creater" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add change language to setting creater" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/handlers/users/create_group.py</url>
-          <line>308</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -167,6 +276,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/gap$app__1_.coverage" NAME="app (1) Coverage Results" MODIFIED="1685191755407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/gap$app.coverage" NAME="app Coverage Results" MODIFIED="1687136573377" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gap$text.coverage" NAME="text Coverage Results" MODIFIED="1688166137742" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gap$app.coverage" NAME="app Coverage Results" MODIFIED="1690033464213" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
