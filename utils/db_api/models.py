@@ -13,7 +13,6 @@ class User(db.Model):
     phone = Column(String(255))
     language = Column(String(2))
     accept = Column(Integer)
-    sms = Column(Integer)
     complain = Column(Integer, default=0)
     subscribe = Column(Integer, default=1)
     end_date = Column(String(255))
