@@ -5,7 +5,6 @@ class UserRegistry(StatesGroup):
     user_name = State()
     user_phone = State()
     user_sms = State()
-    user_sms_accept = State()
     user_approve = State()
     choose = State()
 
@@ -40,6 +39,8 @@ class CreateGroup(StatesGroup):
 
 class JoinToGroup(StatesGroup):
     join = State()
+    join_token = State()
+    join_open = State()
     choose = State()
     list_members = State()
     list_members_to = State()
