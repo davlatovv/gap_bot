@@ -9,7 +9,7 @@ from keyboards.default import get_language_keyboard
 from keyboards.default.menu import *
 from states.states import UserRegistry, CreateGroup, JoinToGroup, Subscribe
 from text import *
-from loader import _
+from loader import _, dp
 from utils.db_api.db_commands import DBCommands
 
 
