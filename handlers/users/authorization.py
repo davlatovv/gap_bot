@@ -48,7 +48,7 @@ async def start(message: Message, state: FSMContext):
 
 @dp.message_handler(text=[button_text for button_text in LANGUAGES.keys()], state=UserRegistry.user_name)
 async def authorization_lang(message: Message, state: FSMContext):
-    await message.answer(user_name, reply_markup=ReplyKeyboardRemove())
+    await message.answer(_("Как к вам обращаться?\nВведите пожалуйста свое ФИО, пример: Шукуров Нурбек Туробович"), reply_markup=ReplyKeyboardRemove())
     language = LANGUAGES[message.text]
     await state.update_data(language=language)
     await state.set_state(UserRegistry.user_phone)
@@ -58,12 +58,12 @@ async def authorization_lang(message: Message, state: FSMContext):
 async def authorization_name(message: Message, state: FSMContext):
     contact_keyboard = ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text=contact, request_contact=True)],
+            [KeyboardButton(text=_("Ваш контакт"), request_contact=True)],
         ],
         resize_keyboard=True
     )
     await state.update_data(name=message.text)
-    await message.answer(user_phone, reply_markup=contact_keyboard)
+    await message.answer(_("Поделитесь своим контактом,нажав на кнопку ниже"), reply_markup=contact_keyboard)
     await state.set_state(UserRegistry.user_sms)
 
 
@@ -81,7 +81,7 @@ async def authorization_phone(message: Message, state: FSMContext):
 
 @dp.message_handler(state=UserRegistry.user_approve)
 async def approve(message: Message, state: FSMContext):
-    if message.text == yes:
+    if message.text == "✅":
         data = await state.get_data()
         await DBCommands.create_user(user_id=data.get("user_id"),
                                      name=data.get("name"),
@@ -93,7 +93,7 @@ async def approve(message: Message, state: FSMContext):
                       "Выберите -создать круг- если вы хотите создать свой круг,\n" 
                       "или -присоедениться- если вы хотите присоедениться к уже существующему кругу.\n"), reply_markup=menu())
         await state.set_state(UserRegistry.choose)
-    elif message.text == no:
+    elif message.text == "❌":
         await message.answer(_("Вы отклонили пользовательское соглашение поэтому мы не сможем продолжить.\n" 
                       "Нажмите /start если хотите заново зарегестрироваться"), reply_markup=ReplyKeyboardRemove())
         await state.finish()
@@ -119,7 +119,7 @@ async def choose_menu(message: Message, state: FSMContext):
         await message.answer(_("Главное меню"), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     else:
-        await message.answer(choose_from_button)
+        await message.answer(_("Выберите одну из кнопок"))
 
 
 

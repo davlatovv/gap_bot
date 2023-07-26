@@ -20,8 +20,60 @@ async def back_function_join(message: Message, state: FSMContext):
 
 @dp.message_handler(state=JoinToGroup.join)
 async def join_group(message: Message, state: FSMContext):
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    if message.text == _("Войти по токену"):
+        await message.answer(_("Введите токен"))
+        await state.set_state(JoinToGroup.join_token)
+    elif message.text == _("Войти в открытые круги"):
+        groups = await DBCommands.get_all_open_groups(user_id=message.from_user.id)
+        if groups:
+            for group in groups:
+                keyboard.add(group)
+            keyboard.add(_("Назад⬅️"))
+            await message.answer(_("Выберите открытые круги"), reply_markup=keyboard)
+            await state.set_state(JoinToGroup.join_open)
+        else:
+            await message.answer(_("Нет открытых кругов"))
+            await state.set_state(JoinToGroup.join)
+    elif message.text == _("Назад ⬅️"):
+        group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+        if group.user_id == message.from_user.id:
+            await message.answer(_("Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️Назад"))))
+        else:
+            await message.answer(_("Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️ Назад"))))
+        await state.set_state(UserRegistry.choose)
+    else:
+        await message.answer(_("Выберите одну из кнопок"))
+        await state.set_state(JoinToGroup.join)
+
+
+@dp.message_handler(state=JoinToGroup.join_token)
+async def join_token(message: Message, state: FSMContext):
     try:
         group = await DBCommands.search_group(message.text)
+        queue = await DBCommands.get_queue_last(group_id=group.id)
+        add_mem = await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=queue.id_queue + 1)
+        if group is not None:
+            if add_mem is True:
+                await DBCommands.update_user_in_group_id(message.from_user.id, group_id=group.id)
+                await message.answer(_("Вы вошли в круг"), reply_markup=menu_for_join())
+                await state.set_state(JoinToGroup.choose)
+            else:
+                await message.answer(_("Количество участников ограничено"))
+    except Exception as ex:
+        logging.error(_("Что-то пошло не так: ") + str(ex))
+        group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+        if group.user_id == message.from_user.id:
+            await message.answer(_("Нет такого круга"), reply_markup=menu().add(KeyboardButton(_("⬅️Назад"))))
+        else:
+            await message.answer(_("Нет такого круга"), reply_markup=menu().add(KeyboardButton(_("⬅️ Назад"))))
+        await state.set_state(UserRegistry.choose)
+
+
+@dp.message_handler(state=JoinToGroup.join_open)
+async def join_open(message: Message, state: FSMContext):
+    try:
+        group = await DBCommands.search_group_by_name(message.text)
         queue = await DBCommands.get_queue_last(group_id=group.id)
         add_mem = await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=queue.id_queue + 1)
         if group is not None:
@@ -90,7 +142,7 @@ async def list_members_func_to(message: Message, state: FSMContext):
     elif receiver.member == message.from_user.id:
         await state.update_data(status_user=to_user, group_id=group.id, date=group.start_date)
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-        keyboard.add(KeyboardButton(yes), KeyboardButton(no))
+        keyboard.add(KeyboardButton("✅"), KeyboardButton("❌"))
         await message.answer(_("Сделал ли он платеж?"), reply_markup=keyboard)
         await state.set_state(JoinToGroup.list_members_save)
     else:
@@ -109,10 +161,10 @@ async def list_members_func_to(message: Message, state: FSMContext):
 @dp.message_handler(state=JoinToGroup.list_members_save)
 async def list_members_func_save(message: Message, state: FSMContext):
     data = await state.get_data()
-    if message.text == yes:
+    if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'],group_id=data['group_id'], date=data['date'], status=1)
         await message.answer(_("Вы подтвердили платеж"))
-    if message.text == no:
+    if message.text == "❌":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
         await message.answer(_("Вы отменили платеж"))
     await state.set_state(JoinToGroup.list_members)
@@ -123,7 +175,7 @@ async def join_info_func(message: Message, state: FSMContext):
     await state.reset_state()
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
-    status = _("Закрытый") if group.private == 0 else _("Открытый")
+    status = _("Закрытый") if group.private == 1 else _("Открытый")
     await message.answer("Имя круга: " + group.name + "\n" +
                          "Число участников: " + str(group.number_of_members) + "\n" +
                          "Сумма: " + group.amount + "\n" +
@@ -181,7 +233,7 @@ async def join_my_group_func(message: Message, state: FSMContext):
     if group_names:
         for names in group_names:
             groups_keyboard.add(KeyboardButton(names))
-        groups_keyboard.add(_("⬅️Назад"))
+        groups_keyboard.add(_("⬅️ Назад"))
         await message.answer(_("Мои круги"), reply_markup=groups_keyboard)
         await state.set_state(JoinToGroup.my_group_to)
     else:
@@ -191,10 +243,13 @@ async def join_my_group_func(message: Message, state: FSMContext):
 
 @dp.message_handler(state=JoinToGroup.my_group_to)
 async def my_group_func_to(message: Message, state: FSMContext):
-    await state.reset_state()
-    group = await DBCommands.search_group_by_name(message.text)
-    await DBCommands.update_user_in_group_id(message.from_user.id, group.id)
-    if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group.id) is True:
+    group_by_name = await DBCommands.search_group_by_name(message.text)
+    if group_by_name:
+        await DBCommands.update_user_in_group_id(message.from_user.id, group_by_name.id)
+    group_ = await DBCommands.select_user_in_group_id(user_id=message.from_user.id)
+    group_id = group_by_name.id if group_by_name else group_
+    group = await DBCommands.get_group_from_id(group_id)
+    if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group_id) is True:
         if group.start == 0:
             await message.answer(_("Главное меню"), reply_markup=menu_for_create())
         else:

@@ -162,7 +162,7 @@ async def validation(message: Message, state: FSMContext):
                          "Дата начала: " + str(data.get('start')) + "\n" +
                          "Переодичность: " + str(data.get('period')) + "\n" +
                          "Линк: " + str(data.get('link')) + "\n" +
-                         "Приватность: " + str(data.get('private')) + "\n" +
+                         "Приватность: " + message.text + "\n" +
                          "Локация: ")
     await message.answer_location(latitude=float(json.loads(data.get('location'))["latitude"]), longitude=float(json.loads(data.get('location'))["longitude"]))
     await message.answer(_("Вы успешно создали круг\nПодтверждаете информацию если да то нажмите на галочку если нет то на крестик и вас перекинет к началу создания круга"), reply_markup=accept())
@@ -264,7 +264,7 @@ async def list_members_func_to(message: Message, state: FSMContext):
     elif receiver.member == message.from_user.id:
         await state.update_data(status_user=to_user.user_id, group_id=group.id, date=group.start_date)
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-        keyboard.add(KeyboardButton(yes), KeyboardButton("❌"))
+        keyboard.add(KeyboardButton("✅"), KeyboardButton("❌"))
         await message.answer(_("Сделал ли он платеж?"), reply_markup=keyboard)
         await state.set_state(CreateGroup.list_members_save)
     else:
@@ -295,7 +295,7 @@ async def list_members_func_save(message: Message, state: FSMContext):
         for i in range(0, len(users) - 1, 2):
             keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
         keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_("⬅️Назад")))
-    if message.text == yes:
+    if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
         await message.answer(_("Вы подтвердили платеж"), reply_markup=keyboard)
     elif message.text == "❌":
@@ -309,7 +309,7 @@ async def info_func(message: Message, state: FSMContext):
     await state.reset_state()
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
-    status = _("Закрытый") if group.private == 0 else _("Открытый")
+    status = _("Закрытый") if group.private == 1 else _("Открытый")
     await message.answer("Имя круга: " + group.name + "\n" +
                          "Число участников: " + str(group.number_of_members) + "\n" +
                          "Сумма: " + group.amount + "\n" +
@@ -328,7 +328,7 @@ async def settings_func(message: Message, state: FSMContext):
     await state.reset_state()
     group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
     await state.update_data(group_id=group.id)
-    status = _("Закрытый") if group.private == 0 else _("Открытый")
+    status = _("Закрытый") if group.private == 1 else _("Открытый")
     await message.answer(
         "Имя круга: " + group.name + "\n" +
         "Число участников: " + str(group.number_of_members) + "\n" +
@@ -349,19 +349,19 @@ async def settings_func(message: Message, state: FSMContext):
 @dp.message_handler(state=CreateGroup.settings_to)
 async def settings_fun_to(message: Message, state: FSMContext):
     mapping = {
-        change_name: ("name", "Введите имя"),
-        change_date: ("start_date", "Введите дату встречи дд/мм/гггг"),
-        change_period: ("period", "Введите период"),
-        change_link: ("link", "Введите линк"),
-        change_location: ("location", "Отправьте локацию"),
-        change_language: ("language", "Изменить язык"),
+        _("Изменить имя"): ("name", "Введите имя"),
+        _("Изменить дату встречи"): ("start_date", "Введите дату встречи дд/мм/гггг"),
+        _("Изменить переодичность"): ("period", "Введите период"),
+        _("Изменить линк"): ("link", "Введите линк"),
+        _("Изменить локацию"): ("location", "Отправьте локацию"),
+        _("Изменить язык"): ("language", "Изменить язык"),
         "⬅️Назад": (None, _("Главное меню"))
     }
 
     setting_data = mapping.get(message.text)
     if setting_data:
-        print(setting_data)
         setting, prompt = setting_data
+        await state.update_data(setting=setting)
         if setting == 'language':
             await message.answer(prompt, reply_markup=get_language_keyboard())
             await state.set_state(CreateGroup.settings_save)
@@ -369,7 +369,11 @@ async def settings_fun_to(message: Message, state: FSMContext):
             await message.answer(prompt)
             await state.set_state(CreateGroup.settings_save)
         else:
-            await message.answer(prompt, reply_markup=menu_for_create())
+            group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+            if group.start == 0:
+                await message.answer(_("Главное меню"), reply_markup=menu_for_create())
+            else:
+                await message.answer(_("Главное меню"), reply_markup=menu_for_create_without_start())
             await state.set_state(CreateGroup.choose)
     else:
         await message.answer(_("Выберите одну из кнопок"))
@@ -387,7 +391,7 @@ async def settings_fun_save(message: Message, state: FSMContext):
     elif data_setting == "location" and not message.location:
         await message.answer("Вы ввели неверно локацию")
     else:
-        if LANGUAGES[message.text]:
+        if message.text in LANGUAGES:
             await DBCommands.language_update(message.from_user.id, LANGUAGES[message.text])
             await message.answer("Успешно изменено", reply_markup=setting())
         elif await DBCommands.settings_update(data.get("group_id"), data_setting, setting_value):
@@ -453,10 +457,13 @@ async def my_group_func(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.my_group_to)
 async def my_group_func_to(message: Message, state: FSMContext):
-    await state.reset_state()
-    group = await DBCommands.search_group_by_name(message.text)
-    await DBCommands.update_user_in_group_id(message.from_user.id, group.id)
-    if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group.id) is True:
+    group_by_name = await DBCommands.search_group_by_name(message.text)
+    if group_by_name:
+        await DBCommands.update_user_in_group_id(message.from_user.id, group_by_name.id)
+    group_ = await DBCommands.select_user_in_group_id(user_id=message.from_user.id)
+    group_id = group_by_name.id if group_by_name else group_
+    group = await DBCommands.get_group_from_id(group_id)
+    if await DBCommands.get_group_now(user_id=message.from_user.id, group_id=group_id) is True:
         if group.start == 0:
             await message.answer(_("Главное меню"), reply_markup=menu_for_create())
         else:

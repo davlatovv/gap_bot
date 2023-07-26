@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from typing import List
 from states.states import Subscribe
-from text import no, yes
 from .models import *
 
 
@@ -46,7 +45,7 @@ class DBCommands:
         for user in users:
             print(user)
             await user.update(subscribe=0).apply()
-            await bot.send_message(chat_id=user.user_id, text="Ваше время истекло, теперь приобретите подписку", reply_markup=keyboard.add(_("ПОДПИСКА")))
+            await bot.send_message(chat_id=user.user_id, text=_("Ваше время истекло, теперь приобретите подписку"), reply_markup=keyboard.add(_("ПОДПИСКА")))
             await FSMContext.set_state(Subscribe.subscribe)
 
     @staticmethod
@@ -127,11 +126,10 @@ class DBCommands:
                           phone=None,
                           language=None,
                           nickname=None,
-                          sms=None,
                           accept=None) -> User:
         new_date = (datetime.today() + timedelta(days=30)).strftime('%d-%m-%Y')
         user = User(user_id=user_id, name=name, nickname=nickname, phone=phone,
-                    language=language, sms=sms, accept=accept, end_date=new_date)
+                    language=language, accept=accept, end_date=new_date)
         await user.create()
         return user
 
@@ -182,6 +180,19 @@ class DBCommands:
         return group
 
     @staticmethod
+    async def get_all_open_groups(user_id) -> List[Group]:
+        groups = await Group.query.where(Group.private != 1).gino.all()
+        allowed_groups = []
+        for group in groups:
+            wrong_members = await Member.query.where(and_(Member.member == user_id, Member.group_id == group.id)).gino.first()
+            if wrong_members is not None:
+                continue
+            members = await db.select([func.count(Member.id)]).where(Member.group_id == group.id).gino.scalar()
+            if members is not None and group.number_of_members > members:
+                allowed_groups.append(group.name)
+        return allowed_groups
+
+    @staticmethod
     async def get_users_name_from_group_id(group_id: int, user_id: int) -> List[str]:
         query = await select([User.name]).select_from(join(Member, User, User.user_id == Member.member)).where(and_(Member.group_id == group_id, Member.member != user_id)).gino.all()
         result = [row[0] for row in query]
@@ -203,8 +214,7 @@ class DBCommands:
     async def settings_update(group_id, key, value):
         value = int(value) if value.isdigit() else value
         group = await Group.update.values(**{key: value}).where(Group.id == group_id).gino.status()
-        if group:
-            return True
+        return group
 
     @staticmethod
     async def select_user_in_group_id(user_id: int):
@@ -253,9 +263,9 @@ class DBCommands:
             us = await User.query.where(User.user_id == user.member_get).gino.first()
             names.append(us.name)
             if user.accept != 1:
-                accepts.append(no)
+                accepts.append("❌")
             else:
-                accepts.append(yes)
+                accepts.append("✅")
         return {"receiver": receiver.name, "names": names, "accepts": accepts}
 
 
