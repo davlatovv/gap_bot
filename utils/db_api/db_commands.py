@@ -75,6 +75,12 @@ class DBCommands:
         return await confirmation.update(accept=status).apply()
 
     @staticmethod
+    async def get_member_recieve(group_id, date):
+        member = await Confirmation.query.where(and_(Confirmation.group_id == group_id, Confirmation.date == date)).gino.first()
+        user = await DBCommands.get_user(member.member_recieve)
+        return user
+
+    @staticmethod
     async def change_queue(user_id_from, user_id_to, group_id):
         memeber_to = await Member.query.where(and_(Member.group_id == group_id, Member.member == user_id_to)).gino.first()
         memeber_from = await Member.query.where(and_(Member.group_id == group_id, Member.member == user_id_from)).gino.first()

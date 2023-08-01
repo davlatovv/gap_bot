@@ -314,9 +314,11 @@ async def info_func(message: Message, state: FSMContext):
     await state.reset_state()
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
+    recieve = await DBCommands.get_member_recieve(group_id=group_id, date=group.start_date)
     status = _("Закрытый") if group.private == 1 else _("Открытый")
     await message.answer("Имя круга: " + group.name + "\n" +
                          "Число участников: " + str(group.number_of_members) + "\n" +
+                         "Имя получателя: " + str(recieve.name) + "\n" +
                          "Сумма: " + group.amount + "\n" +
                          "Дата встречи: " + group.start_date + "\n" +
                          "Переодичность: " + str(group.period) + "\n" +
