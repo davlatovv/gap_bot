@@ -48,7 +48,7 @@ async def start(message: Message, state: FSMContext):
 
 @dp.message_handler(text=[button_text for button_text in LANGUAGES.keys()], state=UserRegistry.user_name)
 async def authorization_lang(message: Message, state: FSMContext):
-    await message.answer(_("Как к вам обращаться?\nВведите пожалуйста свое ФИО, пример: Шукуров Нурбек Туробович"), reply_markup=ReplyKeyboardRemove())
+    await message.answer(_("Введите пожалуйста свое ФИО, пример: (Шукуров Нурбек Туробович)"), reply_markup=ReplyKeyboardRemove())
     language = LANGUAGES[message.text]
     await state.update_data(language=language)
     await state.set_state(UserRegistry.user_phone)
@@ -63,7 +63,7 @@ async def authorization_name(message: Message, state: FSMContext):
         resize_keyboard=True
     )
     await state.update_data(name=message.text)
-    await message.answer(_("Поделитесь своим контактом,нажав на кнопку ниже"), reply_markup=contact_keyboard)
+    await message.answer(_("Поделитесь своим контактом,нажав на кнопку ниже:"), reply_markup=contact_keyboard)
     await state.set_state(UserRegistry.user_sms)
 
 

@@ -31,7 +31,7 @@ async def go_back_to_name(message: Message, state: FSMContext):
     elif group.user_id == message.from_user.id:
         await message.answer(_("Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️Назад"))))
     else:
-        await message.answer(_("Главное меню"), reply_markup=menu().add(KeyboardButton(_(join_back))))
+        await message.answer(_("Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️Назад"))))
     await state.set_state(UserRegistry.choose)
 
 
@@ -137,7 +137,7 @@ async def choose_private(message: Message, state: FSMContext):
         else:
             await message.answer(_("Пожалуйста введите цифрами"))
     await message.answer(_("Выберите статус приватности вашего круга:\n"
-               "Подсказка: если вы выберете открытый статус, то ваш круг будет виден с общем списке и любой желающий сможет вступить в него. Если вы выберите закрытый статус, для вступления в ваш круг пользователям нужен будет токен."), reply_markup=private())
+               "Подсказка: если вы выберете открытый статус, то ваш круг будет виден в общем списке и любой желающий сможет вступить в него. Если вы выберите закрытый статус, для вступления в ваш круг пользователям нужен будет токен."), reply_markup=private())
     await state.set_state(CreateGroup.accept)
 
 
@@ -191,7 +191,8 @@ async def get_token(message: Message, state: FSMContext):
         group = await DBCommands.search_group(data.get('token'))
         await DBCommands.update_user_in_group_id(user_id=message.from_user.id, group_id=group.id)
         await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=1)
-        await message.answer(_("Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоедениться к вашему кругу: \n(Токен отдельным сообщением") + data.get('token'), reply_markup=menu_for_create())
+        await message.answer(_("Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоедениться к вашему кругу: \n(Токен отдельным сообщением)"))
+        await message.answer(data.get('token'), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
 
 
@@ -262,7 +263,7 @@ async def list_members_func_to(message: Message, state: FSMContext):
             await message.answer(_("Главное меню"), reply_markup=menu_for_create_without_start())
         await state.set_state(CreateGroup.choose)
     elif receiver.member == message.from_user.id:
-        await state.update_data(status_user=to_user.user_id, group_id=group.id, date=group.start_date)
+        await state.update_data(status_user=to_user.user_id, group_id=group.id, date=group.start_date, user_name=to_user.name)
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
         keyboard.add(KeyboardButton("✅"), KeyboardButton("❌"))
         await message.answer(_("Сделал ли он платеж?"), reply_markup=keyboard)
@@ -287,6 +288,7 @@ async def list_members_func_save(message: Message, state: FSMContext):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
+    users_id = await DBCommands.get_users_id_from_group_id(group_id=group_id, user_id=message.from_user.id)
     if len(users) % 2 == 0:
         for i in range(0, len(users), 2):
             keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
@@ -298,6 +300,9 @@ async def list_members_func_save(message: Message, state: FSMContext):
     if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
         await message.answer(_("Вы подтвердили платеж"), reply_markup=keyboard)
+        for id in users_id:
+            if id is not message.from_user.id:
+                await bot.send_message(chat_id=id, text=f"Получатель подтвердил платеж от {data['user_name']}")
     elif message.text == "❌":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=0)
         await message.answer(_("Вы отменили платеж"), reply_markup=keyboard)
