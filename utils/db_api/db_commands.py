@@ -45,7 +45,7 @@ class DBCommands:
         for user in users:
             print(user)
             await user.update(subscribe=0).apply()
-            await bot.send_message(chat_id=user.user_id, text=_("Ваше время истекло, теперь приобретите подписку"), reply_markup=keyboard.add(_("ПОДПИСКА")))
+            await bot.send_message(chat_id=user.user_id, text=_("⚠️Ваше время истекло, теперь приобретите подписку"), reply_markup=keyboard.add(_("ПОДПИСКА")))
             await FSMContext.set_state(Subscribe.subscribe)
 
     @staticmethod

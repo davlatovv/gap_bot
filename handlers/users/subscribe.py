@@ -10,7 +10,7 @@ from states.states import Subscribe
 from utils.db_api.db_commands import DBCommands
 
 
-@dp.message_handler(state=Subscribe.subscribe, text=_("ПОДПИСКА"))
+@dp.message_handler(state=Subscribe.subscribe, text=_("🎫ПОДПИСКА"))
 async def cmd_pay(message: Message, state: FSMContext):
     user = await DBCommands.get_user(message.from_user.id)
     amount = 50000
@@ -55,7 +55,7 @@ async def success_payment(message: Message, state: FSMContext):
         else:
             await message.answer(_("🎉Поздравляю!\n✅Вы успешно приобрели подписку!\nТеперь пользоваться ботом будет еще приятнее🤑"), reply_markup=menu_for_join())
     except Exception as ex:
-        await message.answer(_("Что то пошло не так, попробуйте позже") + ex, reply_markup=keyboard.add(_("ПОДПИСКА")))
+        await message.answer(_("Что то пошло не так, попробуйте позже") + ex, reply_markup=keyboard.add(_("🎫ПОДПИСКА")))
         await state.set_state(Subscribe.subscribe)
 
 
