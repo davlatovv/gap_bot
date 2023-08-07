@@ -1,5 +1,4 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from text import *
 from loader import _
 
 
@@ -8,7 +7,7 @@ def menu():
         keyboard=[
             [
                 KeyboardButton(text=_("👥Создать круг")),
-                KeyboardButton(text=_("👤Присоедениться"))
+                KeyboardButton(text=_("👤Присоединиться"))
             ]
         ],
         resize_keyboard=True
@@ -82,17 +81,17 @@ def period():
 def menu_for_create():
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(KeyboardButton(text=_("➡️Старт")))
-    keyboard.add(KeyboardButton(text=_("Список участников")), KeyboardButton(text=_("📋Общая информация")),
+    keyboard.add(KeyboardButton(text=_("📜Список участников")), KeyboardButton(text=_("📋Общая информация")),
                  KeyboardButton(text=_("🎛Настройки")))
-    keyboard.add(KeyboardButton(text=_("🆘Пожаловаться")), KeyboardButton(text=_("Выбор круга")),
+    keyboard.add(KeyboardButton(text=_("🆘Пожаловаться")), KeyboardButton(text=_("🔍Выбор круга")),
                  KeyboardButton(text=_("👥Мои круги")))
     return keyboard
 
 
 def menu_for_create_without_start():
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton(text=_("Список участников")), KeyboardButton(text=_("📋Общая информация")), KeyboardButton(text=_("🎛Настройки")))
-    keyboard.add(KeyboardButton(text=_("🆘Пожаловаться")), KeyboardButton(text=_("Выбор круга")),
+    keyboard.add(KeyboardButton(text=_("📜Список участников")), KeyboardButton(text=_("📋Общая информация")), KeyboardButton(text=_("🎛Настройки")))
+    keyboard.add(KeyboardButton(text=_("🆘Пожаловаться")), KeyboardButton(text=_("🔍Выбор круга")),
                  KeyboardButton(text=_("👥Мои круги")))
     return keyboard
 
@@ -101,12 +100,12 @@ def menu_for_join():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text=_("Список участников")),
+                KeyboardButton(text=_("📜Список участников")),
                 KeyboardButton(text=_("📋Общая информация")),
             ],
             [
                 KeyboardButton(text=_("🆘Пожаловаться")),
-                KeyboardButton(text=_("🔍    Выбор круга")),
+                KeyboardButton(text=_("🔍Выбор круга")),
                 KeyboardButton(text=_("👥Мои круги"))
             ]
         ],
@@ -119,7 +118,7 @@ def join_choose():
         keyboard=[
             [
                 KeyboardButton(text=_("➡️Войти по токену")),
-                KeyboardButton(text=_("Войти в открытые круги"))
+                KeyboardButton(text=_("👤Войти в открытые круги"))
             ],
             [
                 KeyboardButton(text=_("Назад ⬅️"))
@@ -163,7 +162,7 @@ def private():
         keyboard=[
             [
                 KeyboardButton(text=_("🔒Закрытый")),
-                KeyboardButton(text=_("🔒Открытый"))
+                KeyboardButton(text=_("🔓Открытый"))
             ],
             [
                 KeyboardButton(text=_("⬅️Назад"))

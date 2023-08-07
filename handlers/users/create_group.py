@@ -10,7 +10,6 @@ from keyboards.default import get_language_keyboard
 from keyboards.default.menu import *
 from loader import dp, random_token, _, bot, is_date_greater_than_today
 from states.states import CreateGroup, UserRegistry, JoinToGroup
-from text import *
 from utils.db_api.db_commands import DBCommands
 
 
@@ -67,7 +66,7 @@ async def go_back_to_members(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.location)
 async def choose_members(message: Message, state: FSMContext):
-    await message.answer(_("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:⚠вы можете выбрать локацию вручную или же переслать ее из другого чата."), reply_markup=location())
+    await message.answer(_("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."), reply_markup=location())
     if message.text.isdigit():
         await state.update_data(members=message.text)
     else:
@@ -96,9 +95,13 @@ async def go_back_to_link(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.start)
 async def choose_start(message: Message, state: FSMContext):
-    await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
-    await state.update_data(link=message.text)
-    await state.set_state(CreateGroup.period)
+    if "https://t.me" in message.text:
+        await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
+        await state.update_data(link=message.text)
+        await state.set_state(CreateGroup.period)
+    else:
+        await message.answer(_("⚠️Пожалуйста, отправьте правильную ссылку на группу в телеграм."))
+        await state.set_state(CreateGroup.start)
 
 
 @dp.message_handler(text=_("⬅️Назад"), state=CreateGroup.period)
@@ -116,7 +119,7 @@ async def choose_period(message: Message, state: FSMContext):
         await state.update_data(start=message.text)
         await state.set_state(CreateGroup.private)
     else:
-        await message.answer(_("🛑Невереная дата"))
+        await message.answer(_("🛑Неверная дата"))
 
 
 @dp.message_handler(text=_("⬅️Назад"), state=CreateGroup.private)
@@ -127,18 +130,16 @@ async def go_back_to_period(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.private)
 async def choose_private(message: Message, state: FSMContext):
-    if message.text == _("➡️Раз в неделю"):
-        await state.update_data(period=7)
-    elif message.text == _("➡️Раз в в месяц"):
-        await state.update_data(period=30)
+    if message.text in [_("➡️Раз в неделю"), _("➡️Раз в месяц")]:
+        period = 7 if message.text == _("➡️Раз в неделю") else 30
+        await state.update_data(period=period)
+        await message.answer(_("🔐Выберите статус приватности вашего круга:\n"
+                               "⚠️Подсказка: если вы выберете открытый статус, то ваш круг будет виден в общем списке и любой желающий сможет вступить в него. Если вы выберите закрытый статус, для вступления в ваш круг пользователям нужен будет токен."),
+                             reply_markup=private())
+        await state.set_state(CreateGroup.accept)
     else:
-        if message.text.isdigit():
-            await state.update_data(period=message.text)
-        else:
-            await message.answer(_("🔢Пожалуйста введите цифрами"))
-    await message.answer(_("🔐Выберите статус приватности вашего круга:\n"
-               "⚠️Подсказка: если вы выберете открытый статус, то ваш круг будет виден в общем списке и любой желающий сможет вступить в него. Если вы выберите закрытый статус, для вступления в ваш круг пользователям нужен будет токен."), reply_markup=private())
-    await state.set_state(CreateGroup.accept)
+        await message.answer(_("❇️Выберите одну из кнопок"))
+        await state.set_state(CreateGroup.private)
 
 
 @dp.message_handler(text=_("⬅️Назад"), state=CreateGroup.accept)
@@ -149,25 +150,28 @@ async def go_back_to_period(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.accept)
 async def validation(message: Message, state: FSMContext):
-    if message.text == "Открытый":
-        await state.update_data(private=1)
-    elif message.text == "Закрытый":
-        await state.update_data(private=0)
+    if message.text in [_("🔓Открытый"), _("🔒Закрытый")]:
+        private = 1 if message.text == _("🔒Закрытый") else 0
+        await state.update_data(private=private)
+        data = await state.get_data()
+        await message.answer("Имя круга: " + str(data.get('name')) + "\n" +
+                             "Число участников: " + str(data.get('members')) + "\n" +
+                             "Сумма: " + str(data.get('money')) + "\n" +
+                             "Дата начала: " + str(data.get('start')) + "\n" +
+                             "Переодичность: " + str(data.get('period')) + "\n" +
+                             "Линк: " + str(data.get('link')) + "\n" +
+                             "Приватность: " + message.text + "\n" +
+                             "Локация: ")
+        await message.answer_location(latitude=float(json.loads(data.get('location'))["latitude"]),
+                                      longitude=float(json.loads(data.get('location'))["longitude"]))
+        await message.answer(
+            _("🎉Вы успешно создали круг\nПодтверждаете информацию если да то нажмите на галочку если нет то на крестик и вас перекинет к началу создания круга"),
+            reply_markup=accept())
+        await state.update_data(token=random_token)
+        await state.set_state(CreateGroup.token)
     else:
         await message.answer(_("❇️Выберите одну из кнопок"))
-    data = await state.get_data()
-    await message.answer("Имя круга: " + str(data.get('name')) + "\n" +
-                         "Число участников: " + str(data.get('members')) + "\n" +
-                         "Сумма: " + str(data.get('money')) + "\n" +
-                         "Дата начала: " + str(data.get('start')) + "\n" +
-                         "Переодичность: " + str(data.get('period')) + "\n" +
-                         "Линк: " + str(data.get('link')) + "\n" +
-                         "Приватность: " + message.text + "\n" +
-                         "Локация: ")
-    await message.answer_location(latitude=float(json.loads(data.get('location'))["latitude"]), longitude=float(json.loads(data.get('location'))["longitude"]))
-    await message.answer(_("🎉Вы успешно создали круг\nПодтверждаете информацию если да то нажмите на галочку если нет то на крестик и вас перекинет к началу создания круга"), reply_markup=accept())
-    await state.update_data(token=random_token)
-    await state.set_state(CreateGroup.token)
+        await state.set_state(CreateGroup.accept)
 
 
 @dp.message_handler(state=CreateGroup.token)
@@ -191,7 +195,7 @@ async def get_token(message: Message, state: FSMContext):
         group = await DBCommands.search_group(data.get('token'))
         await DBCommands.update_user_in_group_id(user_id=message.from_user.id, group_id=group.id)
         await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=1)
-        await message.answer(_("⚠️Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоедениться к вашему кругу: \n(Токен отдельным сообщением)"))
+        await message.answer(_("⚠️Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоединиться к вашему кругу:"))
         await message.answer(data.get('token'), reply_markup=menu_for_create())
         await state.set_state(CreateGroup.choose)
 
@@ -216,7 +220,7 @@ async def start_func(message: Message, state: FSMContext):
         await message.answer(_("⚠️Что-то пошло не так: ") + str(ex))
 
 
-@dp.message_handler(state=CreateGroup.list_members, text=_("Список участников"))
+@dp.message_handler(state=CreateGroup.list_members, text=_("📜Список участников"))
 async def list_members_func(message: Message, state: FSMContext):
     await state.reset_state()
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
@@ -224,7 +228,7 @@ async def list_members_func(message: Message, state: FSMContext):
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
     if not users:
-        await message.answer(_("Нет участинков"))
+        await message.answer(_("🛑Нет участинков"))
         await state.set_state(CreateGroup.choose)
     else:
         receiver = await DBCommands.get_queue_first(group_id=group_id)
@@ -314,7 +318,7 @@ async def info_func(message: Message, state: FSMContext):
     await state.reset_state()
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
-    status = _("🔒Закрытый") if group.private == 1 else _("🔒Открытый")
+    status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
     try:
         recieve = await DBCommands.get_member_recieve(group_id=group_id, date=group.start_date)
         await message.answer("Имя круга: " + group.name + "\n" +
@@ -346,7 +350,7 @@ async def settings_func(message: Message, state: FSMContext):
     await state.reset_state()
     group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
     await state.update_data(group_id=group.id)
-    status = _("🔒Закрытый") if group.private == 1 else _("🔒Открытый")
+    status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
     await message.answer(
         "Имя круга: " + group.name + "\n" +
         "Число участников: " + str(group.number_of_members) + "\n" +
@@ -426,7 +430,7 @@ async def complain_func(message: Message, state: FSMContext):
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     if not users:
-        await message.answer(_("Нет участинков"))
+        await message.answer(_("🛑Нет участинков"))
         await state.set_state(CreateGroup.choose)
     else:
         if len(users) % 2 == 0:
@@ -513,7 +517,7 @@ async def choose_create(message: Message, state: FSMContext):
 
 actions_create = {
     _("➡️Старт"): (start_func, CreateGroup.start),
-    _("Список участников"): (list_members_func, CreateGroup.list_members),
+    _("📜Список участников"): (list_members_func, CreateGroup.list_members),
     _("📋Общая информация"): (info_func, CreateGroup.info),
     _("🎛Настройки"): (settings_func, CreateGroup.settings),
     _("🆘Пожаловаться"): (complain_func, CreateGroup.complain),

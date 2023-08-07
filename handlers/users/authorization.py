@@ -8,7 +8,6 @@ from handlers.users.create_group import choose_name
 from keyboards.default import get_language_keyboard
 from keyboards.default.menu import *
 from states.states import UserRegistry, CreateGroup, JoinToGroup, Subscribe
-from text import *
 from loader import _, dp
 from utils.db_api.db_commands import DBCommands
 
@@ -91,7 +90,7 @@ async def approve(message: Message, state: FSMContext):
                                      accept=1)
         await message.answer(_("🎉Поздравляем, вы успешно зарегистрировались!\n" 
                       "Выберите 👥-создать круг- если вы хотите создать свой круг,\n" 
-                      "или 👤-присоедениться- если вы хотите присоедениться к уже существующему кругу.\n"), reply_markup=menu())
+                      "или 👤-присоединиться- если вы хотите присоединиться к уже существующему кругу.\n"), reply_markup=menu())
         await state.set_state(UserRegistry.choose)
     elif message.text == "❌":
         await message.answer(_("🛑Вы отклонили пользовательское соглашение поэтому мы не сможем продолжить.\n" 
@@ -106,8 +105,8 @@ async def choose_menu(message: Message, state: FSMContext):
     group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
     if message.text == _("👥Создать круг"):
         await choose_name(message, state)
-    elif message.text == _("👤Присоедениться"):
-        await message.answer(_("👤Выберите в какой круг присоедениться"), reply_markup=join_choose())
+    elif message.text == _("👤Присоединиться"):
+        await message.answer(_("👤Выберите в какой круг присоединиться"), reply_markup=join_choose())
         await state.set_state(JoinToGroup.join)
     elif message.text == _("⬅️Назад"):
         if group.start == 0:
