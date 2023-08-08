@@ -10,17 +10,19 @@ from states.states import JoinToGroup, UserRegistry, CreateGroup
 from utils.db_api.db_commands import DBCommands
 
 
-@dp.message_handler(text=_("⬅️ Назад"), state="*")
-async def back_function_join(message: Message, state: FSMContext):
-    await state.reset_state()
-    await message.answer(_("📱Главное меню"), reply_markup=menu_for_join())
-    await state.set_state(JoinToGroup.choose)
-
-
 @dp.message_handler(state=JoinToGroup.join)
 async def join_group(message: Message, state: FSMContext):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-    if message.text == _("➡️Войти по токену"):
+    if message.text == _("Назад ⬅️"):
+        group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+        if not group:
+            await message.answer(_("📱Главное меню"), reply_markup=menu())
+        elif group.user_id == message.from_user.id:
+            await message.answer(_("📱Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️Назад"))))
+        else:
+            await message.answer(_("📱Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️ Назад"))))
+        await state.set_state(UserRegistry.choose)
+    elif message.text == _("➡️Войти по токену"):
         await message.answer(_("✍️Введите токен"))
         await state.set_state(JoinToGroup.join_token)
     elif message.text == _("👤Войти в открытые круги"):
@@ -34,13 +36,6 @@ async def join_group(message: Message, state: FSMContext):
         else:
             await message.answer(_("⚠️Нет открытых кругов"))
             await state.set_state(JoinToGroup.join)
-    elif message.text == _("Назад ⬅️"):
-        group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
-        if group.user_id == message.from_user.id:
-            await message.answer(_("📱Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️Назад"))))
-        else:
-            await message.answer(_("📱Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️ Назад"))))
-        await state.set_state(UserRegistry.choose)
     else:
         await message.answer(_("❇️Выберите одну из кнопок"))
         await state.set_state(JoinToGroup.join)
@@ -61,12 +56,8 @@ async def join_token(message: Message, state: FSMContext):
                 await message.answer(_("🛑Количество участников ограничено"))
     except Exception as ex:
         logging.error(_("Что-то пошло не так: ") + str(ex))
-        group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
-        if group.user_id == message.from_user.id:
-            await message.answer(_("⚠️Нет такого круга"), reply_markup=join_choose())
-        else:
-            await message.answer(_("⚠️Нет такого круга"), reply_markup=join_choose())
-        await state.set_state(UserRegistry.choose)
+        await message.answer(_("⚠️Нет такого круга"), reply_markup=join_choose())
+        await state.set_state(JoinToGroup.join)
 
 
 @dp.message_handler(state=JoinToGroup.join_open)
@@ -88,11 +79,7 @@ async def join_open(message: Message, state: FSMContext):
                     await message.answer(_("🛑Количество участников ограничено"))
         except Exception as ex:
             logging.error(_("Что-то пошло не так: ") + str(ex))
-            group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
-            if group.user_id == message.from_user.id:
-                await message.answer(_("⚠️Нет такого круга"), reply_markup=join_choose())
-            else:
-                await message.answer(_("⚠️Нет такого круга"), reply_markup=join_choose())
+            await message.answer(_("⚠️Нет такого круга"), reply_markup=join_choose())
             await state.set_state(JoinToGroup.join)
 
 

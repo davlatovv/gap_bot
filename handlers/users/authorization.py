@@ -69,10 +69,9 @@ async def authorization_name(message: Message, state: FSMContext):
 @dp.message_handler(content_types=types.ContentType.CONTACT, state=UserRegistry.user_sms)
 async def authorization_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.contact.phone_number)
-    await message.answer(_("⚠️Ознакомьтесь с пользовательским соглашением и подтвердите его!\n" 
-                             "📕Пользовательское соглашение:\n" 
-                             "(ссылка на пользовательское соглашение\n" 
-                             "⚠️Предупреждение:подтверждая пользовательское соглашение вы принимаете на себя ответственность за свои действия!"), reply_markup=accept())
+    await message.answer(_("Ознакомьтесь с пользовательским соглашением и подтвердите его!\n" 
+                           "⚠️Предупреждение:подтверждая пользовательское соглашение вы принимаете на себя ответственность за свои действия!\n"
+                           "📕Пользовательское соглашение:"), reply_markup=accept())
     await message.answer_document(open("document.docx", 'rb'))
     await state.update_data(sms=message.text)
     await state.set_state(UserRegistry.user_approve)
