@@ -56,6 +56,10 @@ async def choose_money(message: Message, state: FSMContext):
         await message.answer(_("🔢Введите цифрами количество участников вашего круга, пример: 5"), reply_markup=back_state())
         await state.update_data(money=message.text)
         await state.set_state(CreateGroup.location)
+    else:
+        await message.answer(_("🔢Пожалуйста введите цифрами"))
+        await state.set_state(CreateGroup.members)
+
 
 
 @dp.message_handler(text=_("⬅️Назад"), state=CreateGroup.location)
@@ -66,12 +70,15 @@ async def go_back_to_members(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.location)
 async def choose_members(message: Message, state: FSMContext):
-    await message.answer(_("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."), reply_markup=location())
     if message.text.isdigit():
+        await message.answer(
+            _("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."),
+            reply_markup=location())
         await state.update_data(members=message.text)
+        await state.set_state(CreateGroup.link)
     else:
         await message.answer(_("🔢Пожалуйста введите цифрами"))
-    await state.set_state(CreateGroup.link)
+        await state.set_state(CreateGroup.location)
 
 
 @dp.message_handler(text=_("⬅️Назад"), state=CreateGroup.link)
@@ -82,7 +89,11 @@ async def go_back_to_location(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.link, content_types=ContentType.LOCATION)
 async def choose_location(message: Message, state: FSMContext):
-    await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, для остальных отправьте ссылку на группу в которую они могут вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом(видео записи экрана, как пользователь копирует ссылку группы и отправляет ее боту"), reply_markup=back_state())
+    await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
+                           "для остальных отправьте нам ссылку на группу в которую они могут "
+                           "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом⬇️"),
+                         reply_markup=back_state())
+    await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=2)
     await state.update_data(location=json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}))
     await state.set_state(CreateGroup.start)
 
@@ -106,8 +117,11 @@ async def choose_start(message: Message, state: FSMContext):
 
 @dp.message_handler(text=_("⬅️Назад"), state=CreateGroup.period)
 async def go_back_to_start(message: Message, state: FSMContext):
-    await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, для остальных отправьте ссылку на группу в которую они могут вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом(видео записи экрана, как пользователь копирует ссылку группы и отправляет ее боту"
-), reply_markup=back_state())
+    await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
+                           "для остальных отправьте нам ссылку на группу в которую они могут "
+                           "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом(видео записи "
+                           "экрана, как пользователь копирует ссылку группы и отправляет ее боту"),
+                         reply_markup=back_state())
     await state.set_state(CreateGroup.start)
 
 

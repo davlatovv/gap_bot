@@ -67,7 +67,7 @@ def period():
         keyboard=[
             [
                 KeyboardButton(text=_("➡️Раз в неделю")),
-                KeyboardButton(text=_("➡️Раз в в месяц")),
+                KeyboardButton(text=_("➡️Раз в месяц")),
             ],
             [
                 KeyboardButton(text=_("⬅️Назад")),
