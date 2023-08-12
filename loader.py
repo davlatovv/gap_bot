@@ -17,8 +17,6 @@ __all__ = ["bot", "storage", "dp", "db"]
 i18n = setup_middleware(dp)
 _ = i18n.gettext
 
-random_token = secrets.token_hex(16)
-
 
 def is_date_greater_than_today(date_string):
     try:

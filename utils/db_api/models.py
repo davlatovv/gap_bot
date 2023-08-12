@@ -32,17 +32,6 @@ class SubscribeUsers(db.Model):
     date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 
-class Sms(db.Model):
-    __tablename__ = "sms"
-    id = Column(BigInteger, primary_key=True, unique=True, autoincrement=True)
-    user_id = Column(BigInteger, ForeignKey("user.id"))
-    user = relationship("User")
-    phone = Column(String(255))
-    otp = Column(String(255))
-    date_created = Column(TIMESTAMP, server_default=db.func.current_timestamp())
-    date_updated = Column(TIMESTAMP, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
-
-
 class Group(db.Model):
     __tablename__ = "group"
     id = Column(BigInteger, primary_key=True, autoincrement=True)

@@ -13,7 +13,7 @@ from utils.db_api.db_commands import DBCommands
 @dp.message_handler(state=JoinToGroup.join)
 async def join_group(message: Message, state: FSMContext):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-    if message.text == _("Назад ⬅️"):
+    if message.text in ["Назад ⬅️", "Orqaga ⬅️"]:
         group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
         if not group:
             await message.answer(_("📱Главное меню"), reply_markup=menu())
@@ -22,10 +22,10 @@ async def join_group(message: Message, state: FSMContext):
         else:
             await message.answer(_("📱Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️ Назад"))))
         await state.set_state(UserRegistry.choose)
-    elif message.text == _("➡️Войти по токену"):
+    elif message.text in ["➡️Войти по токену", "➡️Token bilan kiring"]:
         await message.answer(_("✍️Введите токен"))
         await state.set_state(JoinToGroup.join_token)
-    elif message.text == _("👤Войти в открытые круги"):
+    elif message.text in ["👤Войти в открытые круги", "👤Ochiq doiralarga kirish"]:
         groups = await DBCommands.get_all_open_groups(user_id=message.from_user.id)
         if groups:
             for group in groups:
@@ -62,7 +62,7 @@ async def join_token(message: Message, state: FSMContext):
 
 @dp.message_handler(state=JoinToGroup.join_open)
 async def join_open(message: Message, state: FSMContext):
-    if message.text == "Назад⬅️":
+    if message.text in ["Назад⬅️", "Orqaga⬅️"]:
         await message.answer(_("👤Выберите в какой круг присоединиться"), reply_markup=join_choose())
         await state.set_state(JoinToGroup.join)
     else:
@@ -126,7 +126,7 @@ async def list_members_func_to(message: Message, state: FSMContext):
     to_user = await DBCommands.get_user_with_name(message.text)
     from_user = await DBCommands.get_user(message.from_user.id)
     user_queue = await DBCommands.get_user_from_table_member(user_id=message.from_user.id, group_id=group.id)
-    if message.text == _("⬅️ Назад"):
+    if message.text in ["⬅️ Назад", "⬅️ Orqaga"]:
         await message.answer(_("📱Главное меню"), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     elif receiver.member == message.from_user.id:
@@ -210,7 +210,7 @@ async def join_complain_func(message: Message, state: FSMContext):
 
 @dp.message_handler(state=JoinToGroup.complain_to)
 async def join_complain_to_func(message: Message, state: FSMContext):
-    if message.text == _("⬅️ Назад"):
+    if message.text in ["⬅️ Назад", "⬅️ Orqaga"]:
         await message.answer(_("📱Главное меню"), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     else:

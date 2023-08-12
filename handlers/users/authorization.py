@@ -102,18 +102,18 @@ async def approve(message: Message, state: FSMContext):
 @dp.message_handler(state=UserRegistry.choose)
 async def choose_menu(message: Message, state: FSMContext):
     group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
-    if message.text == _("👥Создать круг"):
+    if message.text in ["👥Создать круг", "👥Doira yaratish"]:
         await choose_name(message, state)
-    elif message.text == _("👤Присоединиться"):
+    elif message.text in ["👤Присоединиться", "👤Qo'shilish"]:
         await message.answer(_("👤Выберите в какой круг присоединиться"), reply_markup=join_choose())
         await state.set_state(JoinToGroup.join)
-    elif message.text == _("⬅️Назад"):
+    elif message.text in ["⬅️Назад", "⬅️Orqaga"]:
         if group.start == 0:
             await message.answer(_("📱Главное меню"), reply_markup=menu_for_create())
         else:
             await message.answer(_("📱Главное меню"), reply_markup=menu_for_create_without_start())
         await state.set_state(CreateGroup.choose)
-    elif message.text == _("⬅️ Назад"):
+    elif message.text in ["⬅️ Назад", "⬅️ Orqaga"]:
         await message.answer(_("📱Главное меню"), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     else:

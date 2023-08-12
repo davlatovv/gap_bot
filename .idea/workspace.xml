@@ -4,24 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c37fb928-04b3-4bdf-86c5-78a58af10e71" name="Changes" comment="Add change language to setting creater">
+    <list default="true" id="c37fb928-04b3-4bdf-86c5-78a58af10e71" name="Changes" comment="Fix bugs">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers/users/authorization.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/authorization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handlers/users/subscribe.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/subscribe.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keyboards/default/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/keyboards/default/menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/users/create_group.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/create_group.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handlers/users/join_to_group.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers/users/join_to_group.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/bot.pot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/bot.mo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en/LC_MESSAGES/bot.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/bot.mo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/bot.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/uz/LC_MESSAGES/bot.mo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/uz/LC_MESSAGES/bot.po" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/states/states.py" beforeDir="false" afterPath="$PROJECT_DIR$/states/states.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/text.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/db_api/db_commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/db_api/db_commands.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/bot.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru/LC_MESSAGES/bot.mo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/uz/LC_MESSAGES/bot.mo" beforeDir="false" afterPath="$PROJECT_DIR$/locales/uz/LC_MESSAGES/bot.mo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/db_api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/db_api/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,16 +47,19 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/zafar/Desktop/TelegramBots/srb_bot&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/zafar/Desktop/TelegramBots/gap&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Subversion.SSH&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\zafar\Desktop\TelegramBots\gap" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\zafar\Desktop\TelegramBots\gap" />
       <recent name="C:\Users\zafar\Desktop\TelegramBots\gap\data" />
@@ -101,6 +95,9 @@
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\zafar\AppData\Roaming\Subversion</configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="c37fb928-04b3-4bdf-86c5-78a58af10e71" name="Changes" comment="" />
@@ -137,7 +134,24 @@
       <workItem from="1689510151138" duration="668000" />
       <workItem from="1689771260273" duration="383000" />
       <workItem from="1689837517784" duration="597000" />
-      <workItem from="1690009061468" duration="19782000" />
+      <workItem from="1690009061468" duration="23213000" />
+      <workItem from="1690265063684" duration="11405000" />
+      <workItem from="1690288185005" duration="609000" />
+      <workItem from="1690371455272" duration="1875000" />
+      <workItem from="1690381825851" duration="655000" />
+      <workItem from="1690527359289" duration="7000" />
+      <workItem from="1690548794226" duration="741000" />
+      <workItem from="1690718803590" duration="1000" />
+      <workItem from="1690722179649" duration="2604000" />
+      <workItem from="1690911737315" duration="9460000" />
+      <workItem from="1691089903068" duration="2176000" />
+      <workItem from="1691314592421" duration="2181000" />
+      <workItem from="1691437011833" duration="10086000" />
+      <workItem from="1691512812994" duration="3806000" />
+      <workItem from="1691530668257" duration="3239000" />
+      <workItem from="1691735199989" duration="1088000" />
+      <workItem from="1691783050420" duration="6000" />
+      <workItem from="1691844474084" duration="12188000" />
     </task>
     <task id="LOCAL-00001" summary="First commit with registration">
       <created>1685600535105</created>
@@ -230,7 +244,133 @@
       <option name="project" value="LOCAL" />
       <updated>1689339150217</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Add change language to setting creater">
+      <created>1690034902249</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1690034902249</updated>
+    </task>
+    <task id="LOCAL-00015" summary="CONFIG UPDATE">
+      <created>1690034933486</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1690034933486</updated>
+    </task>
+    <task id="LOCAL-00016" summary="CREATE_GROUP UPDATE text">
+      <created>1690036485123</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1690036485123</updated>
+    </task>
+    <task id="LOCAL-00017" summary="authorization UPDATE text">
+      <created>1690036568593</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1690036568593</updated>
+    </task>
+    <task id="LOCAL-00018" summary="models UPDATE text">
+      <created>1690036592689</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1690036592689</updated>
+    </task>
+    <task id="LOCAL-00019" summary="states UPDATE text">
+      <created>1690036600207</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1690036600207</updated>
+    </task>
+    <task id="LOCAL-00020" summary="callback UPDATE text">
+      <created>1690036689776</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1690036689776</updated>
+    </task>
+    <task id="LOCAL-00021" summary="callback UPDATE text">
+      <created>1690037129173</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1690037129173</updated>
+    </task>
+    <task id="LOCAL-00022" summary="callback UPDATE text">
+      <created>1690037147670</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1690037147670</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Full compition">
+      <created>1690371476235</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1690371476235</updated>
+    </task>
+    <task id="LOCAL-00024" summary="document send">
+      <created>1690381850541</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1690381850541</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Update text and send notification">
+      <created>1690916703105</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1690916703105</updated>
+    </task>
+    <task id="LOCAL-00026" summary="send recieve member from info">
+      <created>1690918029836</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1690918029836</updated>
+    </task>
+    <task id="LOCAL-00027" summary="send recieve member from info">
+      <created>1690937532424</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1690937532424</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Add emoji to texts">
+      <created>1691316794380</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1691316794380</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Add emoji to texts">
+      <created>1691445283710</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1691445283710</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Fix bugs">
+      <created>1691457408387</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1691457408387</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Fix bugs">
+      <created>1691536037131</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1691536037131</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -261,7 +401,19 @@
     <MESSAGE value="Add payment and subscribe update logging and bugfix" />
     <MESSAGE value="add text to variable" />
     <MESSAGE value="Add change language to setting creater" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add change language to setting creater" />
+    <MESSAGE value="CONFIG UPDATE" />
+    <MESSAGE value="CREATE_GROUP UPDATE text" />
+    <MESSAGE value="authorization UPDATE text" />
+    <MESSAGE value="models UPDATE text" />
+    <MESSAGE value="states UPDATE text" />
+    <MESSAGE value="callback UPDATE text" />
+    <MESSAGE value="Full compition" />
+    <MESSAGE value="document send" />
+    <MESSAGE value="Update text and send notification" />
+    <MESSAGE value="send recieve member from info" />
+    <MESSAGE value="Add emoji to texts" />
+    <MESSAGE value="Fix bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix bugs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -277,6 +429,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/gap$app__1_.coverage" NAME="app (1) Coverage Results" MODIFIED="1685191755407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/gap$text.coverage" NAME="text Coverage Results" MODIFIED="1688166137742" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/gap$app.coverage" NAME="app Coverage Results" MODIFIED="1690033464213" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gap$app.coverage" NAME="app Coverage Results" MODIFIED="1691867125827" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
