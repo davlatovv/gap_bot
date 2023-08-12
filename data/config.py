@@ -27,5 +27,4 @@ LOCALES_DIR = BASE_DIR / 'locales'
 LANGUAGES = {
     "🇷🇺 Русский": "ru",
     "🇺🇿 Ўзбек тили": "uz",
-    "🇺🇸 English": "en"
 }

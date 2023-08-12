@@ -99,6 +99,11 @@ class DBCommands:
         return user
 
     @staticmethod
+    async def add_language(user_id, lang):
+        user = User(user_id=user_id, language=lang)
+        await user.create()
+
+    @staticmethod
     async def get_user_with_name(name) -> User:
         user = await User.query.where(User.name == name).gino.first()
         return user
@@ -130,13 +135,11 @@ class DBCommands:
     async def create_user(user_id,
                           name=None,
                           phone=None,
-                          language=None,
                           nickname=None,
                           accept=None) -> User:
         new_date = (datetime.today() + timedelta(days=30)).strftime('%d-%m-%Y')
-        user = User(user_id=user_id, name=name, nickname=nickname, phone=phone,
-                    language=language, accept=accept, end_date=new_date)
-        await user.create()
+        user = await DBCommands.get_user(user_id=user_id)
+        await user.update(name=name, nickname=nickname, phone=phone, accept=accept, end_date=new_date).apply()
         return user
 
     @staticmethod

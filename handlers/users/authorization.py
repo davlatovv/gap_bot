@@ -31,7 +31,7 @@ async def start(message: Message, state: FSMContext):
     elif await DBCommands.get_user_from_table_member(message.from_user.id, group_id=group_id):
         await message.answer(_("📱Главное меню"), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
-    elif user:
+    elif user is not None and user.name is not None:
         await message.answer(_("📱Главное меню"), reply_markup=(menu()))
         await state.set_state(UserRegistry.choose)
     else:
@@ -47,9 +47,21 @@ async def start(message: Message, state: FSMContext):
 
 @dp.message_handler(text=[button_text for button_text in LANGUAGES.keys()], state=UserRegistry.user_name)
 async def authorization_lang(message: Message, state: FSMContext):
-    await message.answer(_("👨‍💻Введите пожалуйста свое ФИО, пример: (Шукуров Нурбек Туробович)"), reply_markup=ReplyKeyboardRemove())
     language = LANGUAGES[message.text]
-    await state.update_data(language=language)
+    user = await DBCommands.get_user(message.from_user.id)
+    if not user:
+        await DBCommands.add_language(message.from_user.id, language)
+    if user:
+        await DBCommands.language_update(message.from_user.id, language)
+    if message.text == "🇷🇺 Русский":
+        await message.answer("👨‍💻Введите пожалуйста свое ФИО, пример: (Шукуров Нурбек Туробович)",
+                             reply_markup=ReplyKeyboardRemove())
+    elif message.text == "🇺🇿 Ўзбек тили":
+        await message.answer("👨‍💻Iltimos, to'liq ismingizni kiriting, misol: (Shukurov Nurbek Turobovich)",
+                             reply_markup=ReplyKeyboardRemove())
+    else:
+        await message.answer("❇️Выберите одну из кнопок\n❇️Tugmalardan birini tanlang")
+        await state.set_state(UserRegistry.user_name)
     await state.set_state(UserRegistry.user_phone)
 
 
@@ -85,7 +97,6 @@ async def approve(message: Message, state: FSMContext):
                                      name=data.get("name"),
                                      nickname=data.get("nickname"),
                                      phone=data.get("phone"),
-                                     language=data.get("language"),
                                      accept=1)
         await message.answer(_("🎉Поздравляем, вы успешно зарегистрировались!\n" 
                       "Выберите 👥-создать круг- если вы хотите создать свой круг,\n" 
