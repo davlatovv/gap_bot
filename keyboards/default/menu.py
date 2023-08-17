@@ -19,19 +19,19 @@ def setting():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text=_("🆔Изменить имя")),
-                KeyboardButton(text=_("📅Изменить дату встречи"))
+                KeyboardButton(text="🆔Изменить имя"),
+                KeyboardButton(text="📅Изменить дату встречи")
             ],
             [
-                KeyboardButton(text=_("📅Изменить периодичность")),
-                KeyboardButton(text=_("📎Изменить линк"))
+                KeyboardButton(text="📅Изменить периодичность"),
+                KeyboardButton(text="📎Изменить линк")
             ],
             [
-                KeyboardButton(text=_("📍Изменить локацию")),
-                KeyboardButton(text=_("🌐Изменить язык"))
+                KeyboardButton(text="📍Изменить локацию"),
+                KeyboardButton(text="🌐Изменить язык")
             ],
             [
-                KeyboardButton(text=_("⬅️Назад"))
+                KeyboardButton(text="⬅️Назад")
             ]
         ],
         resize_keyboard=True
@@ -43,16 +43,16 @@ def setting_uz():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text=_("🆔Nomini o'zgartirish")),
-                KeyboardButton(text=_("📅Uchrashuv sanasini o'zgartirish"))
+                KeyboardButton(text="🆔Nomini o'zgartirish"),
+                KeyboardButton(text="📅Uchrashuv sanasini o'zgartirish")
             ],
             [
-                KeyboardButton(text=_("📅Davriylikni o’zgartirish")),
-                KeyboardButton(text=_("📎Havolani o'zgartirish"))
+                KeyboardButton(text="📅Davriylikni o’zgartirish"),
+                KeyboardButton(text="📎Havolani o'zgartirish")
             ],
             [
-                KeyboardButton(text=_("📍Joylashuvni o'zgartirish")),
-                KeyboardButton(text=_("🌐Tilni o'zgartiring"))
+                KeyboardButton(text="📍Joylashuvni o'zgartirish"),
+                KeyboardButton(text="🌐Tilni o'zgartiring")
             ],
             [
                 KeyboardButton(text=_("⬅️Orqaga"))

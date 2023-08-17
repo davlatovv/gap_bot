@@ -438,10 +438,10 @@ async def settings_fun_save(message: Message, state: FSMContext):
         if message.text in LANGUAGES:
             if message.text == "🇷🇺 Русский":
                 await DBCommands.language_update(message.from_user.id, LANGUAGES[message.text])
-                await message.answer(_("Успешно изменено"), reply_markup=setting())
+                await message.answer("Успешно изменено", reply_markup=setting())
             elif message.text == "🇺🇿 Ўзбек тили":
                 await DBCommands.language_update(message.from_user.id, LANGUAGES[message.text])
-                await message.answer(_("Muvaffaqiyatli o'zgartirildi"), reply_markup=setting_uz())
+                await message.answer("Muvaffaqiyatli o'zgartirildi", reply_markup=setting_uz())
             else:
                 await message.answer(_("❇️Выберите одну из кнопок"))
         elif await DBCommands.settings_update(data.get("group_id"), data_setting, setting_value):
