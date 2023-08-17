@@ -370,9 +370,11 @@ async def info_func(message: Message, state: FSMContext):
 @dp.message_handler(state=CreateGroup.settings, text=[_("🎛Настройки"), _("🎛Sozlamalar")])
 async def settings_func(message: Message, state: FSMContext):
     await state.reset_state()
+    user = await DBCommands.get_user(message.from_user.id)
     group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
     await state.update_data(group_id=group.id)
     status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
+    reply_markup = setting() if user.language == 'ru' else setting_uz()
     await message.answer(
         _("Название круга: ") + group.name + "\n" +
         _("Количество участников: ") + str(group.number_of_members) + "\n" +
@@ -381,7 +383,7 @@ async def settings_func(message: Message, state: FSMContext):
         _("Периодичность: ") + str(group.period) + "\n" +
         _("Ссылка на группу: ") + group.link + "\n" +
         _("Приватность: ") + status + "\n" +
-        _("Локация: "), reply_markup=setting()
+        _("Локация: "), reply_markup=reply_markup
     )
     await message.answer_location(
         latitude=float(json.loads(group.location)['latitude']),

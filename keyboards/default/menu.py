@@ -55,7 +55,7 @@ def setting_uz():
                 KeyboardButton(text="🌐Tilni o'zgartiring")
             ],
             [
-                KeyboardButton(text=_("⬅️Orqaga"))
+                KeyboardButton(text="⬅️Orqaga")
             ]
         ],
         resize_keyboard=True
