@@ -23,7 +23,7 @@ def setting():
                 KeyboardButton(text=_("📅Изменить дату встречи"))
             ],
             [
-                KeyboardButton(text=_("📅Изменить переодичность")),
+                KeyboardButton(text=_("📅Изменить периодичность")),
                 KeyboardButton(text=_("📎Изменить линк"))
             ],
             [
@@ -32,6 +32,30 @@ def setting():
             ],
             [
                 KeyboardButton(text=_("⬅️Назад"))
+            ]
+        ],
+        resize_keyboard=True
+    )
+    return keyboard
+
+
+def setting_uz():
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text=_("🆔Nomini o'zgartirish")),
+                KeyboardButton(text=_("📅Uchrashuv sanasini o'zgartirish"))
+            ],
+            [
+                KeyboardButton(text=_("📅Davriylikni o’zgartirish")),
+                KeyboardButton(text=_("📎Havolani o'zgartirish"))
+            ],
+            [
+                KeyboardButton(text=_("📍Joylashuvni o'zgartirish")),
+                KeyboardButton(text=_("🌐Tilni o'zgartiring"))
+            ],
+            [
+                KeyboardButton(text=_("⬅️Orqaga"))
             ]
         ],
         resize_keyboard=True

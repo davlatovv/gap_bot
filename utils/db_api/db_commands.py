@@ -218,6 +218,7 @@ class DBCommands:
         user = await User.query.select_from(join(Member, User, User.user_id == Member.member)).where(and_(Member.group_id == group_id, User.name == name)).gino.first()
         if user:
             await user.update(complain=user.complain + 1).apply()
+            return user
 
     @staticmethod
     async def settings_update(group_id, key, value):

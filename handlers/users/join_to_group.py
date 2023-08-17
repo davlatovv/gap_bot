@@ -144,7 +144,8 @@ async def list_members_func_to(message: Message, state: FSMContext):
                                                                    "group": group.id}))
         keyboard = InlineKeyboardMarkup().add(button_yes, button_no)
         await bot.send_message(chat_id=to_user.user_id,
-                               text=from_user.name + _(" 🔄хочет поменяться его очередь ") + str(user_queue.id_queue), reply_markup=keyboard)
+                               text="⚠️" + from_user.name + _(" 🔄 хочет поменяться с вами очередями на получение вознаграждения, хотите ли вы поменяться?\nЕго очередь: ") + str(user_queue.id_queue),
+                               reply_markup=keyboard)
         await message.answer(_("⚠️Ваш запрос отправлен, ожидайте ответа"))
 
 
@@ -176,7 +177,7 @@ async def join_info_func(message: Message, state: FSMContext):
                          "Имя получателя: " + str(recieve.name) + "\n" +
                          "Сумма: " + group.amount + "\n" +
                          "Дата начала: " + group.start_date + "\n" +
-                         "Переодичность: " + str(group.period) + "\n" +
+                         "Периодичность: " + str(group.period) + "\n" +
                          "Линк: " + group.link + "\n" +
                          "Приватность: " + status + "\n" +
                          "Токен: " + group.token + "\n" +
@@ -215,8 +216,9 @@ async def join_complain_to_func(message: Message, state: FSMContext):
         await state.set_state(JoinToGroup.choose)
     else:
         group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
-        await DBCommands.do_complain(message.text, group_id=group_id)
+        user = await DBCommands.do_complain(message.text, group_id=group_id)
         await message.answer(_("⚠️Ваша жалоба принята"))
+        await bot.send_message(user.user_id, "⚠️ " + user.name + _(" пожаловался на вас, если вы с этим не согласны, напишите в тех.поддержку."))
         await state.set_state(JoinToGroup.complain)
 
 
@@ -259,7 +261,7 @@ async def my_group_func_to(message: Message, state: FSMContext):
 @dp.message_handler(state=JoinToGroup.choose_group, text=_("🔍Выбор круга"))
 async def join_choose_group_func(message: Message, state: FSMContext):
     await state.reset_state()
-    await message.answer(_("📱Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️ Назад"))))
+    await message.answer(_("❇️Выберите одну из кнопок:"), reply_markup=menu().add(KeyboardButton(_("⬅️ Назад"))))
     await state.set_state(UserRegistry.choose)
 
 
@@ -272,7 +274,7 @@ async def choose_join(message: Message, state: FSMContext):
         action, new_state = actions_join[message.text]
         await action(message, state)
     else:
-        await message.answer(_("❇️Выберите одну из кнопок"))
+        await message.answer(_("❇️Выберите одну из кнопок"), reply_markup=menu_for_join())
 
 
 actions_join = {
@@ -280,5 +282,11 @@ actions_join = {
     _("📋Общая информация"): (join_info_func, JoinToGroup.info),
     _("🆘Пожаловаться"): (join_complain_func, JoinToGroup.complain),
     _("🔍Выбор круга"): (join_choose_group_func, JoinToGroup.choose_group),
-    _("👥Мои круги"): (join_my_group_func, JoinToGroup.my_group)
+    _("👥Мои круги"): (join_my_group_func, JoinToGroup.my_group),
+
+    _("📜Davrangiz a'zolari"): (join_list_members_func, JoinToGroup.list_members),
+    _("📋Umumiy ma'lumot"): (join_info_func, JoinToGroup.info),
+    _("🆘Shikoyat"): (join_complain_func, JoinToGroup.complain),
+    _("🔍Davra tanlash"): (join_choose_group_func, JoinToGroup.choose_group),
+    _("👥Mening davralarim"): (join_my_group_func, JoinToGroup.my_group)
 }

@@ -172,7 +172,7 @@ async def validation(message: Message, state: FSMContext):
                              _("Количество участников: ") + str(data.get('members')) + "\n" +
                              _("Сумма взносов: ") + str(data.get('money')) + " сум\n" +
                              _("Дата встречи: ") + str(data.get('start')) + "\n" +
-                             _("Переодичность: ") + str(data.get('period')) + "\n" +
+                             _("Периодичность: ") + str(data.get('period')) + "\n" +
                              _("Ссылка на группу: ") + str(data.get('link')) + "\n" +
                              _("Приватность: ") + message.text + "\n" +
                              _("Локация: "))
@@ -303,7 +303,7 @@ async def list_members_func_to(message: Message, state: FSMContext):
                                                                    "group": group.id}))
         keyboard = InlineKeyboardMarkup().add(button_yes, button_no)
         await bot.send_message(chat_id=to_user.user_id,
-                               text=from_user.name + _(" 🔄хочет поменяться его очередь ") + str(user_queue.id_queue),
+                               text="⚠️" + from_user.name + _(" 🔄 хочет поменяться с вами очередями на получение вознаграждения, хотите ли вы поменяться?\nЕго очередь: ") + str(user_queue.id_queue),
                                reply_markup=keyboard)
         await message.answer(_("⚠️Ваш запрос отправлен, ожидайте ответа"))
 
@@ -348,7 +348,7 @@ async def info_func(message: Message, state: FSMContext):
                              _("Имя получателя: ") + str(recieve.name) + "\n" +
                              _("Cумма взносов: ") + group.amount + "сум \n" +
                              _("Дата встречи: ") + group.start_date + "\n" +
-                             _("Переодичность: ") + str(group.period) + "\n" +
+                             _("Периодичность: ") + str(group.period) + "\n" +
                              _("Ссылка на группу: ") + group.link + "\n" +
                              _("Приватность: ") + status + "\n" +
                              _("Токен: ") + group.token + "\n" +
@@ -358,7 +358,7 @@ async def info_func(message: Message, state: FSMContext):
                              _("Количество участников: ") + str(group.number_of_members) + "\n" +
                              _("Cумма взносов: ") + group.amount + " сум\n" +
                              _("Дата встречи: ") + group.start_date + "\n" +
-                             _("Переодичность: ") + str(group.period) + "\n" +
+                             _("Периодичность: ") + str(group.period) + "\n" +
                              _("Ссылка на группу: ") + group.link + "\n" +
                              _("Приватность: ") + status + "\n" +
                              _("Токен: ") + group.token + "\n" +
@@ -378,7 +378,7 @@ async def settings_func(message: Message, state: FSMContext):
         _("Количество участников: ") + str(group.number_of_members) + "\n" +
         _("Сумма взносов: ") + group.amount + " сум\n" +
         _("Дата встречи: ") + group.start_date + "\n" +
-        _("Переодичность: ") + str(group.period) + "\n" +
+        _("Периодичность: ") + str(group.period) + "\n" +
         _("Ссылка на группу: ") + group.link + "\n" +
         _("Приватность: ") + status + "\n" +
         _("Локация: "), reply_markup=setting()
@@ -393,12 +393,12 @@ async def settings_func(message: Message, state: FSMContext):
 @dp.message_handler(state=CreateGroup.settings_to)
 async def settings_fun_to(message: Message, state: FSMContext):
     mapping = {
-        _("🆔Изменить имя"): ("name", _("Введите название круга")),
-        _("📅Изменить дату встречи"): ("start_date", _("Введите дату встречи дд/мм/гггг")),
-        _("📅Изменить переодичность"): ("period", _("Введите период")),
-        _("📎Изменить линк"): ("link", _("Введите линк")),
-        _("📍Изменить локацию"): ("location", _("Отправьте локацию")),
-        _("🌐Изменить язык"): ("language", _("Изменить язык")),
+        _("🆔Изменить имя"): ("name", _("Введите новое название круга")),
+        _("📅Изменить дату встречи"): ("start_date", _("⚠️Введите новую дату в формате ДД/ММ/ГГГГ")),
+        _("📅Изменить периодичность"): ("period", _("⚠️Введите новый период встречи днями\nНапример: введите 10(будет означать периодичность 10 дней)")),
+        _("📎Изменить линк"): ("link", _("Введите новую ссылку в группу телеграм")),
+        _("📍Изменить локацию"): ("location", _("Отправьте новую локацию")),
+        _("🌐Изменить язык"): ("language", _("❇️Выберите одну из кнопок")),
         _("⬅️Назад"): (None, _("📱Главное меню"))
     }
 
@@ -436,8 +436,14 @@ async def settings_fun_save(message: Message, state: FSMContext):
         await message.answer(_("🛑Вы ввели неверно локацию"))
     else:
         if message.text in LANGUAGES:
-            await DBCommands.language_update(message.from_user.id, LANGUAGES[message.text])
-            await message.answer(_("Успешно изменено"), reply_markup=setting())
+            if message.text == "🇷🇺 Русский":
+                await DBCommands.language_update(message.from_user.id, LANGUAGES[message.text])
+                await message.answer(_("Успешно изменено"), reply_markup=setting())
+            elif message.text == "🇺🇿 Ўзбек тили":
+                await DBCommands.language_update(message.from_user.id, LANGUAGES[message.text])
+                await message.answer(_("Muvaffaqiyatli o'zgartirildi"), reply_markup=setting_uz())
+            else:
+                await message.answer(_("❇️Выберите одну из кнопок"))
         elif await DBCommands.settings_update(data.get("group_id"), data_setting, setting_value):
             await message.answer(_("Успешно изменено"))
         else:
@@ -477,8 +483,9 @@ async def complain_to_func(message: Message, state: FSMContext):
             await message.answer(_("📱Главное меню"), reply_markup=menu_for_create_without_start())
         await state.set_state(CreateGroup.choose)
     else:
-        await DBCommands.do_complain(message.text, group_id=group.id)
+        user = await DBCommands.do_complain(message.text, group_id=group.id)
         await message.answer(_("⚠️Ваша жалоба принята"))
+        await bot.send_message(user.user_id, "⚠️ " + user.name + _(" пожаловался на вас, если вы с этим не согласны, напишите в тех.поддержку."))
         await state.set_state(CreateGroup.complain_to)
 
 
@@ -521,7 +528,7 @@ async def my_group_func_to(message: Message, state: FSMContext):
 @dp.message_handler(state=CreateGroup.choose_group, text=[_("🔍Выбор круга"), _("🔍Davra tanlash")])
 async def choose_group_func(message: Message, state: FSMContext):
     await state.reset_state()
-    await message.answer(_("📱Главное меню"), reply_markup=menu().add(KeyboardButton(_("⬅️Назад"))))
+    await message.answer(_("❇️Выберите одну из кнопок:"), reply_markup=menu().add(KeyboardButton(_("⬅️Назад"))))
     await state.set_state(UserRegistry.choose)
 
 
@@ -534,7 +541,12 @@ async def choose_create(message: Message, state: FSMContext):
         action, new_state = actions_create[message.text]
         await action(message, state)
     else:
-        await message.answer(_("❇️Выберите одну из кнопок"))
+        group = await DBCommands.get_group_from_id(await DBCommands.select_user_in_group_id(message.from_user.id))
+        if group.start == 0:
+            await message.answer(_("❇️Выберите одну из кнопок"), reply_markup=menu_for_create())
+        else:
+            await message.answer(_("❇️Выберите одну из кнопок"), reply_markup=menu_for_create_without_start())
+        await state.set_state(CreateGroup.choose)
 
 
 actions_create = {

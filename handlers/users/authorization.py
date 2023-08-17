@@ -128,7 +128,11 @@ async def choose_menu(message: Message, state: FSMContext):
         await message.answer(_("📱Главное меню"), reply_markup=menu_for_join())
         await state.set_state(JoinToGroup.choose)
     else:
-        await message.answer(_("❇️Выберите одну из кнопок"))
+        if group.start == 0:
+            await message.answer(_("❇️Выберите одну из кнопок"), reply_markup=menu_for_create())
+        else:
+            await message.answer(_("❇️Выберите одну из кнопок"), reply_markup=menu_for_create_without_start())
+        await state.set_state(UserRegistry.choose)
 
 
 
