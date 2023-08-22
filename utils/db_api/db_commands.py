@@ -190,7 +190,7 @@ class DBCommands:
 
     @staticmethod
     async def get_all_open_groups(user_id) -> List[Group]:
-        groups = await Group.query.where(Group.private != 1).gino.all()
+        groups = await Group.query.where(and_(Group.private != 1, Group.start != 1)).gino.all()
         allowed_groups = []
         for group in groups:
             wrong_members = await Member.query.where(and_(Member.member == user_id, Member.group_id == group.id)).gino.first()
