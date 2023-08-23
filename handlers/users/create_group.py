@@ -436,6 +436,8 @@ async def settings_fun_save(message: Message, state: FSMContext):
         await message.answer(_("🛑Вы ввели неверную дату"))
     elif data_setting == "location" and not message.location:
         await message.answer(_("🛑Вы ввели неверно локацию"))
+    elif data_setting == "period" and not message.text.isdigit():
+        await message.answer(_("🛑Вы ввели неверно период"))
     else:
         if message.text in LANGUAGES:
             if message.text == "🇷🇺 Русский":

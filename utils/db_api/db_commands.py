@@ -39,11 +39,9 @@ class DBCommands:
         from aiogram.types import ReplyKeyboardMarkup
         from loader import bot, _
         today = datetime.today().strftime('%d-%m-%Y')
-        print(today)
         users = await User.query.where(and_(User.subscribe == 1, User.end_date == today)).gino.all()
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
         for user in users:
-            print(user)
             await user.update(subscribe=0).apply()
             await bot.send_message(chat_id=user.user_id, text=_("⚠️Ваше время истекло, теперь приобретите подписку"), reply_markup=keyboard.add(_("ПОДПИСКА")))
             await FSMContext.set_state(Subscribe.subscribe)

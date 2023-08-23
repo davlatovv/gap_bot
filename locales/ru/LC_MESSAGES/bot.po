@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-08-17 20:23+0500\n"
+"POT-Creation-Date: 2023-08-23 23:23+0500\n"
 "PO-Revision-Date: 2023-08-04 00:12+0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: handlers/users/authorization.py:22 utils/db_api/db_commands.py:48
+#: handlers/users/authorization.py:22 utils/db_api/db_commands.py:46
 msgid "⚠️Ваше время истекло, теперь приобретите подписку"
 msgstr ""
 
@@ -34,12 +34,12 @@ msgstr ""
 #: handlers/users/authorization.py:128 handlers/users/create_group.py:30
 #: handlers/users/create_group.py:32 handlers/users/create_group.py:34
 #: handlers/users/create_group.py:195 handlers/users/create_group.py:287
-#: handlers/users/create_group.py:289 handlers/users/create_group.py:402
-#: handlers/users/create_group.py:418 handlers/users/create_group.py:420
-#: handlers/users/create_group.py:475 handlers/users/create_group.py:477
-#: handlers/users/create_group.py:513 handlers/users/create_group.py:515
-#: handlers/users/create_group.py:518 handlers/users/create_group.py:570
-#: handlers/users/create_group.py:572 handlers/users/join_to_group.py:19
+#: handlers/users/create_group.py:289 handlers/users/create_group.py:404
+#: handlers/users/create_group.py:420 handlers/users/create_group.py:422
+#: handlers/users/create_group.py:485 handlers/users/create_group.py:487
+#: handlers/users/create_group.py:523 handlers/users/create_group.py:525
+#: handlers/users/create_group.py:528 handlers/users/create_group.py:580
+#: handlers/users/create_group.py:582 handlers/users/join_to_group.py:19
 #: handlers/users/join_to_group.py:21 handlers/users/join_to_group.py:23
 #: handlers/users/join_to_group.py:130 handlers/users/join_to_group.py:215
 #: handlers/users/join_to_group.py:252 handlers/users/join_to_group.py:254
@@ -94,9 +94,10 @@ msgstr ""
 #: handlers/users/authorization.py:110 handlers/users/authorization.py:132
 #: handlers/users/authorization.py:134 handlers/users/create_group.py:155
 #: handlers/users/create_group.py:188 handlers/users/create_group.py:218
-#: handlers/users/create_group.py:401 handlers/users/create_group.py:423
-#: handlers/users/create_group.py:540 handlers/users/create_group.py:542
-#: handlers/users/join_to_group.py:40 handlers/users/join_to_group.py:277
+#: handlers/users/create_group.py:403 handlers/users/create_group.py:425
+#: handlers/users/create_group.py:450 handlers/users/create_group.py:550
+#: handlers/users/create_group.py:552 handlers/users/join_to_group.py:40
+#: handlers/users/join_to_group.py:277
 msgid "❇️Выберите одну из кнопок"
 msgstr ""
 
@@ -131,13 +132,12 @@ msgstr ""
 #: handlers/users/create_group.py:139 handlers/users/create_group.py:159
 #: handlers/users/create_group.py:266 handlers/users/create_group.py:270
 #: handlers/users/create_group.py:321 handlers/users/create_group.py:325
-#: handlers/users/create_group.py:402 handlers/users/create_group.py:461
-#: handlers/users/create_group.py:465 handlers/users/create_group.py:495
-#: handlers/users/create_group.py:525 handlers/users/create_group.py:565
-#: handlers/users/join_to_group.py:21 keyboards/default/menu.py:34
-#: keyboards/default/menu.py:57 keyboards/default/menu.py:73
-#: keyboards/default/menu.py:152 keyboards/default/menu.py:168
-#: keyboards/default/menu.py:180
+#: handlers/users/create_group.py:404 handlers/users/create_group.py:471
+#: handlers/users/create_group.py:475 handlers/users/create_group.py:505
+#: handlers/users/create_group.py:535 handlers/users/create_group.py:575
+#: handlers/users/join_to_group.py:21 keyboards/default/menu.py:81
+#: keyboards/default/menu.py:97 keyboards/default/menu.py:176
+#: keyboards/default/menu.py:192 keyboards/default/menu.py:204
 msgid "⬅️Назад"
 msgstr ""
 
@@ -145,9 +145,9 @@ msgstr ""
 #: handlers/users/create_group.py:65 handlers/users/create_group.py:84
 #: handlers/users/create_group.py:101 handlers/users/create_group.py:118
 #: handlers/users/create_group.py:139 handlers/users/create_group.py:159
-#: handlers/users/create_group.py:565
+#: handlers/users/create_group.py:575
 msgid "⬅️Orqaga"
-msgstr ""
+msgstr "⬅️Назад"
 
 #: handlers/users/create_group.py:40 handlers/users/create_group.py:67
 msgid ""
@@ -217,41 +217,41 @@ msgid ""
 msgstr ""
 
 #: handlers/users/create_group.py:171 handlers/users/create_group.py:346
-#: handlers/users/create_group.py:357 handlers/users/create_group.py:377
+#: handlers/users/create_group.py:357 handlers/users/create_group.py:379
 msgid "Название круга: "
 msgstr ""
 
 #: handlers/users/create_group.py:172 handlers/users/create_group.py:347
-#: handlers/users/create_group.py:358 handlers/users/create_group.py:378
+#: handlers/users/create_group.py:358 handlers/users/create_group.py:380
 msgid "Количество участников: "
 msgstr ""
 
-#: handlers/users/create_group.py:173 handlers/users/create_group.py:379
+#: handlers/users/create_group.py:173 handlers/users/create_group.py:381
 msgid "Сумма взносов: "
 msgstr ""
 
 #: handlers/users/create_group.py:174 handlers/users/create_group.py:350
-#: handlers/users/create_group.py:360 handlers/users/create_group.py:380
+#: handlers/users/create_group.py:360 handlers/users/create_group.py:382
 msgid "Дата встречи: "
 msgstr ""
 
 #: handlers/users/create_group.py:175 handlers/users/create_group.py:351
-#: handlers/users/create_group.py:361 handlers/users/create_group.py:381
+#: handlers/users/create_group.py:361 handlers/users/create_group.py:383
 msgid "Периодичность: "
 msgstr ""
 
 #: handlers/users/create_group.py:176 handlers/users/create_group.py:352
-#: handlers/users/create_group.py:362 handlers/users/create_group.py:382
+#: handlers/users/create_group.py:362 handlers/users/create_group.py:384
 msgid "Ссылка на группу: "
 msgstr ""
 
 #: handlers/users/create_group.py:177 handlers/users/create_group.py:353
-#: handlers/users/create_group.py:363 handlers/users/create_group.py:383
+#: handlers/users/create_group.py:363 handlers/users/create_group.py:385
 msgid "Приватность: "
 msgstr ""
 
 #: handlers/users/create_group.py:178 handlers/users/create_group.py:355
-#: handlers/users/create_group.py:365 handlers/users/create_group.py:384
+#: handlers/users/create_group.py:365 handlers/users/create_group.py:386
 msgid "Локация: "
 msgstr ""
 
@@ -268,12 +268,12 @@ msgid ""
 "присоединиться к вашему кругу:"
 msgstr ""
 
-#: handlers/users/create_group.py:224 handlers/users/create_group.py:547
-#: keyboards/default/menu.py:83
+#: handlers/users/create_group.py:224 handlers/users/create_group.py:557
+#: keyboards/default/menu.py:107
 msgid "➡️Старт"
 msgstr ""
 
-#: handlers/users/create_group.py:224 handlers/users/create_group.py:555
+#: handlers/users/create_group.py:224 handlers/users/create_group.py:565
 msgid "➡️Start"
 msgstr ""
 
@@ -296,19 +296,19 @@ msgid ""
 "трех, мы начнем разбирательство в отношении этого пользователя."
 msgstr ""
 
-#: handlers/users/create_group.py:245 handlers/users/create_group.py:548
+#: handlers/users/create_group.py:245 handlers/users/create_group.py:558
 #: handlers/users/join_to_group.py:89 handlers/users/join_to_group.py:281
-#: keyboards/default/menu.py:84 keyboards/default/menu.py:93
-#: keyboards/default/menu.py:103
+#: keyboards/default/menu.py:108 keyboards/default/menu.py:117
+#: keyboards/default/menu.py:127
 msgid "📜Список участников"
 msgstr ""
 
-#: handlers/users/create_group.py:245 handlers/users/create_group.py:556
+#: handlers/users/create_group.py:245 handlers/users/create_group.py:566
 #: handlers/users/join_to_group.py:287
 msgid "📜Davrangiz a'zolari"
 msgstr ""
 
-#: handlers/users/create_group.py:253 handlers/users/create_group.py:455
+#: handlers/users/create_group.py:253 handlers/users/create_group.py:465
 #: handlers/users/join_to_group.py:97 handlers/users/join_to_group.py:197
 msgid "🛑Нет участинков"
 msgstr ""
@@ -344,25 +344,25 @@ msgstr ""
 msgid "🛑Вы отменили платеж"
 msgstr ""
 
-#: handlers/users/create_group.py:338 handlers/users/create_group.py:549
+#: handlers/users/create_group.py:338 handlers/users/create_group.py:559
 #: handlers/users/join_to_group.py:168 handlers/users/join_to_group.py:282
-#: keyboards/default/menu.py:84 keyboards/default/menu.py:93
-#: keyboards/default/menu.py:104
+#: keyboards/default/menu.py:108 keyboards/default/menu.py:117
+#: keyboards/default/menu.py:128
 msgid "📋Общая информация"
 msgstr ""
 
-#: handlers/users/create_group.py:338 handlers/users/create_group.py:557
+#: handlers/users/create_group.py:338 handlers/users/create_group.py:567
 #: handlers/users/join_to_group.py:288
 msgid "📋Umumiy ma'lumot"
 msgstr ""
 
-#: handlers/users/create_group.py:343 handlers/users/create_group.py:375
-#: handlers/users/join_to_group.py:174 keyboards/default/menu.py:164
+#: handlers/users/create_group.py:343 handlers/users/create_group.py:376
+#: handlers/users/join_to_group.py:174 keyboards/default/menu.py:188
 msgid "🔒Закрытый"
 msgstr ""
 
-#: handlers/users/create_group.py:343 handlers/users/create_group.py:375
-#: handlers/users/join_to_group.py:174 keyboards/default/menu.py:165
+#: handlers/users/create_group.py:343 handlers/users/create_group.py:376
+#: handlers/users/join_to_group.py:174 keyboards/default/menu.py:189
 msgid "🔓Открытый"
 msgstr ""
 
@@ -378,131 +378,135 @@ msgstr ""
 msgid "Токен: "
 msgstr ""
 
-#: handlers/users/create_group.py:370 handlers/users/create_group.py:550
-#: keyboards/default/menu.py:85 keyboards/default/menu.py:93
+#: handlers/users/create_group.py:370 handlers/users/create_group.py:560
+#: keyboards/default/menu.py:109 keyboards/default/menu.py:117
 msgid "🎛Настройки"
 msgstr ""
 
-#: handlers/users/create_group.py:370 handlers/users/create_group.py:558
+#: handlers/users/create_group.py:370 handlers/users/create_group.py:568
 msgid "🎛Sozlamalar"
 msgstr ""
 
-#: handlers/users/create_group.py:396 keyboards/default/menu.py:22
+#: handlers/users/create_group.py:398
 msgid "🆔Изменить имя"
 msgstr ""
 
-#: handlers/users/create_group.py:396
+#: handlers/users/create_group.py:398
 msgid "Введите новое название круга"
 msgstr ""
 
-#: handlers/users/create_group.py:397 keyboards/default/menu.py:23
+#: handlers/users/create_group.py:399
 msgid "📅Изменить дату встречи"
 msgstr ""
 
-#: handlers/users/create_group.py:397
+#: handlers/users/create_group.py:399
 msgid "⚠️Введите новую дату в формате ДД/ММ/ГГГГ"
 msgstr ""
 
-#: handlers/users/create_group.py:398 keyboards/default/menu.py:26
+#: handlers/users/create_group.py:400
 msgid "📅Изменить периодичность"
 msgstr ""
 
-#: handlers/users/create_group.py:398
+#: handlers/users/create_group.py:400
 msgid ""
 "⚠️Введите новый период встречи днями\n"
 "Например: введите 10(будет означать периодичность 10 дней)"
 msgstr ""
 
-#: handlers/users/create_group.py:399 keyboards/default/menu.py:27
+#: handlers/users/create_group.py:401
 msgid "📎Изменить линк"
 msgstr ""
 
-#: handlers/users/create_group.py:399
+#: handlers/users/create_group.py:401
 msgid "Введите новую ссылку в группу телеграм"
 msgstr ""
 
-#: handlers/users/create_group.py:400 keyboards/default/menu.py:30
+#: handlers/users/create_group.py:402
 msgid "📍Изменить локацию"
 msgstr ""
 
-#: handlers/users/create_group.py:400
+#: handlers/users/create_group.py:402
 msgid "Отправьте новую локацию"
 msgstr ""
 
-#: handlers/users/create_group.py:401 keyboards/default/menu.py:31
+#: handlers/users/create_group.py:403
 msgid "🌐Изменить язык"
 msgstr ""
 
-#: handlers/users/create_group.py:434
+#: handlers/users/create_group.py:436
 msgid "🛑Вы ввели неверную дату"
 msgstr ""
 
-#: handlers/users/create_group.py:436
+#: handlers/users/create_group.py:438
 msgid "🛑Вы ввели неверно локацию"
 msgstr ""
 
-#: handlers/users/create_group.py:440 handlers/users/create_group.py:442
+#: handlers/users/create_group.py:440
+msgid "🛑Вы ввели неверно период"
+msgstr ""
+
+#: handlers/users/create_group.py:452
 msgid "Успешно изменено"
 msgstr ""
 
-#: handlers/users/create_group.py:444
+#: handlers/users/create_group.py:454
 msgid "Не получилось изменить"
 msgstr ""
 
-#: handlers/users/create_group.py:448 handlers/users/create_group.py:551
+#: handlers/users/create_group.py:458 handlers/users/create_group.py:561
 #: handlers/users/join_to_group.py:190 handlers/users/join_to_group.py:283
-#: keyboards/default/menu.py:86 keyboards/default/menu.py:94
-#: keyboards/default/menu.py:107
+#: keyboards/default/menu.py:110 keyboards/default/menu.py:118
+#: keyboards/default/menu.py:131
 msgid "🆘Пожаловаться"
 msgstr ""
 
-#: handlers/users/create_group.py:448 handlers/users/create_group.py:559
+#: handlers/users/create_group.py:458 handlers/users/create_group.py:569
 #: handlers/users/join_to_group.py:289
 msgid "🆘Shikoyat"
 msgstr ""
 
-#: handlers/users/create_group.py:466 handlers/users/join_to_group.py:208
+#: handlers/users/create_group.py:476 handlers/users/join_to_group.py:208
 msgid "👥Участники вашего круга"
 msgstr ""
 
-#: handlers/users/create_group.py:481 handlers/users/join_to_group.py:220
+#: handlers/users/create_group.py:491 handlers/users/join_to_group.py:220
 msgid "⚠️Ваша жалоба принята"
 msgstr ""
 
-#: handlers/users/create_group.py:482 handlers/users/join_to_group.py:221
+#: handlers/users/create_group.py:492 handlers/users/join_to_group.py:221
 msgid " пожаловался на вас, если вы с этим не согласны, напишите в тех.поддержку."
 msgstr ""
 
-#: handlers/users/create_group.py:486 handlers/users/create_group.py:496
-#: handlers/users/create_group.py:553 handlers/users/join_to_group.py:225
+#: handlers/users/create_group.py:496 handlers/users/create_group.py:506
+#: handlers/users/create_group.py:563 handlers/users/join_to_group.py:225
 #: handlers/users/join_to_group.py:235 handlers/users/join_to_group.py:285
-#: keyboards/default/menu.py:87 keyboards/default/menu.py:95
-#: keyboards/default/menu.py:109
+#: keyboards/default/menu.py:111 keyboards/default/menu.py:119
+#: keyboards/default/menu.py:133
 msgid "👥Мои круги"
 msgstr ""
 
-#: handlers/users/create_group.py:486 handlers/users/create_group.py:561
+#: handlers/users/create_group.py:496 handlers/users/create_group.py:571
 #: handlers/users/join_to_group.py:291
 msgid "👥Mening davralarim"
 msgstr ""
 
-#: handlers/users/create_group.py:499 handlers/users/join_to_group.py:238
+#: handlers/users/create_group.py:509 handlers/users/join_to_group.py:238
 msgid "⚠️У вас только 1 круг"
 msgstr ""
 
-#: handlers/users/create_group.py:522 handlers/users/create_group.py:552
+#: handlers/users/create_group.py:532 handlers/users/create_group.py:562
 #: handlers/users/join_to_group.py:261 handlers/users/join_to_group.py:284
-#: keyboards/default/menu.py:86 keyboards/default/menu.py:94
-#: keyboards/default/menu.py:108
+#: keyboards/default/menu.py:110 keyboards/default/menu.py:118
+#: keyboards/default/menu.py:132
 msgid "🔍Выбор круга"
 msgstr ""
 
-#: handlers/users/create_group.py:522 handlers/users/create_group.py:560
+#: handlers/users/create_group.py:532 handlers/users/create_group.py:570
 #: handlers/users/join_to_group.py:290
 msgid "🔍Davra tanlash"
 msgstr ""
 
-#: handlers/users/create_group.py:525 handlers/users/join_to_group.py:264
+#: handlers/users/create_group.py:535 handlers/users/join_to_group.py:264
 msgid "❇️Выберите одну из кнопок:"
 msgstr ""
 
@@ -570,411 +574,35 @@ msgstr ""
 msgid "👤Присоединиться"
 msgstr ""
 
-#: keyboards/default/menu.py:56
+#: keyboards/default/menu.py:80
 msgid "➡️Другая сумма"
 msgstr ""
 
-#: keyboards/default/menu.py:69
+#: keyboards/default/menu.py:93
 msgid "➡️Раз в неделю"
 msgstr ""
 
-#: keyboards/default/menu.py:70
+#: keyboards/default/menu.py:94
 msgid "➡️Раз в месяц"
 msgstr ""
 
-#: keyboards/default/menu.py:120
+#: keyboards/default/menu.py:144
 msgid "➡️Войти по токену"
 msgstr ""
 
-#: keyboards/default/menu.py:121
+#: keyboards/default/menu.py:145
 msgid "👤Войти в открытые круги"
 msgstr ""
 
-#: keyboards/default/menu.py:124
+#: keyboards/default/menu.py:148
 msgid "Назад ⬅️"
 msgstr ""
 
-#: keyboards/default/menu.py:149
+#: keyboards/default/menu.py:173
 msgid "📍Отправить текущую локацию"
 msgstr ""
 
-#: utils/db_api/db_commands.py:48
+#: utils/db_api/db_commands.py:46
 msgid "ПОДПИСКА"
 msgstr ""
-
-#~ msgid "Ваше время истекло, теперь приобретите подписку"
-#~ msgstr ""
-
-#~ msgid "Главное меню"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Добро пожаловать в “mates”.\n"
-#~ "Мы поможем вам сделать ваш “Ga’p” более удобным и безопасным!\n"
-#~ "\n"
-#~ "“mates” ga xush kelibsiz.\n"
-#~ "Biz sizga “Ga’p” ni qulayroq va "
-#~ "xavfsizroq qilishingizga yordam beramiz!\n"
-#~ "\n"
-#~ "🇷🇺Для начала выберите удобный вам язык!\n"
-#~ "🇺🇿Ўзингизга қулай тилни танланг!\n"
-#~ msgstr ""
-
-#~ msgid "Введите пожалуйста свое ФИО, пример: (Шукуров Нурбек Туробович)"
-#~ msgstr ""
-
-#~ msgid "Ваш контакт"
-#~ msgstr ""
-
-#~ msgid "Поделитесь своим контактом,нажав на кнопку ниже:"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Ознакомьтесь с пользовательским соглашением и подтвердите его!\n"
-#~ "Пользовательское соглашение:\n"
-#~ "(ссылка на пользовательское соглашение\n"
-#~ "Предупреждение:подтверждая пользовательское соглашение "
-#~ "вы принимаете на себя ответственность за"
-#~ " свои действия!"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Поздравляем, вы успешно зарегистрировались!\n"
-#~ "Выберите -создать круг- если вы хотите создать свой круг,\n"
-#~ "или -присоедениться- если вы хотите "
-#~ "присоедениться к уже существующему кругу.\n"
-#~ ""
-#~ "\n"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Вы отклонили пользовательское соглашение "
-#~ "поэтому мы не сможем продолжить.\n"
-#~ "Нажмите /start если хотите заново зарегестрироваться"
-#~ msgstr ""
-
-#~ msgid "Выберите одну из кнопок"
-#~ msgstr ""
-
-#~ msgid "Создать круг"
-#~ msgstr ""
-
-#~ msgid "Присоедениться"
-#~ msgstr ""
-
-#~ msgid "Выберите в какой круг присоедениться"
-#~ msgstr ""
-
-#~ msgid "Вы успешно поменялись, теперь ваша очередь "
-#~ msgstr ""
-
-#~ msgid "Вы нажали кнопку 'Нет'"
-#~ msgstr ""
-
-#~ msgid "Вам отказали"
-#~ msgstr ""
-
-#~ msgid "Назовите свой круг, например: круг коллег."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Выберите сумму взносов( эту сумму,каждый "
-#~ "из участников будет отдавать получателю "
-#~ "вознаграждения:"
-#~ msgstr ""
-
-#~ msgid "Другая сумма"
-#~ msgstr ""
-
-#~ msgid "Введите сумму:"
-#~ msgstr ""
-
-#~ msgid "Введите цифрами количество участников вашего круга, пример: 5"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Отправьте локацию места, где вы планируете собираться с участниками:\n"
-#~ "Cовет:вы можете выбрать локацию вручную "
-#~ "или же переслать ее из другого "
-#~ "чата."
-#~ msgstr ""
-
-#~ msgid "Пожалуйста введите цифрами"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Создайте группу в телеграм и добавьте"
-#~ " в нее участников, чьи контакты у "
-#~ "вас уже имеются, для остальных отправьте"
-#~ " ссылку на группу в которую они "
-#~ "могут вступить.\n"
-#~ "Совет:ссылку на группу вы можете найти"
-#~ " следующим способом(видео записи экрана, "
-#~ "как пользователь копирует ссылку группы "
-#~ "и отправляет ее боту"
-#~ msgstr ""
-
-#~ msgid "Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"
-#~ msgstr ""
-
-#~ msgid "Выберите, как часто вы планируете собираться:"
-#~ msgstr ""
-
-#~ msgid "Невереная дата"
-#~ msgstr ""
-
-#~ msgid "Раз в неделю"
-#~ msgstr ""
-
-#~ msgid "Раз в в месяц"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Выберите статус приватности вашего круга:\n"
-#~ "Подсказка: если вы выберете открытый "
-#~ "статус, то ваш круг будет виден в"
-#~ " общем списке и любой желающий сможет"
-#~ " вступить в него. Если вы выберите"
-#~ " закрытый статус, для вступления в "
-#~ "ваш круг пользователям нужен будет "
-#~ "токен."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Вы успешно создали круг\n"
-#~ "Подтверждаете информацию если да то "
-#~ "нажмите на галочку если нет то на"
-#~ " крестик и вас перекинет к началу "
-#~ "создания круга"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Это ваш токен для приглашения,отправьте "
-#~ "его друзьям чтобы они смогли "
-#~ "присоедениться к вашему кругу: \n"
-#~ "(Токен отдельным сообщением)"
-#~ msgstr ""
-
-#~ msgid "Старт"
-#~ msgstr ""
-
-#~ msgid "Создатель круга"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Поздравляем, вы завершили создание круга!\n"
-#~ "Проверьте и подтвердите достоверность введеной"
-#~ " вами информации, нажатием галочки. Если"
-#~ " же вы хотите исправить какую нибудь"
-#~ " информацию, то нажмите на крестик и"
-#~ " бот перекинет вас к началу создания"
-#~ " круга."
-#~ msgstr ""
-
-#~ msgid "Сделал ли он платеж?"
-#~ msgstr ""
-
-#~ msgid "хочет поменяться его очередь "
-#~ msgstr ""
-
-#~ msgid "Ваш запрос ушел, ждем ответа"
-#~ msgstr ""
-
-#~ msgid "Вы подтвердили платеж"
-#~ msgstr ""
-
-#~ msgid "Вы отменили платеж"
-#~ msgstr ""
-
-#~ msgid "Общая информация"
-#~ msgstr ""
-
-#~ msgid "Закрытый"
-#~ msgstr ""
-
-#~ msgid "Открытый"
-#~ msgstr ""
-
-#~ msgid "Настройки"
-#~ msgstr ""
-
-#~ msgid "Изменить имя"
-#~ msgstr ""
-
-#~ msgid "Изменить дату встречи"
-#~ msgstr ""
-
-#~ msgid "Изменить переодичность"
-#~ msgstr ""
-
-#~ msgid "Изменить линк"
-#~ msgstr ""
-
-#~ msgid "Изменить локацию"
-#~ msgstr ""
-
-#~ msgid "Изменить язык"
-#~ msgstr ""
-
-#~ msgid "Пожаловаться"
-#~ msgstr ""
-
-#~ msgid "Участники вашего круга"
-#~ msgstr ""
-
-#~ msgid "Ваша жалоба принята"
-#~ msgstr ""
-
-#~ msgid "Мои круги"
-#~ msgstr ""
-
-#~ msgid "У вас только 1 круг"
-#~ msgstr ""
-
-#~ msgid "Войти по токену"
-#~ msgstr ""
-
-#~ msgid "Введите токен"
-#~ msgstr ""
-
-#~ msgid "Выберите открытые круги"
-#~ msgstr ""
-
-#~ msgid "Нет открытых кругов"
-#~ msgstr ""
-
-#~ msgid "Вы вошли в круг"
-#~ msgstr ""
-
-#~ msgid "Количество участников ограничено"
-#~ msgstr ""
-
-#~ msgid "Нет такого круга"
-#~ msgstr ""
-
-#~ msgid "Отправить текущую локацию"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "🎉Поздравляем, вы успешно зарегистрировались!\n"
-#~ "Выберите 👥-создать круг- если вы хотите создать свой круг,\n"
-#~ "или 👤-присоедениться- если вы хотите "
-#~ "присоедениться к уже существующему кругу.\n"
-#~ ""
-#~ "\n"
-#~ msgstr ""
-
-#~ msgid "👤Присоедениться"
-#~ msgstr ""
-
-#~ msgid "👤Выберите в какой круг присоедениться"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "📍Отправьте локацию места, где вы планируете собираться с участниками:\n"
-#~ "⚠️Cовет:⚠вы можете выбрать локацию вручную "
-#~ "или же переслать ее из другого "
-#~ "чата."
-#~ msgstr ""
-
-#~ msgid "🛑Невереная дата"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "⚠️Это ваш токен для приглашения,отправьте "
-#~ "его друзьям чтобы они смогли "
-#~ "присоедениться к вашему кругу: \n"
-#~ "(Токен отдельным сообщением)"
-#~ msgstr ""
-
-#~ msgid "Список участников"
-#~ msgstr ""
-
-#~ msgid "Нет участинков"
-#~ msgstr ""
-
-#~ msgid "🔒Открытый"
-#~ msgstr ""
-
-#~ msgid "Войти в открытые круги"
-#~ msgstr ""
-
-#~ msgid "Выбор круга"
-#~ msgstr ""
-
-#~ msgid "🔍    Выбор круга"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "⚠️Ознакомьтесь с пользовательским соглашением и подтвердите его!\n"
-#~ "📕Пользовательское соглашение:\n"
-#~ "(ссылка на пользовательское соглашение\n"
-#~ "⚠️Предупреждение:подтверждая пользовательское соглашение"
-#~ " вы принимаете на себя ответственность "
-#~ "за свои действия!"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "📲Создайте группу в телеграм и добавьте"
-#~ " в нее участников, чьи контакты у "
-#~ "вас уже имеются, для остальных отправьте"
-#~ " ссылку на группу в которую они "
-#~ "могут вступить.\n"
-#~ "⚠️Совет:ссылку на группу вы можете найти"
-#~ " следующим способом(видео записи экрана, "
-#~ "как пользователь копирует ссылку группы "
-#~ "и отправляет ее боту"
-#~ msgstr ""
-
-#~ msgid "👤Создатель круга"
-#~ msgstr ""
-
-#~ msgid "стартовал"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "🎉   Поздравляем, вы завершили создание круга!\n"
-#~ "Проверьте и подтвердите достоверность введеной"
-#~ " вами информации, нажатием галочки. Если"
-#~ " же вы хотите исправить какую нибудь"
-#~ " информацию, то нажмите на крестик и"
-#~ " бот перекинет вас к началу создания"
-#~ " круга."
-#~ msgstr ""
-
-#~ msgid "➡️Раз в в месяц"
-#~ msgstr ""
-
-#~ msgid "И📎зменить линк"
-#~ msgstr ""
-
-#~ msgid "Введите имя"
-#~ msgstr ""
-
-#~ msgid "👨‍💻Введите пожалуйста свое ФИО, пример: (Шукуров Нурбек Туробович)"
-#~ msgstr ""
-
-#~ msgid "Переодичность: "
-#~ msgstr ""
-
-#~ msgid " 🔄хочет поменяться его очередь "
-#~ msgstr ""
-
-#~ msgid "Введите название круга"
-#~ msgstr ""
-
-#~ msgid "Введите дату встречи дд/мм/гггг"
-#~ msgstr ""
-
-#~ msgid "📅Изменить переодичность"
-#~ msgstr ""
-
-#~ msgid "Введите период"
-#~ msgstr ""
-
-#~ msgid "Введите линк"
-#~ msgstr ""
-
-#~ msgid "Отправьте локацию"
-#~ msgstr ""
 
