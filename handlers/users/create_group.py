@@ -87,15 +87,19 @@ async def go_back_to_location(message: Message, state: FSMContext):
     await state.set_state(CreateGroup.location)
 
 
-@dp.message_handler(state=CreateGroup.link, content_types=ContentType.LOCATION)
+@dp.message_handler(state=CreateGroup.link, content_types=ContentType.ANY)
 async def choose_location(message: Message, state: FSMContext):
-    await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
-                           "для остальных отправьте нам ссылку на группу в которую они могут "
-                           "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом⬇️"),
-                         reply_markup=back_state())
-    await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=2)
-    await state.update_data(location=json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}))
-    await state.set_state(CreateGroup.start)
+    if not message.location:
+        await message.answer(_("🛑Вы ввели неверно локацию"))
+        await state.set_state(CreateGroup.link)
+    else:
+        await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
+                               "для остальных отправьте нам ссылку на группу в которую они могут "
+                               "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом⬇️"),
+                             reply_markup=back_state())
+        await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=2)
+        await state.update_data(location=json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}))
+        await state.set_state(CreateGroup.start)
 
 
 @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.start)
