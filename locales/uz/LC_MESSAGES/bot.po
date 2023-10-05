@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-08-23 23:23+0500\n"
+"POT-Creation-Date: 2023-10-05 23:36+0500\n"
 "PO-Revision-Date: 2023-08-04 00:12+0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uz\n"
@@ -32,17 +32,17 @@ msgstr "🎫OBUNA"
 #: handlers/users/authorization.py:123 handlers/users/authorization.py:125
 #: handlers/users/authorization.py:128 handlers/users/create_group.py:30
 #: handlers/users/create_group.py:32 handlers/users/create_group.py:34
-#: handlers/users/create_group.py:195 handlers/users/create_group.py:287
-#: handlers/users/create_group.py:289 handlers/users/create_group.py:404
-#: handlers/users/create_group.py:420 handlers/users/create_group.py:422
-#: handlers/users/create_group.py:485 handlers/users/create_group.py:487
-#: handlers/users/create_group.py:523 handlers/users/create_group.py:525
-#: handlers/users/create_group.py:528 handlers/users/create_group.py:580
-#: handlers/users/create_group.py:582 handlers/users/join_to_group.py:19
+#: handlers/users/create_group.py:205 handlers/users/create_group.py:297
+#: handlers/users/create_group.py:299 handlers/users/create_group.py:414
+#: handlers/users/create_group.py:430 handlers/users/create_group.py:432
+#: handlers/users/create_group.py:495 handlers/users/create_group.py:497
+#: handlers/users/create_group.py:533 handlers/users/create_group.py:535
+#: handlers/users/create_group.py:538 handlers/users/create_group.py:590
+#: handlers/users/create_group.py:592 handlers/users/join_to_group.py:19
 #: handlers/users/join_to_group.py:21 handlers/users/join_to_group.py:23
-#: handlers/users/join_to_group.py:130 handlers/users/join_to_group.py:215
-#: handlers/users/join_to_group.py:252 handlers/users/join_to_group.py:254
-#: handlers/users/join_to_group.py:257
+#: handlers/users/join_to_group.py:135 handlers/users/join_to_group.py:220
+#: handlers/users/join_to_group.py:257 handlers/users/join_to_group.py:259
+#: handlers/users/join_to_group.py:262
 msgid "📱Главное меню"
 msgstr "📱Asosiy menyu"
 
@@ -102,16 +102,16 @@ msgstr ""
 "⚠️Qayta ro'yxatdan o'tmoqchi bo'lsangiz /start tugmasini bosing"
 
 #: handlers/users/authorization.py:110 handlers/users/authorization.py:132
-#: handlers/users/authorization.py:134 handlers/users/create_group.py:155
-#: handlers/users/create_group.py:188 handlers/users/create_group.py:218
-#: handlers/users/create_group.py:403 handlers/users/create_group.py:425
-#: handlers/users/create_group.py:450 handlers/users/create_group.py:550
-#: handlers/users/create_group.py:552 handlers/users/join_to_group.py:40
-#: handlers/users/join_to_group.py:277
+#: handlers/users/authorization.py:134 handlers/users/create_group.py:159
+#: handlers/users/create_group.py:198 handlers/users/create_group.py:228
+#: handlers/users/create_group.py:413 handlers/users/create_group.py:435
+#: handlers/users/create_group.py:460 handlers/users/create_group.py:560
+#: handlers/users/create_group.py:562 handlers/users/join_to_group.py:40
+#: handlers/users/join_to_group.py:282
 msgid "❇️Выберите одну из кнопок"
 msgstr "❇️Tugmalardan birini tanlang"
 
-#: handlers/users/authorization.py:119 handlers/users/join_to_group.py:66
+#: handlers/users/authorization.py:119 handlers/users/join_to_group.py:71
 msgid "👤Выберите в какой круг присоединиться"
 msgstr "👤Qaysi davraga qo'shilishni tanlang"
 
@@ -119,7 +119,7 @@ msgstr "👤Qaysi davraga qo'shilishni tanlang"
 msgid "🔄Вы успешно поменялись, теперь ваша очередь "
 msgstr "🔄Siz muvaffaqiyatli almashdingiz, endi sizning navbatingiz "
 
-#: handlers/users/callback.py:20 handlers/users/create_group.py:242
+#: handlers/users/callback.py:20 handlers/users/create_group.py:252
 msgid "⚠️Что-то пошло не так: "
 msgstr "⚠️Nimadir xato ketdi: "
 
@@ -138,13 +138,13 @@ msgstr "💭Davrangizga nom bering, masalan: hamkasblar doirasi."
 #: handlers/users/create_group.py:26 handlers/users/create_group.py:32
 #: handlers/users/create_group.py:34 handlers/users/create_group.py:45
 #: handlers/users/create_group.py:65 handlers/users/create_group.py:84
-#: handlers/users/create_group.py:101 handlers/users/create_group.py:118
-#: handlers/users/create_group.py:139 handlers/users/create_group.py:159
-#: handlers/users/create_group.py:266 handlers/users/create_group.py:270
-#: handlers/users/create_group.py:321 handlers/users/create_group.py:325
-#: handlers/users/create_group.py:404 handlers/users/create_group.py:471
-#: handlers/users/create_group.py:475 handlers/users/create_group.py:505
-#: handlers/users/create_group.py:535 handlers/users/create_group.py:575
+#: handlers/users/create_group.py:105 handlers/users/create_group.py:122
+#: handlers/users/create_group.py:143 handlers/users/create_group.py:163
+#: handlers/users/create_group.py:276 handlers/users/create_group.py:280
+#: handlers/users/create_group.py:331 handlers/users/create_group.py:335
+#: handlers/users/create_group.py:414 handlers/users/create_group.py:481
+#: handlers/users/create_group.py:485 handlers/users/create_group.py:515
+#: handlers/users/create_group.py:545 handlers/users/create_group.py:585
 #: handlers/users/join_to_group.py:21 keyboards/default/menu.py:81
 #: keyboards/default/menu.py:97 keyboards/default/menu.py:176
 #: keyboards/default/menu.py:192 keyboards/default/menu.py:204
@@ -153,9 +153,9 @@ msgstr "⬅️Orqaga"
 
 #: handlers/users/create_group.py:26 handlers/users/create_group.py:45
 #: handlers/users/create_group.py:65 handlers/users/create_group.py:84
-#: handlers/users/create_group.py:101 handlers/users/create_group.py:118
-#: handlers/users/create_group.py:139 handlers/users/create_group.py:159
-#: handlers/users/create_group.py:575
+#: handlers/users/create_group.py:105 handlers/users/create_group.py:122
+#: handlers/users/create_group.py:143 handlers/users/create_group.py:163
+#: handlers/users/create_group.py:585
 msgid "⬅️Orqaga"
 msgstr ""
 
@@ -179,7 +179,7 @@ msgstr "🔢Davrangizdagi ishtirokchilar sonini raqamlar bilan kiriting, misol: 
 msgid "🔢Пожалуйста введите цифрами"
 msgstr "🔢Iltimos raqam kiriting"
 
-#: handlers/users/create_group.py:75 handlers/users/create_group.py:103
+#: handlers/users/create_group.py:75 handlers/users/create_group.py:107
 msgid ""
 "📍Отправьте локацию места, где вы планируете собираться с участниками:\n"
 "⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого "
@@ -190,7 +190,11 @@ msgstr ""
 "⚠️Maslahat: siz joylashuvni qo'lda tanlashingiz yoki uni boshqa chatdan "
 "yo'naltirishingiz mumkin."
 
-#: handlers/users/create_group.py:92
+#: handlers/users/create_group.py:93 handlers/users/create_group.py:448
+msgid "🛑Вы ввели неверно локацию"
+msgstr "🛑Siz noto'g'ri lokatsiya kiritdingiz"
+
+#: handlers/users/create_group.py:96
 msgid ""
 "📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у "
 "вас уже имеются, для остальных отправьте нам ссылку на группу в которую "
@@ -202,15 +206,15 @@ msgstr ""
 "yuboring.\n"
 "⚠️Maslahat: siz guruhga havolani quyidagi tarzda topishingiz mumkin⬇️"
 
-#: handlers/users/create_group.py:110 handlers/users/create_group.py:141
+#: handlers/users/create_group.py:114 handlers/users/create_group.py:145
 msgid "📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"
 msgstr "📆Boshlanish sanasini quyidagi formatda KK/OO/YYYY yuboring:"
 
-#: handlers/users/create_group.py:114
+#: handlers/users/create_group.py:118
 msgid "⚠️Пожалуйста, отправьте правильную ссылку на группу в телеграм."
 msgstr "⚠️Iltimos, telegram guruhiga toʻgʻri havolani yuboring."
 
-#: handlers/users/create_group.py:120
+#: handlers/users/create_group.py:124
 msgid ""
 "📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у "
 "вас уже имеются, для остальных отправьте нам ссылку на группу в которую "
@@ -225,15 +229,15 @@ msgstr ""
 "yozuvlar foydalanuvchi guruh havolasini nusxalashi va uni botga yuborishi"
 " uchun ekran"
 
-#: handlers/users/create_group.py:132 handlers/users/create_group.py:161
+#: handlers/users/create_group.py:136 handlers/users/create_group.py:165
 msgid "📆Выберите, как часто вы планируете собираться:"
 msgstr "📆Qanchalik tez-tez uchrashishni rejalashtirganingizni tanlang:"
 
-#: handlers/users/create_group.py:136
+#: handlers/users/create_group.py:140
 msgid "🛑Неверная дата"
 msgstr "🛑Noto'g'ri sana"
 
-#: handlers/users/create_group.py:150
+#: handlers/users/create_group.py:154
 msgid ""
 "🔐Выберите статус приватности вашего круга:\n"
 "⚠️Подсказка: если вы выберете открытый статус, то ваш круг будет виден в "
@@ -247,46 +251,46 @@ msgstr ""
 "maqomni tanlasangiz, foydalanuvchilarga davrangizga qo‘shilish uchun "
 "token kerak bo‘ladi."
 
-#: handlers/users/create_group.py:171 handlers/users/create_group.py:346
-#: handlers/users/create_group.py:357 handlers/users/create_group.py:379
+#: handlers/users/create_group.py:175 handlers/users/create_group.py:356
+#: handlers/users/create_group.py:367 handlers/users/create_group.py:389
 msgid "Название круга: "
 msgstr "Davra nomi:"
 
-#: handlers/users/create_group.py:172 handlers/users/create_group.py:347
-#: handlers/users/create_group.py:358 handlers/users/create_group.py:380
+#: handlers/users/create_group.py:176 handlers/users/create_group.py:357
+#: handlers/users/create_group.py:368 handlers/users/create_group.py:390
 msgid "Количество участников: "
 msgstr "Ishtirokchilar soni: "
 
-#: handlers/users/create_group.py:173 handlers/users/create_group.py:381
+#: handlers/users/create_group.py:177 handlers/users/create_group.py:391
 msgid "Сумма взносов: "
 msgstr "To'lovl miqdori: "
 
-#: handlers/users/create_group.py:174 handlers/users/create_group.py:350
-#: handlers/users/create_group.py:360 handlers/users/create_group.py:382
+#: handlers/users/create_group.py:178 handlers/users/create_group.py:360
+#: handlers/users/create_group.py:370 handlers/users/create_group.py:392
 msgid "Дата встречи: "
 msgstr "Uchrashuv sanasi: "
 
-#: handlers/users/create_group.py:175 handlers/users/create_group.py:351
-#: handlers/users/create_group.py:361 handlers/users/create_group.py:383
+#: handlers/users/create_group.py:179 handlers/users/create_group.py:361
+#: handlers/users/create_group.py:371 handlers/users/create_group.py:393
 msgid "Периодичность: "
 msgstr "Davriylik: "
 
-#: handlers/users/create_group.py:176 handlers/users/create_group.py:352
-#: handlers/users/create_group.py:362 handlers/users/create_group.py:384
+#: handlers/users/create_group.py:180 handlers/users/create_group.py:362
+#: handlers/users/create_group.py:372 handlers/users/create_group.py:394
 msgid "Ссылка на группу: "
 msgstr "Guruh havolasi: "
 
-#: handlers/users/create_group.py:177 handlers/users/create_group.py:353
-#: handlers/users/create_group.py:363 handlers/users/create_group.py:385
+#: handlers/users/create_group.py:181 handlers/users/create_group.py:363
+#: handlers/users/create_group.py:373 handlers/users/create_group.py:395
 msgid "Приватность: "
 msgstr "Maxfiylik: "
 
-#: handlers/users/create_group.py:178 handlers/users/create_group.py:355
-#: handlers/users/create_group.py:365 handlers/users/create_group.py:386
+#: handlers/users/create_group.py:182 handlers/users/create_group.py:365
+#: handlers/users/create_group.py:375 handlers/users/create_group.py:396
 msgid "Локация: "
 msgstr "Lokatsiya: "
 
-#: handlers/users/create_group.py:182
+#: handlers/users/create_group.py:186
 msgid ""
 "🎉Вы успешно создали круг\n"
 "Подтверждаете информацию если да то нажмите на галочку если нет то на "
@@ -296,7 +300,31 @@ msgstr ""
 "Ma'lumotni tasdiqlang, agar shunday bo'lsa, tasdiq belgisini bosing; "
 "bo'lmasa, keyin yoqingXoch o'ting va siz aylananing boshiga tashlanasiz"
 
-#: handlers/users/create_group.py:213
+#: handlers/users/create_group.py:188
+msgid ""
+"⚠️Подсказка по кнопкам ниже:\n"
+"        Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием,"
+" убедитесь, что все участники вступили в круг и определились с "
+"очередностью!\n"
+"        📜Список участников- тут список участников круга с их статусом по "
+"оплатам. Также тут можно поменяться местами на получение денег с другими "
+"участниками. Если вы \"Получатель Вознаграждения\", то тут, вы можете "
+"отметить тех кто внес оплату.\n"
+"        📋Общая информация- тут вся информация о вашем круге. Если вы "
+"создатель круга,то тут вы можете поменять дату и место встречи и т.д.\n"
+"        🆘Пожаловаться- тут вы можете пожаловаться на участников, которые "
+"нарушают условия участия. 🔍Выбор круга-тут вы можете вступить в другие "
+"круги.\n"
+"        👥Мои круги-тут находятся ваши круги и тут вы можете перейти в них."
+msgstr ""
+"⚠️Quyidagi tugmalarga maslahat bering:\n"
+"Boshlash - ushbu tugmani bosish orqali siz o'z davrangizni boshlaysiz. Bosishdan oldin, barcha ishtirokchilar davraga kirganligiga ishonch hosil qiling va buyurtma to'g'risida qaror qabul qiling!\n"
+"📜Ishtirokchilar ro'yxati - bu erda to'lov holati bilan to'garak ishtirokchilari ro'yxati. Shuningdek, bu erda siz boshqa ishtirokchilar bilan pul olish uchun joylarni o'zgartirishingiz mumkin. Agar siz 'mukofot oluvchi' bo'lsangiz, bu erda siz to'lovni amalga oshirganlarni belgilashingiz mumkin.\n"
+"📋Umumiy ma'lumot - bu yerda sizning davrangiz haqidagi barcha ma'lumotlar. Agar siz davra yaratuvchisi bo'lsangiz, bu erda siz uchrashuv sanasi va joyini va hokazolarni o'zgartirishingiz mumkin.\n"
+"🆘Shikoyat qilish - bu yerda ishtirok etish shartlarini buzgan ishtirokchilar ustidan shikoyat qilishingiz mumkin. 🔍Doira tanlang - bu yerda siz boshqa davralarga qo'shilishingiz mumkin.\n"
+"👥Mening davralarim - bu sizning davralaringiz va shu yerda ularga kirishingiz mumkin."
+
+#: handlers/users/create_group.py:223
 msgid ""
 "⚠️Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли "
 "присоединиться к вашему кругу:"
@@ -304,24 +332,24 @@ msgstr ""
 "⚠️Bu sizning taklifnoma tokeningiz, uni doʻstlaringizga yuboring, ular "
 "imkoniga ega boʻlsinlardavringizga qo'shiling:"
 
-#: handlers/users/create_group.py:224 handlers/users/create_group.py:557
+#: handlers/users/create_group.py:234 handlers/users/create_group.py:567
 #: keyboards/default/menu.py:107
 msgid "➡️Старт"
 msgstr "➡️Start"
 
-#: handlers/users/create_group.py:224 handlers/users/create_group.py:565
+#: handlers/users/create_group.py:234 handlers/users/create_group.py:575
 msgid "➡️Start"
 msgstr ""
 
-#: handlers/users/create_group.py:231
+#: handlers/users/create_group.py:241
 msgid "👤Создатель круга "
 msgstr "👤Doira yaratuvchisi "
 
-#: handlers/users/create_group.py:231
+#: handlers/users/create_group.py:241
 msgid " стартовал"
 msgstr " boshladi"
 
-#: handlers/users/create_group.py:234
+#: handlers/users/create_group.py:244
 msgid ""
 "🎉Поздравляю, ваш круг стартовал!\n"
 "⚠️Подсказка по кнопкам ниже:\n"
@@ -341,36 +369,36 @@ msgstr ""
 "mumkinSiz buni noqonuniy deb hisoblaysiz va agar shikoyatlar soni ko'proq"
 " bo'lsauch, biz bu foydalanuvchiga qarshi ish boshlaymiz."
 
-#: handlers/users/create_group.py:245 handlers/users/create_group.py:558
-#: handlers/users/join_to_group.py:89 handlers/users/join_to_group.py:281
+#: handlers/users/create_group.py:255 handlers/users/create_group.py:568
+#: handlers/users/join_to_group.py:94 handlers/users/join_to_group.py:286
 #: keyboards/default/menu.py:108 keyboards/default/menu.py:117
 #: keyboards/default/menu.py:127
 msgid "📜Список участников"
 msgstr "📜Davrangiz a'zolari"
 
-#: handlers/users/create_group.py:245 handlers/users/create_group.py:566
-#: handlers/users/join_to_group.py:287
+#: handlers/users/create_group.py:255 handlers/users/create_group.py:576
+#: handlers/users/join_to_group.py:292
 msgid "📜Davrangiz a'zolari"
 msgstr ""
 
-#: handlers/users/create_group.py:253 handlers/users/create_group.py:465
-#: handlers/users/join_to_group.py:97 handlers/users/join_to_group.py:197
+#: handlers/users/create_group.py:263 handlers/users/create_group.py:475
+#: handlers/users/join_to_group.py:102 handlers/users/join_to_group.py:202
 msgid "🛑Нет участинков"
 msgstr "🛑Ishtirokchilar yoʻq"
 
-#: handlers/users/create_group.py:295 handlers/users/join_to_group.py:136
+#: handlers/users/create_group.py:305 handlers/users/join_to_group.py:141
 msgid "⚠️Сделал ли он платеж?"
 msgstr "⚠️U to'lov qildimi?"
 
-#: handlers/users/create_group.py:298 handlers/users/join_to_group.py:139
+#: handlers/users/create_group.py:308 handlers/users/join_to_group.py:144
 msgid "Да"
 msgstr "Ha"
 
-#: handlers/users/create_group.py:301 handlers/users/join_to_group.py:142
+#: handlers/users/create_group.py:311 handlers/users/join_to_group.py:147
 msgid "Нет"
 msgstr "Yo'q"
 
-#: handlers/users/create_group.py:306 handlers/users/join_to_group.py:147
+#: handlers/users/create_group.py:316 handlers/users/join_to_group.py:152
 msgid ""
 " 🔄 хочет поменяться с вами очередями на получение вознаграждения, хотите "
 "ли вы поменяться?\n"
@@ -379,82 +407,82 @@ msgstr ""
 "🔄 agar xohlasangiz, siz bilan navbat almashtirmoqchialmashtirasizmi?\n"
 "Uning navbati:"
 
-#: handlers/users/create_group.py:308 handlers/users/join_to_group.py:149
+#: handlers/users/create_group.py:318 handlers/users/join_to_group.py:154
 msgid "⚠️Ваш запрос отправлен, ожидайте ответа"
 msgstr "⚠️Sizning so'rovingiz yuborildi, biz javob kutmoqdamiz"
 
-#: handlers/users/create_group.py:328 handlers/users/join_to_group.py:158
+#: handlers/users/create_group.py:338 handlers/users/join_to_group.py:163
 msgid "⚠️Вы подтвердили платеж"
 msgstr "⚠️Siz toʻlovni tasdiqladingiz"
 
-#: handlers/users/create_group.py:334 handlers/users/join_to_group.py:164
+#: handlers/users/create_group.py:344 handlers/users/join_to_group.py:169
 msgid "🛑Вы отменили платеж"
 msgstr "🛑Toʻlovni bekor qildingiz"
 
-#: handlers/users/create_group.py:338 handlers/users/create_group.py:559
-#: handlers/users/join_to_group.py:168 handlers/users/join_to_group.py:282
+#: handlers/users/create_group.py:348 handlers/users/create_group.py:569
+#: handlers/users/join_to_group.py:173 handlers/users/join_to_group.py:287
 #: keyboards/default/menu.py:108 keyboards/default/menu.py:117
 #: keyboards/default/menu.py:128
 msgid "📋Общая информация"
 msgstr "📋Umumiy ma'lumot"
 
-#: handlers/users/create_group.py:338 handlers/users/create_group.py:567
-#: handlers/users/join_to_group.py:288
+#: handlers/users/create_group.py:348 handlers/users/create_group.py:577
+#: handlers/users/join_to_group.py:293
 msgid "📋Umumiy ma'lumot"
 msgstr ""
 
-#: handlers/users/create_group.py:343 handlers/users/create_group.py:376
-#: handlers/users/join_to_group.py:174 keyboards/default/menu.py:188
+#: handlers/users/create_group.py:353 handlers/users/create_group.py:386
+#: handlers/users/join_to_group.py:179 keyboards/default/menu.py:188
 msgid "🔒Закрытый"
 msgstr "🔒Yopiq"
 
-#: handlers/users/create_group.py:343 handlers/users/create_group.py:376
-#: handlers/users/join_to_group.py:174 keyboards/default/menu.py:189
+#: handlers/users/create_group.py:353 handlers/users/create_group.py:386
+#: handlers/users/join_to_group.py:179 keyboards/default/menu.py:189
 msgid "🔓Открытый"
 msgstr "🔓Ochiq"
 
-#: handlers/users/create_group.py:348
+#: handlers/users/create_group.py:358
 msgid "Имя получателя: "
 msgstr "Qabul qiluvchining nomi: "
 
-#: handlers/users/create_group.py:349 handlers/users/create_group.py:359
+#: handlers/users/create_group.py:359 handlers/users/create_group.py:369
 msgid "Cумма взносов: "
 msgstr "Toʻlov miqdori: "
 
-#: handlers/users/create_group.py:354 handlers/users/create_group.py:364
+#: handlers/users/create_group.py:364 handlers/users/create_group.py:374
 msgid "Токен: "
 msgstr "Token: "
 
-#: handlers/users/create_group.py:370 handlers/users/create_group.py:560
+#: handlers/users/create_group.py:380 handlers/users/create_group.py:570
 #: keyboards/default/menu.py:109 keyboards/default/menu.py:117
 msgid "🎛Настройки"
 msgstr "🎛Sozlamalar"
 
-#: handlers/users/create_group.py:370 handlers/users/create_group.py:568
+#: handlers/users/create_group.py:380 handlers/users/create_group.py:578
 msgid "🎛Sozlamalar"
 msgstr ""
 
-#: handlers/users/create_group.py:398
+#: handlers/users/create_group.py:408
 msgid "🆔Изменить имя"
 msgstr "🆔Nomini o'zgartirish"
 
-#: handlers/users/create_group.py:398
+#: handlers/users/create_group.py:408
 msgid "Введите новое название круга"
 msgstr "Doira yangi nomini kiriting"
 
-#: handlers/users/create_group.py:399
+#: handlers/users/create_group.py:409
 msgid "📅Изменить дату встречи"
 msgstr "📅Uchrashuv sanasini o'zgartirish"
 
-#: handlers/users/create_group.py:399
+#: handlers/users/create_group.py:409
 msgid "⚠️Введите новую дату в формате ДД/ММ/ГГГГ"
 msgstr "⚠️Yangi uchrashuv sanasini kiriting KK/OO/YYYY"
 
-#: handlers/users/create_group.py:400
+#: handlers/users/create_group.py:410
 msgid "📅Изменить периодичность"
 msgstr "📅Davriylikni o’zgartirish"
 
-#: handlers/users/create_group.py:400
+#: handlers/users/create_group.py:410
 msgid ""
 "⚠️Введите новый период встречи днями\n"
 "Например: введите 10(будет означать периодичность 10 дней)"
@@ -462,109 +490,105 @@ msgstr ""
 "⚠️Yangi uchrashuv davrini kunlar ichida kiriting\n"
 "Misol: 10 kiriting (10 kunlik intervalni bildiradi)"
 
-#: handlers/users/create_group.py:401
+#: handlers/users/create_group.py:411
 msgid "📎Изменить линк"
 msgstr "📎Havolani o'zgartirish"
 
-#: handlers/users/create_group.py:401
+#: handlers/users/create_group.py:411
 msgid "Введите новую ссылку в группу телеграм"
 msgstr "Iltimos, yangi telegram guruhning havolasini yuboring."
 
-#: handlers/users/create_group.py:402
+#: handlers/users/create_group.py:412
 msgid "📍Изменить локацию"
 msgstr "📍Joylashuvni o'zgartirish"
 
-#: handlers/users/create_group.py:402
+#: handlers/users/create_group.py:412
 msgid "Отправьте новую локацию"
 msgstr "Yangi joriy joylashuvni yuboring"
 
-#: handlers/users/create_group.py:403
+#: handlers/users/create_group.py:413
 msgid "🌐Изменить язык"
 msgstr "🌐Tilni o'zgartiring"
 
-#: handlers/users/create_group.py:436
+#: handlers/users/create_group.py:446
 msgid "🛑Вы ввели неверную дату"
 msgstr "🛑Siz noto'g'ri sana kiritdingiz"
 
-#: handlers/users/create_group.py:438
-msgid "🛑Вы ввели неверно локацию"
-msgstr "🛑Siz noto'g'ri lokatsiya kiritdingiz"
-
-#: handlers/users/create_group.py:440
+#: handlers/users/create_group.py:450
 msgid "🛑Вы ввели неверно период"
 msgstr "🛑Siz noto'g'ri davr tanladingiz"
 
-#: handlers/users/create_group.py:452
+#: handlers/users/create_group.py:462
 msgid "Успешно изменено"
 msgstr "Muvaffaqiyatli o'zgartirildi"
 
-#: handlers/users/create_group.py:454
+#: handlers/users/create_group.py:464
 msgid "Не получилось изменить"
 msgstr "O‘zgartirib bo‘lmadi"
 
-#: handlers/users/create_group.py:458 handlers/users/create_group.py:561
-#: handlers/users/join_to_group.py:190 handlers/users/join_to_group.py:283
+#: handlers/users/create_group.py:468 handlers/users/create_group.py:571
+#: handlers/users/join_to_group.py:195 handlers/users/join_to_group.py:288
 #: keyboards/default/menu.py:110 keyboards/default/menu.py:118
 #: keyboards/default/menu.py:131
 msgid "🆘Пожаловаться"
 msgstr "🆘Shikoyat"
 
-#: handlers/users/create_group.py:458 handlers/users/create_group.py:569
-#: handlers/users/join_to_group.py:289
+#: handlers/users/create_group.py:468 handlers/users/create_group.py:579
+#: handlers/users/join_to_group.py:294
 msgid "🆘Shikoyat"
 msgstr ""
 
-#: handlers/users/create_group.py:476 handlers/users/join_to_group.py:208
+#: handlers/users/create_group.py:486 handlers/users/join_to_group.py:213
 msgid "👥Участники вашего круга"
 msgstr "👥Davrangiz a'zolari"
 
-#: handlers/users/create_group.py:491 handlers/users/join_to_group.py:220
+#: handlers/users/create_group.py:501 handlers/users/join_to_group.py:225
 msgid "⚠️Ваша жалоба принята"
 msgstr "⚠️Sizning shikoyatingiz qabul qilindi."
 
-#: handlers/users/create_group.py:492 handlers/users/join_to_group.py:221
+#: handlers/users/create_group.py:502 handlers/users/join_to_group.py:226
 msgid " пожаловался на вас, если вы с этим не согласны, напишите в тех.поддержку."
 msgstr ""
 " sizga shikoyat qildi, agar bunga rozi bo'lmasangiz, texnik yordamga "
 "yozing."
 
-#: handlers/users/create_group.py:496 handlers/users/create_group.py:506
-#: handlers/users/create_group.py:563 handlers/users/join_to_group.py:225
-#: handlers/users/join_to_group.py:235 handlers/users/join_to_group.py:285
+#: handlers/users/create_group.py:506 handlers/users/create_group.py:516
+#: handlers/users/create_group.py:573 handlers/users/join_to_group.py:230
+#: handlers/users/join_to_group.py:240 handlers/users/join_to_group.py:290
 #: keyboards/default/menu.py:111 keyboards/default/menu.py:119
 #: keyboards/default/menu.py:133
 msgid "👥Мои круги"
 msgstr "👥Mening davralarim"
 
-#: handlers/users/create_group.py:496 handlers/users/create_group.py:571
-#: handlers/users/join_to_group.py:291
+#: handlers/users/create_group.py:506 handlers/users/create_group.py:581
+#: handlers/users/join_to_group.py:296
 msgid "👥Mening davralarim"
 msgstr ""
 
-#: handlers/users/create_group.py:509 handlers/users/join_to_group.py:238
+#: handlers/users/create_group.py:519 handlers/users/join_to_group.py:243
 msgid "⚠️У вас только 1 круг"
 msgstr "⚠️Sizda faqat 1 ta davra bor"
 
-#: handlers/users/create_group.py:532 handlers/users/create_group.py:562
-#: handlers/users/join_to_group.py:261 handlers/users/join_to_group.py:284
+#: handlers/users/create_group.py:542 handlers/users/create_group.py:572
+#: handlers/users/join_to_group.py:266 handlers/users/join_to_group.py:289
 #: keyboards/default/menu.py:110 keyboards/default/menu.py:118
 #: keyboards/default/menu.py:132
 msgid "🔍Выбор круга"
 msgstr "🔍Davra tanlash"
 
-#: handlers/users/create_group.py:532 handlers/users/create_group.py:570
-#: handlers/users/join_to_group.py:290
+#: handlers/users/create_group.py:542 handlers/users/create_group.py:580
+#: handlers/users/join_to_group.py:295
 msgid "🔍Davra tanlash"
 msgstr ""
 
-#: handlers/users/create_group.py:535 handlers/users/join_to_group.py:264
+#: handlers/users/create_group.py:545 handlers/users/join_to_group.py:269
 msgid "❇️Выберите одну из кнопок:"
 msgstr "❇️Tugmalardan birini tanlang:"
 
-#: handlers/users/join_to_group.py:23 handlers/users/join_to_group.py:110
-#: handlers/users/join_to_group.py:114 handlers/users/join_to_group.py:203
-#: handlers/users/join_to_group.py:207 handlers/users/join_to_group.py:234
-#: handlers/users/join_to_group.py:264
+#: handlers/users/join_to_group.py:23 handlers/users/join_to_group.py:115
+#: handlers/users/join_to_group.py:119 handlers/users/join_to_group.py:208
+#: handlers/users/join_to_group.py:212 handlers/users/join_to_group.py:239
+#: handlers/users/join_to_group.py:269
 msgid "⬅️ Назад"
 msgstr "⬅️ Orqaga"
 
@@ -584,19 +608,38 @@ msgstr "🔍Ochiq doiralarni tanlang"
 msgid "⚠️Нет открытых кругов"
 msgstr "⚠️Ochiq doiralar yo'q"
 
-#: handlers/users/join_to_group.py:53 handlers/users/join_to_group.py:76
+#: handlers/users/join_to_group.py:53 handlers/users/join_to_group.py:81
 msgid "⚠️Вы вошли в круг"
 msgstr "⚠️Siz davraga qo’shildingiz"
 
-#: handlers/users/join_to_group.py:56 handlers/users/join_to_group.py:79
+#: handlers/users/join_to_group.py:54
+msgid ""
+"⚠️Подсказка по кнопкам ниже:\n"
+"📜Список участников- тут список участников круга с их статусом по оплатам."
+" Также тут можно поменяться местами на получение денег с другими "
+"участниками. Если вы \"Получатель Вознаграждения\", то тут, вы можете "
+"отметить тех кто внес оплату.\n"
+"📋Общая информация- тут вся информация о вашем круге. Если вы создатель "
+"круга,то тут вы можете поменять дату и место встречи и т.д. \n"
+"🆘Пожаловаться- тут вы можете пожаловаться на участников, которые нарушают"
+" условия участия. 🔍Выбор круга-тут вы можете вступить в другие круги. \n"
+"👥Мои круги-тут находятся ваши круги и тут вы можете перейти в них."
+msgstr ""
+"⚠️Quyidagi tugmalarga maslahat bering:\n"
+"📜Ishtirokchilar ro'yxati - bu erda to'lov holati bilan to'garak ishtirokchilari ro'yxati. Shuningdek, bu erda siz boshqa ishtirokchilar bilan pul olish uchun joylarni o'zgartirishingiz mumkin. Agar siz 'mukofot oluvchi' bo'lsangiz, bu erda siz to'lovni amalga oshirganlarni belgilashingiz mumkin.\n"
+"📋Umumiy ma'lumot - bu yerda sizning davrangiz haqidagi barcha ma'lumotlar. Agar siz davra yaratuvchisi bo'lsangiz, bu erda siz uchrashuv sanasi va joyini va hokazolarni o'zgartirishingiz mumkin.\n"
+"🆘Shikoyat qilish - bu yerda ishtirok etish shartlarini buzgan ishtirokchilar ustidan shikoyat qilishingiz mumkin. 🔍Doira tanlang - bu yerda siz boshqa davralarga qo'shilishingiz mumkin.\n"
+"👥Mening davralarim - bu sizning davralaringiz va shu yerda ularga kirishingiz mumkin."
+
+#: handlers/users/join_to_group.py:61 handlers/users/join_to_group.py:84
 msgid "🛑Количество участников ограничено"
 msgstr "🛑Ishtirokchilar soni cheklangan"
 
-#: handlers/users/join_to_group.py:58 handlers/users/join_to_group.py:81
+#: handlers/users/join_to_group.py:63 handlers/users/join_to_group.py:86
 msgid "Что-то пошло не так: "
 msgstr "Nimadir xato ketdi: "
 
-#: handlers/users/join_to_group.py:59 handlers/users/join_to_group.py:82
+#: handlers/users/join_to_group.py:64 handlers/users/join_to_group.py:87
 msgid "⚠️Нет такого круга"
 msgstr "⚠️Bunday davra yo'q"
 
