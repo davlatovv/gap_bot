@@ -62,11 +62,24 @@ async def authorization_lang(message: Message, state: FSMContext):
     else:
         await message.answer("❇️Выберите одну из кнопок\n❇️Tugmalardan birini tanlang")
         await state.set_state(UserRegistry.user_name)
-    await state.set_state(UserRegistry.user_phone)
+    await state.set_state(UserRegistry.user_phone_and_sms)
 
 
-@dp.message_handler(state=UserRegistry.user_phone)
-async def authorization_name(message: Message, state: FSMContext):
+# @dp.message_handler(state=UserRegistry.user_phone)
+# async def authorization_name(message: Message, state: FSMContext):
+#     contact_keyboard = ReplyKeyboardMarkup(
+#         keyboard=[
+#             [KeyboardButton(text=_("☎️Ваш контакт"), request_contact=True)],
+#         ],
+#         resize_keyboard=True
+#     )
+#     await state.update_data(name=message.text)
+#     await message.answer(_("📲Поделитесь своим контактом,нажав на кнопку ниже:"), reply_markup=contact_keyboard)
+#     await state.set_state(UserRegistry.user_sms)
+
+
+@dp.message_handler(state=UserRegistry.user_phone_and_sms)
+async def authorization_phone(message: Message, state: FSMContext):
     contact_keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text=_("☎️Ваш контакт"), request_contact=True)],
@@ -74,41 +87,27 @@ async def authorization_name(message: Message, state: FSMContext):
         resize_keyboard=True
     )
     await state.update_data(name=message.text)
-    await message.answer(_("📲Поделитесь своим контактом,нажав на кнопку ниже:"), reply_markup=contact_keyboard)
-    await state.set_state(UserRegistry.user_sms)
-
-
-@dp.message_handler(content_types=types.ContentType.CONTACT, state=UserRegistry.user_sms)
-async def authorization_phone(message: Message, state: FSMContext):
-    await state.update_data(phone=message.contact.phone_number)
-    await message.answer(_("Ознакомьтесь с пользовательским соглашением и подтвердите его!\n" 
+    await message.answer(_("Ознакомьтесь с пользовательским соглашением и подтвердите его нажав на кнопку 'поделиться контактом'!\n"
                            "⚠️Предупреждение:подтверждая пользовательское соглашение вы принимаете на себя ответственность за свои действия!\n"
-                           "📕Пользовательское соглашение:"), reply_markup=accept())
+                           "📕Пользовательское соглашение:"))
     await message.answer_document(open("document.docx", 'rb'))
-    await state.update_data(sms=message.text)
+    await message.answer(_("Чтобы подтвердить поделитесь контактом"), reply_markup=contact_keyboard)
     await state.set_state(UserRegistry.user_approve)
 
 
-@dp.message_handler(state=UserRegistry.user_approve)
+@dp.message_handler(content_types=types.ContentType.CONTACT, state=UserRegistry.user_approve)
 async def approve(message: Message, state: FSMContext):
-    if message.text == "✅":
-        data = await state.get_data()
-        await DBCommands.create_user(user_id=data.get("user_id"),
-                                     name=data.get("name"),
-                                     nickname=data.get("nickname"),
-                                     phone=data.get("phone"),
-                                     accept=1)
-        await message.answer(_("🎉Поздравляем, вы успешно зарегистрировались!\n" 
-                      "Выберите 👥-создать круг- если вы хотите создать свой круг,\n" 
-                      "или 👤-присоединиться- если вы хотите присоединиться к уже существующему кругу.\n"), reply_markup=menu())
-        await state.set_state(UserRegistry.choose)
-    elif message.text == "❌":
-        await message.answer(_("🛑Вы отклонили пользовательское соглашение поэтому мы не сможем продолжить.\n" 
-                      "⚠️Нажмите /start если хотите заново зарегестрироваться"), reply_markup=ReplyKeyboardRemove())
-        await state.finish()
-    else:
-        await message.answer(_("❇️Выберите одну из кнопок"))
-
+    # if message.text == "✅":
+    data = await state.get_data()
+    await DBCommands.create_user(user_id=data.get("user_id"),
+                                 name=data.get("name"),
+                                 nickname=data.get("nickname"),
+                                 phone=message.contact.phone_number,
+                                 accept=1)
+    await message.answer(_("🎉Поздравляем, вы успешно зарегистрировались!\n" 
+                  "Выберите 👥-создать круг- если вы хотите создать свой круг,\n" 
+                  "или 👤-присоединиться- если вы хотите присоединиться к уже существующему кругу.\n"), reply_markup=menu())
+    await state.set_state(UserRegistry.choose)
 
 @dp.message_handler(state=UserRegistry.choose)
 async def choose_menu(message: Message, state: FSMContext):

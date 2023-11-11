@@ -56,7 +56,7 @@ async def choose_money(message: Message, state: FSMContext):
     elif message.text.isdigit() or re.match(r'\d{1,3}.\d{1,3}.\d{3}', message.text) or re.match(r'\d{1,3}.\d{3}', message.text):
         await message.answer(_("🔢Введите цифрами количество участников вашего круга, пример: 5"), reply_markup=back_state())
         await state.update_data(money=message.text)
-        await state.set_state(CreateGroup.location)
+        await state.set_state(CreateGroup.accept)
     else:
         await message.answer(_("🔢Пожалуйста введите цифрами"))
         await state.set_state(CreateGroup.members)
@@ -68,135 +68,138 @@ async def go_back_to_members(message: Message, state: FSMContext):
     await state.set_state(CreateGroup.members)
 
 
-@dp.message_handler(state=CreateGroup.location)
-async def choose_members(message: Message, state: FSMContext):
-    if message.text.isdigit():
-        await message.answer(
-            _("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."),
-            reply_markup=location())
-        await state.update_data(members=message.text)
-        await state.set_state(CreateGroup.link)
-    else:
-        await message.answer(_("🔢Пожалуйста введите цифрами"))
-        await state.set_state(CreateGroup.location)
+# @dp.message_handler(state=CreateGroup.location)
+# async def choose_members(message: Message, state: FSMContext):
+#     if message.text.isdigit():
+#         await message.answer(
+#             _("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."),
+#             reply_markup=location())
+#         await state.update_data(members=message.text)
+#         await state.set_state(CreateGroup.accept)
+#     else:
+#         await message.answer(_("🔢Пожалуйста введите цифрами"))
+#         await state.set_state(CreateGroup.location)
+
+#
+# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.link)
+# async def go_back_to_location(message: Message, state: FSMContext):
+#     await message.answer(_("🔢Введите цифрами количество участников вашего круга, пример: 5"), reply_markup=back_state())
+#     await state.set_state(CreateGroup.location)
 
 
-@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.link)
-async def go_back_to_location(message: Message, state: FSMContext):
-    await message.answer(_("🔢Введите цифрами количество участников вашего круга, пример: 5"), reply_markup=back_state())
-    await state.set_state(CreateGroup.location)
-
-
-@dp.message_handler(state=CreateGroup.link, content_types=ContentType.ANY)
-async def choose_location(message: Message, state: FSMContext):
-    if not message.location:
-        await message.answer(_("🛑Вы ввели неверно локацию"))
-        await state.set_state(CreateGroup.link)
-    else:
-        await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
-                               "для остальных отправьте нам ссылку на группу в которую они могут "
-                               "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом⬇️"),
-                             reply_markup=back_state())
-        await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=2)
-        await state.update_data(location=json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}))
-        await state.set_state(CreateGroup.start)
-
-
-@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.start)
-async def go_back_to_link(message: Message, state: FSMContext):
-    await message.answer(_("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."), reply_markup=location())
-    await state.set_state(CreateGroup.link)
-
-
-@dp.message_handler(state=CreateGroup.start)
-async def choose_start(message: Message, state: FSMContext):
-    if "https://t.me" in message.text:
-        await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
-        await state.update_data(link=message.text)
-        await state.set_state(CreateGroup.period)
-    else:
-        await message.answer(_("⚠️Пожалуйста, отправьте правильную ссылку на группу в телеграм."))
-        await state.set_state(CreateGroup.start)
-
-
-@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.period)
-async def go_back_to_start(message: Message, state: FSMContext):
-    await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
-                           "для остальных отправьте нам ссылку на группу в которую они могут "
-                           "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом(видео записи "
-                           "экрана, как пользователь копирует ссылку группы и отправляет ее боту"),
-                         reply_markup=back_state())
-    await state.set_state(CreateGroup.start)
-
-
-@dp.message_handler(state=CreateGroup.period)
-async def choose_period(message: Message, state: FSMContext):
-    date_pattern = r'\d{2}/\d{2}/\d{4}'
-    if re.match(date_pattern, message.text) and is_date_greater_than_today(message.text) is True:
-        await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
-        await state.update_data(start=message.text)
-        await state.set_state(CreateGroup.private)
-    else:
-        await message.answer(_("🛑Неверная дата"))
-
-
-@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.private)
-async def go_back_to_period(message: Message, state: FSMContext):
-    await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
-    await state.set_state(CreateGroup.period)
-
-
-@dp.message_handler(state=CreateGroup.private)
-async def choose_private(message: Message, state: FSMContext):
-    if message.text in ["➡️Раз в неделю", "➡️Раз в месяц", "➡️Xaftada bir marotaba", "➡️Oyda bir marta"]:
-        period = 7 if message.text in ["➡️Раз в неделю", "➡️Xaftada bir marotaba"] else 30
-        await state.update_data(period=period)
-        await message.answer(_("🔐Выберите статус приватности вашего круга:\n"
-                               "⚠️Подсказка: если вы выберете открытый статус, то ваш круг будет виден в общем списке и любой желающий сможет вступить в него. Если вы выберите закрытый статус, для вступления в ваш круг пользователям нужен будет токен."),
-                             reply_markup=private())
-        await state.set_state(CreateGroup.accept)
-    else:
-        await message.answer(_("❇️Выберите одну из кнопок"))
-        await state.set_state(CreateGroup.private)
-
-
-@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.accept)
-async def go_back_to_period(message: Message, state: FSMContext):
-    await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
-    await state.set_state(CreateGroup.private)
+# @dp.message_handler(state=CreateGroup.link, content_types=ContentType.ANY)
+# async def choose_location(message: Message, state: FSMContext):
+#     if not message.location:
+#         await message.answer(_("🛑Вы ввели неверно локацию"))
+#         await state.set_state(CreateGroup.link)
+#     else:
+#         await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
+#                                "для остальных отправьте нам ссылку на группу в которую они могут "
+#                                "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом⬇️"),
+#                              reply_markup=back_state())
+#         await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=2)
+#         await state.update_data(location=json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}))
+#         await state.set_state(CreateGroup.start)
+#
+#
+# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.start)
+# async def go_back_to_link(message: Message, state: FSMContext):
+#     await message.answer(_("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."), reply_markup=location())
+#     await state.set_state(CreateGroup.link)
+#
+#
+# @dp.message_handler(state=CreateGroup.start)
+# async def choose_start(message: Message, state: FSMContext):
+#     if "https://t.me" in message.text:
+#         await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
+#         await state.update_data(link=message.text)
+#         await state.set_state(CreateGroup.period)
+#     else:
+#         await message.answer(_("⚠️Пожалуйста, отправьте правильную ссылку на группу в телеграм."))
+#         await state.set_state(CreateGroup.start)
+#
+#
+# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.period)
+# async def go_back_to_start(message: Message, state: FSMContext):
+#     await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
+#                            "для остальных отправьте нам ссылку на группу в которую они могут "
+#                            "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом(видео записи "
+#                            "экрана, как пользователь копирует ссылку группы и отправляет ее боту"),
+#                          reply_markup=back_state())
+#     await state.set_state(CreateGroup.start)
+#
+#
+# @dp.message_handler(state=CreateGroup.period)
+# async def choose_period(message: Message, state: FSMContext):
+#     date_pattern = r'\d{2}/\d{2}/\d{4}'
+#     if re.match(date_pattern, message.text) and is_date_greater_than_today(message.text) is True:
+#         await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
+#         await state.update_data(start=message.text)
+#         await state.set_state(CreateGroup.private)
+#     else:
+#         await message.answer(_("🛑Неверная дата"))
+#
+#
+# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.private)
+# async def go_back_to_period(message: Message, state: FSMContext):
+#     await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
+#     await state.set_state(CreateGroup.period)
+#
+#
+# @dp.message_handler(state=CreateGroup.private)
+# async def choose_private(message: Message, state: FSMContext):
+#     if message.text in ["➡️Раз в неделю", "➡️Раз в месяц", "➡️Xaftada bir marotaba", "➡️Oyda bir marta"]:
+#         period = 7 if message.text in ["➡️Раз в неделю", "➡️Xaftada bir marotaba"] else 30
+#         await state.update_data(period=period)
+#         await message.answer(_("🔐Выберите статус приватности вашего круга:\n"
+#                                "⚠️Подсказка: если вы выберете открытый статус, то ваш круг будет виден в общем списке и любой желающий сможет вступить в него. Если вы выберите закрытый статус, для вступления в ваш круг пользователям нужен будет токен."),
+#                              reply_markup=private())
+#         await state.set_state(CreateGroup.accept)
+#     else:
+#         await message.answer(_("❇️Выберите одну из кнопок"))
+#         await state.set_state(CreateGroup.private)
+#
+#
+# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.accept)
+# async def go_back_to_period(message: Message, state: FSMContext):
+#     await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
+#     await state.set_state(CreateGroup.private)
 
 
 @dp.message_handler(state=CreateGroup.accept)
 async def validation(message: Message, state: FSMContext):
-    if message.text in ["🔓Открытый", "🔒Закрытый", "🔒Yopiq", "🔓Ochiq"]:
-        private = 1 if message.text in ["🔒Закрытый", "🔒Yopiq"] else 0
-        await state.update_data(private=private)
-        data = await state.get_data()
-        await message.answer(_("Название круга: ") + str(data.get('name')) + "\n" +
-                             _("Количество участников: ") + str(data.get('members')) + "\n" +
-                             _("Сумма взносов: ") + str(data.get('money')) + " сум\n" +
-                             _("Дата встречи: ") + str(data.get('start')) + "\n" +
-                             _("Периодичность: ") + str(data.get('period')) + "\n" +
-                             _("Ссылка на группу: ") + str(data.get('link')) + "\n" +
-                             _("Приватность: ") + message.text + "\n" +
-                             _("Локация: "))
-        await message.answer_location(latitude=float(json.loads(data.get('location'))["latitude"]),
-                                      longitude=float(json.loads(data.get('location'))["longitude"]))
-        await message.answer(
-            _("🎉Вы успешно создали круг\nПодтверждаете информацию если да то нажмите на галочку если нет то на крестик и вас перекинет к началу создания круга"),
-            reply_markup=accept())
-        await message.answer(_("""⚠️Подсказка по кнопкам ниже:
-Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!
-📜Список участников- тут список участников круга с их статусом по оплатам. Также тут можно поменяться местами на получение денег с другими участниками. Если вы "Получатель Вознаграждения", то тут, вы можете отметить тех кто внес оплату.
-📋Общая информация- тут вся информация о вашем круге. Если вы создатель круга,то тут вы можете поменять дату и место встречи и т.д.
-🆘Пожаловаться- тут вы можете пожаловаться на участников, которые нарушают условия участия. 🔍Выбор круга-тут вы можете вступить в другие круги.
-👥Мои круги-тут находятся ваши круги и тут вы можете перейти в них."""))
-        random_token = secrets.token_hex(16)
-        await state.update_data(token=random_token)
-        await state.set_state(CreateGroup.token)
+    # if message.text in ["🔓Открытый", "🔒Закрытый", "🔒Yopiq", "🔓Ochiq"]:
+    #     private = 1 if message.text in ["🔒Закрытый", "🔒Yopiq"] else 0
+    #     await state.update_data(private=private)
+    data = await state.get_data()
+    if message.text.isdigit():
+            await message.answer(_("Название круга: ") + str(data.get('name')) + "\n" +
+                         _("Количество участников: ") + message.text + "\n" +
+                     _("Сумма взносов: ") + str(data.get('money')) + " сум\n")
+            await message.answer(
+                _("🎉Вы успешно создали круг\nПодтверждаете информацию если да то нажмите на галочку если нет то на крестик и вас перекинет к началу создания круга"),
+                reply_markup=accept())
+            random_token = secrets.token_hex(16)
+            await state.update_data(token=random_token, members=message.text)
+            await state.set_state(CreateGroup.token)
     else:
-        await message.answer(_("❇️Выберите одну из кнопок"))
+        await message.answer(_("🔢Пожалуйста введите цифрами"))
         await state.set_state(CreateGroup.accept)
+
+    # await message.answer(_("Название круга: ") + str(data.get('name')) + "\n" +
+    #                      _("Количество участников: ") + str(data.get('members')) + "\n" +
+    #                      _("Сумма взносов: ") + str(data.get('money')) + " сум\n"
+    #                      _("Дата встречи: ") + str(data.get('start')) + "\n" +
+    #                      _("Периодичность: ") + str(data.get('period')) + "\n" +
+    #                      _("Ссылка на группу: ") + str(data.get('link')) + "\n" +
+    #                      _("Приватность: ") + message.text + "\n" +
+    #                      _("Локация: "))
+    # await message.answer_location(latitude=float(json.loads(data.get('location'))["latitude"]),
+    #                               longitude=float(json.loads(data.get('location'))["longitude"]))
+
+    # else:
+    #     await message.answer(_("❇️Выберите одну из кнопок"))
+    #     await state.set_state(CreateGroup.accept)
 
 
 @dp.message_handler(state=CreateGroup.token)
@@ -210,16 +213,22 @@ async def get_token(message: Message, state: FSMContext):
                                       name=data.get('name'),
                                       members=int(data.get('members')),
                                       money=data.get('money'),
-                                      location=data.get('location'),
-                                      start_date=data.get('start'),
-                                      period=int(data.get('period')),
-                                      link=data.get('link'),
-                                      private=data.get('private'),
+                                      # location=data.get('location'),
+                                      # start_date=data.get('start'),
+                                      # period=int(data.get('period')),
+                                      # link=data.get('link'),
+                                      # private=data.get('private'),
                                       token=data.get('token')
                                       )
         group = await DBCommands.search_group(data.get('token'))
         await DBCommands.update_user_in_group_id(user_id=message.from_user.id, group_id=group.id)
         await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=1)
+        await message.answer(_("""⚠️Подсказка по кнопкам ниже:
+Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!
+📜Список участников- тут список участников круга с их статусом по оплатам. Также тут можно поменяться местами на получение денег с другими участниками. Если вы "Получатель Вознаграждения", то тут, вы можете отметить тех кто внес оплату.
+📋Общая информация- тут вся информация о вашем круге. Если вы создатель круга,то тут вы можете поменять дату и место встречи и т.д.
+🆘Пожаловаться- тут вы можете пожаловаться на участников, которые нарушают условия участия. 🔍Выбор круга-тут вы можете вступить в другие круги.
+👥Мои круги-тут находятся ваши круги и тут вы можете перейти в них."""))
         await message.answer(_("⚠️Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоединиться к вашему кругу:"))
         await message.answer(data.get('token'), reply_markup=menu_for_create())
         await state.reset_data()
