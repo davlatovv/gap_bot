@@ -146,20 +146,14 @@ class DBCommands:
         await user.update(language=language).apply()
 
     @staticmethod
-    async def create_group(user_id=int,
-                           name=str,
-                           members=int,
-                           money=str,
-                           location=str,
-                           start_date=str,
-                           period=str,
-                           link=str,
-                           private=int,
-                           token=str) -> Group:
-        group = Group(user_id=user_id, name=name, number_of_members=members, amount=money,
-                  location=location, link=link, private=private, start_date=start_date, period=period, token=token)
+    async def create_group(user_id, members, name, money, token):
+                           # location=str,
+                           # start_date=str,
+                           # period=str,
+                           # link=str,
+                           # private=int,
+        group = Group(user_id=user_id, name=name, number_of_members=members, amount=money, token=token)
         await group.create()
-        return group
 
     @staticmethod
     async def add_member(member: int, group_id: int, id_queue: int) -> bool:

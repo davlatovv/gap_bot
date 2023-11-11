@@ -3,8 +3,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 
 class UserRegistry(StatesGroup):
     user_name = State()
-    user_phone = State()
-    user_sms = State()
+    user_phone_and_sms = State()
     user_approve = State()
     choose = State()
 
