@@ -269,7 +269,7 @@ async def list_members_func(message: Message, state: FSMContext):
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
     if not users:
-        await message.answer(_("🛑Нет участинков"))
+        await message.answer(_("🛑Нет участников"))
         await state.set_state(CreateGroup.choose)
     else:
         receiver = await DBCommands.get_queue_first(group_id=group_id)
@@ -362,27 +362,30 @@ async def info_func(message: Message, state: FSMContext):
     status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
     try:
         recieve = await DBCommands.get_member_recieve(group_id=group_id, date=group.start_date)
-        await message.answer(_("Название круга: ") + group.name + "\n" +
-                             _("Количество участников: ") + str(group.number_of_members) + "\n" +
-                             _("Имя получателя: ") + str(recieve.name) + "\n" +
-                             _("Cумма взносов: ") + group.amount + "сум \n" +
-                             _("Дата встречи: ") + group.start_date + "\n" +
-                             _("Периодичность: ") + str(group.period) + "\n" +
-                             _("Ссылка на группу: ") + group.link + "\n" +
-                             _("Приватность: ") + status + "\n" +
-                             _("Токен: ") + group.token + "\n" +
-                             _("Локация: "))
+        await message.answer(
+            _("Название круга: ") + group.name + "\n" +
+            _("Количество участников: ") + str(group.number_of_members) + "\n" +
+            _("Имя получателя: ") + str(recieve.name) + "\n" +
+            _("Сумма взносов: ") + str(group.amount) + " сум\n" +
+            _("Дата встречи: ") + (str(group.start_date) if group.start_date is not None else _("Нет данных")) + "\n" +
+            _("Периодичность: ") + (str(group.period) if group.period is not None else _("Нет данных")) + "\n" +
+            _("Ссылка на группу: ") + (group.link if group.link is not None else _("Нет данных")) + "\n" +
+            _("Приватность: ") + (status if status is not None else _("Нет данных")) + "\n" +
+            _("Токен: ") + group.token + "\n" +
+            _("Локация: ") + _("Нет данных") if group.location is None else " ")
     except Exception:
-        await message.answer(_("Название круга: ") + group.name + "\n" +
-                             _("Количество участников: ") + str(group.number_of_members) + "\n" +
-                             _("Cумма взносов: ") + group.amount + " сум\n" +
-                             _("Дата встречи: ") + group.start_date + "\n" +
-                             _("Периодичность: ") + str(group.period) + "\n" +
-                             _("Ссылка на группу: ") + group.link + "\n" +
-                             _("Приватность: ") + status + "\n" +
-                             _("Токен: ") + group.token + "\n" +
-                             _("Локация: "))
-    await message.answer_location(latitude=float(json.loads(group.location)['latitude']), longitude=float(json.loads(group.location)['longitude']))
+        await message.answer(
+            _("Название круга: ") + group.name + "\n" +
+            _("Количество участников: ") + str(group.number_of_members) + "\n" +
+            _("Сумма взносов: ") + str(group.amount) + " сум\n" +
+            _("Дата встречи: ") + (str(group.start_date) if group.start_date is not None else _("Нет данных")) + "\n" +
+            _("Периодичность: ") + (str(group.period) if group.period is not None else _("Нет данных")) + "\n" +
+            _("Ссылка на группу: ") + (group.link if group.link is not None else _("Нет данных")) + "\n" +
+            _("Приватность: ") + (status if status is not None else _("Нет данных")) + "\n" +
+            _("Токен: ") + group.token + "\n" +
+            _("Локация: ") + _("Нет данных") if group.location is None else " ")
+    if group.location is not None:
+        await message.answer_location(latitude=float(json.loads(group.location)['latitude']), longitude=float(json.loads(group.location)['longitude']))
     await state.set_state(CreateGroup.choose)
 
 
@@ -394,20 +397,22 @@ async def settings_func(message: Message, state: FSMContext):
     await state.update_data(group_id=group.id)
     status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
     reply_markup = setting() if user.language == 'ru' else setting_uz()
-    await message.answer(
+    msg = (
         _("Название круга: ") + group.name + "\n" +
         _("Количество участников: ") + str(group.number_of_members) + "\n" +
-        _("Сумма взносов: ") + group.amount + " сум\n" +
-        _("Дата встречи: ") + group.start_date + "\n" +
-        _("Периодичность: ") + str(group.period) + "\n" +
-        _("Ссылка на группу: ") + group.link + "\n" +
-        _("Приватность: ") + status + "\n" +
-        _("Локация: "), reply_markup=reply_markup
-    )
-    await message.answer_location(
-        latitude=float(json.loads(group.location)['latitude']),
-        longitude=float(json.loads(group.location)['longitude'])
-    )
+        _("Сумма взносов: ") + str(group.amount) + " сум\n" +
+        _("Дата встречи: ") + (str(group.start_date) if group.start_date is not None else _("Нет данных")) + "\n" +
+        _("Периодичность: ") + (str(group.period) if group.period is not None else _("Нет данных")) + "\n" +
+        _("Ссылка на группу: ") + (group.link if group.link is not None else _("Нет данных")) + "\n" +
+        _("Приватность: ") + (status if status is not None else _("Нет данных")) + "\n" +
+        _("Локация: ") + _("Нет данных") if group.location is None else " ")
+    await message.answer(msg, reply_markup=reply_markup)
+    if group.location is not None:
+        await message.answer_location(
+            latitude=float(json.loads(group.location)['latitude']),
+            longitude=float(json.loads(group.location)['longitude'])
+        )
+
     await state.set_state(CreateGroup.settings_to)
 
 
@@ -481,7 +486,7 @@ async def complain_func(message: Message, state: FSMContext):
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     if not users:
-        await message.answer(_("🛑Нет участинков"))
+        await message.answer(_("🛑Нет участников"))
         await state.set_state(CreateGroup.choose)
     else:
         if len(users) % 2 == 0:
