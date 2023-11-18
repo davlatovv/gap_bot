@@ -383,7 +383,7 @@ msgstr ""
 
 #: handlers/users/create_group.py:263 handlers/users/create_group.py:475
 #: handlers/users/join_to_group.py:102 handlers/users/join_to_group.py:202
-msgid "🛑Нет участинков"
+msgid "🛑Нет участников"
 msgstr "🛑Ishtirokchilar yoʻq"
 
 #: handlers/users/create_group.py:305 handlers/users/join_to_group.py:141

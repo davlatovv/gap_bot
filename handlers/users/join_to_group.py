@@ -99,7 +99,7 @@ async def join_list_members_func(message: Message, state: FSMContext):
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
     if not users:
-        await message.answer(_("🛑Нет участинков"))
+        await message.answer(_("🛑Нет участников"))
         await state.set_state(JoinToGroup.choose)
     else:
         receiver = await DBCommands.get_queue_first(group_id=group_id)
@@ -199,7 +199,7 @@ async def join_complain_func(message: Message, state: FSMContext):
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     if not users:
-        await message.answer(_("🛑Нет участинков"))
+        await message.answer(_("🛑Нет участников"))
         await state.set_state(JoinToGroup.choose)
     else:
         if len(users) % 2 == 0:
