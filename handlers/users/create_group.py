@@ -223,8 +223,9 @@ async def get_token(message: Message, state: FSMContext):
         group = await DBCommands.search_group(data.get('token'))
         await DBCommands.update_user_in_group_id(user_id=message.from_user.id, group_id=group.id)
         await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=1)
-        await message.answer(_("➡️Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!"))
+        await message.answer(_("⚠️Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоединиться к вашему кругу:"))
         await message.answer(data.get('token'), reply_markup=menu_for_create())
+        await message.answer(_("➡️Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!"))
         await state.reset_data()
         await state.set_state(CreateGroup.choose)
     else:
@@ -340,6 +341,7 @@ async def list_members_func_save(message: Message, state: FSMContext):
         keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_("⬅️Назад")))
     if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
+        await do_confirmation(group_id)
         await message.answer(_("⚠️Вы подтвердили платеж"), reply_markup=keyboard)
         for id in users_id:
             if id is not message.from_user.id:
@@ -349,6 +351,11 @@ async def list_members_func_save(message: Message, state: FSMContext):
         await message.answer(_("🛑Вы отменили платеж"), reply_markup=keyboard)
     await state.set_state(CreateGroup.list_members_to)
 
+async def do_confirmation(group_id):
+    start_date = await DBCommands.get_group_from_id(group_id)
+    confirmation = await DBCommands.get_confirmation_for_process(group_id, start_date.start_date)
+    if confirmation:
+        await DBCommands.create_new_confirmation(group_id)
 
 @dp.message_handler(state=CreateGroup.info, text=[_("📋Общая информация"), _("📋Umumiy ma'lumot")])
 async def info_func(message: Message, state: FSMContext):
