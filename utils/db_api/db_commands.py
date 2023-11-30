@@ -295,13 +295,7 @@ class DBCommands:
                 accepts.append("✅")
         return {"receiver": receiver.name, "names": names, "accepts": accepts}
 
-    @staticmethod
-    async def get_confirmation_for_process(group_id, start_date):
-        confirmation =  await Confirmation.query.where(and_(Confirmation.group_id == group_id, Confirmation.date == start_date, Confirmation.accept == 0)).gino.all()
-        if not confirmation:
-            return true
-        else:
-            return false
+
 
 
 
