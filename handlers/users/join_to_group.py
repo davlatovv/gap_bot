@@ -158,8 +158,10 @@ async def list_members_func_to(message: Message, state: FSMContext):
 async def list_members_func_save(message: Message, state: FSMContext):
     data = await state.get_data()
     users_id = await DBCommands.get_users_id_from_group_id(group_id=data['group_id'], user_id=message.from_user.id)
+    group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
+        await do_confirmation(group_id)
         await message.answer(_("⚠️Вы подтвердили платеж"))
         for id in users_id:
             if id is not message.from_user.id:
@@ -169,6 +171,11 @@ async def list_members_func_save(message: Message, state: FSMContext):
         await message.answer(_("🛑Вы отменили платеж"))
     await state.set_state(JoinToGroup.list_members)
 
+async def do_confirmation(group_id):
+    start_date = await DBCommands.get_group_from_id(group_id)
+    confirmation = await DBCommands.get_confirmation_for_process(group_id, start_date.start_date)
+    if confirmation:
+        await DBCommands.create_new_confirmation(group_id)
 
 @dp.message_handler(state=JoinToGroup.info, text=_("📋Общая информация"))
 async def join_info_func(message: Message, state: FSMContext):

@@ -35,9 +35,9 @@ async def start(message: Message, state: FSMContext):
         await message.answer(_("📱Главное меню"), reply_markup=(menu()))
         await state.set_state(UserRegistry.choose)
     else:
-        await message.answer(_("🙂Добро пожаловать в “mates”.\n" 
+        await message.answer(_("🙂Добро пожаловать в “ЧЁРНАЯ КАССА”.\n" 
                 "😉Мы поможем вам сделать ваш “Ga’p” более удобным и безопасным!\n\n" 
-                "🙂“mates” ga xush kelibsiz.\n"
+                "🙂“ЧЁРНАЯ КАССА” ga xush kelibsiz.\n"
                 "😉Biz sizga “Ga’p” ni qulayroq va xavfsizroq qilishingizga yordam beramiz!\n\n"
                 "🇷🇺Для начала выберите удобный вам язык!\n" 
                 "🇺🇿Ўзингизга қулай тилни танланг!\n"), reply_markup=get_language_keyboard())
