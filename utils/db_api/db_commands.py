@@ -19,20 +19,19 @@ class DBCommands:
 
                 for i, member in enumerate(queue_members):
                     if i == 0:
-                        update_id = await DBCommands.get_queue_first(group_id)
-                        last_id = await DBCommands.get_queue_last(group_id)
+                        update_id = await Member.query.where(
+                            and_(Member.group_id == group.id, Member.member == member)).gino.first()
+                        last_id = await Member.query.where(
+                            and_(Member.group_id == group.id, Member.member == queue_members[-1])).gino.first()
                         await update_id.update(id_queue=last_id.id_queue).apply()
                     else:
-                        update_id = await Member.query.where(and_(Member.group_id == group.id, Member.member == member)).gino.first()
-                        await update_id.update(id_queue=update_id.id_queue - 1).apply()
-
-                queue_members_for_confirm = await DBCommands.queue(group_id=group.id)
-
-                for member in queue_members_for_confirm:
-                    if member != queue_members_for_confirm[0]:
-                        confirm = Confirmation(group_id=group.id, member_recieve=queue_members_for_confirm[0], member_get=member,
+                        confirm = Confirmation(group_id=group.id, member_recieve=queue_members[0], member_get=member,
                                                date=new_date, accept=0)
                         await confirm.create()
+
+                        update_id = await Member.query.where(
+                            and_(Member.group_id == group.id, Member.member == member)).gino.first()
+                        await update_id.update(id_queue=update_id.id_queue - 1).apply()
 
     @staticmethod
     async def create_new_confirmation(group_id):
@@ -56,9 +55,8 @@ class DBCommands:
         for member in queue_members_for_confirm:
             if member != queue_members_for_confirm[0]:
                 confirm = Confirmation(group_id=group.id, member_recieve=queue_members_for_confirm[0], member_get=member,
-                               date=new_date, accept=0)
+                                       date=new_date, accept=0)
                 await confirm.create()
-
 
     @staticmethod
     async def process_subscribe():
@@ -292,13 +290,10 @@ class DBCommands:
             else:
                 accepts.append("✅")
         return {"receiver": receiver.name, "names": names, "accepts": accepts}
-    @staticmethod
-    async def get_confirmation_for_process(group_id, start_date):
-        confirmation =  await Confirmation.query.where(and_(Confirmation.group_id == group_id, Confirmation.date == start_date, Confirmation.accept == 0)).gino.all()
-        if not confirmation:
-            return true
-        else:
-            return false
+
+
+
+
 
 
 

@@ -338,6 +338,7 @@ async def list_members_func_save(message: Message, state: FSMContext):
     if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
         await message.answer(_("⚠️Вы подтвердили платеж"), reply_markup=keyboard)
+        await do_confirmation(group_id)
         for id in users_id:
             if id is not message.from_user.id:
                 await bot.send_message(chat_id=id, text=f"Получатель подтвердил платеж от {data['user_name']}")
@@ -345,6 +346,13 @@ async def list_members_func_save(message: Message, state: FSMContext):
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=0)
         await message.answer(_("🛑Вы отменили платеж"), reply_markup=keyboard)
     await state.set_state(CreateGroup.list_members_to)
+
+
+async def do_confirmation(group_id):
+    start_date = await DBCommands.get_group_from_id(group_id)
+    confirmation = await DBCommands.get_confirmation_for_process(group_id, start_date.start_date)
+    if confirmation:
+        await DBCommands.create_new_confirmation(group_id)
 
 
 @dp.message_handler(state=CreateGroup.info, text=[_("📋Общая информация"), _("📋Umumiy ma'lumot")])
