@@ -4,7 +4,9 @@ import secrets
 
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, ContentType, InlineKeyboardMarkup, \
-    InlineKeyboardButton
+    InlineKeyboardButton, ParseMode
+from aiogram.utils.markdown import hbold, hitalic
+from tabulate import tabulate
 
 from data.config import LANGUAGES
 from keyboards.default import get_language_keyboard
@@ -185,12 +187,6 @@ async def validation(message: Message, state: FSMContext):
         await message.answer(
             _("🎉Вы успешно создали круг\nПодтверждаете информацию если да то нажмите на галочку если нет то на крестик и вас перекинет к началу создания круга"),
             reply_markup=accept())
-        await message.answer(_("""⚠️Подсказка по кнопкам ниже:
-Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!
-📜Список участников- тут список участников круга с их статусом по оплатам. Также тут можно поменяться местами на получение денег с другими участниками. Если вы "Получатель Вознаграждения", то тут, вы можете отметить тех кто внес оплату.
-📋Общая информация- тут вся информация о вашем круге. Если вы создатель круга,то тут вы можете поменять дату и место встречи и т.д.
-🆘Пожаловаться- тут вы можете пожаловаться на участников, которые нарушают условия участия. 🔍Выбор круга-тут вы можете вступить в другие круги.
-👥Мои круги-тут находятся ваши круги и тут вы можете перейти в них."""))
         random_token = secrets.token_hex(16)
         await state.update_data(token=random_token)
         await state.set_state(CreateGroup.token)
@@ -222,6 +218,12 @@ async def get_token(message: Message, state: FSMContext):
         await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=1)
         await message.answer(_("⚠️Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоединиться к вашему кругу:"))
         await message.answer(data.get('token'), reply_markup=menu_for_create())
+        await message.answer(_("""⚠️Подсказка по кнопкам ниже:
+Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!
+📜Список участников- тут список участников круга с их статусом по оплатам. Также тут можно поменяться местами на получение денег с другими участниками. Если вы "Получатель Вознаграждения", то тут, вы можете отметить тех кто внес оплату.
+📋Общая информация- тут вся информация о вашем круге. Если вы создатель круга,то тут вы можете поменять дату и место встречи и т.д.
+🆘Пожаловаться- тут вы можете пожаловаться на участников, которые нарушают условия участия. 🔍Выбор круга-тут вы можете вступить в другие круги.
+👥Мои круги-тут находятся ваши круги и тут вы можете перейти в них."""))
         await state.reset_data()
         await state.set_state(CreateGroup.choose)
     else:
@@ -267,10 +269,17 @@ async def list_members_func(message: Message, state: FSMContext):
     else:
         receiver = await DBCommands.get_queue_first(group_id=group_id)
         result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
-        text = "Получатель: " + result['receiver'] + "\n"
-        text += "Отправители     Статус\n"
+        table_data = [
+            ["ПОЛУЧАТЕЛЬ➡️",  result['receiver']],
+            ["ОТПРАВИТЕЛИ⬇️", "СТАТУС⬇️"]
+        ]
+
         for i, j in zip(result['names'], result['accepts']):
-            text += i + "    " + j + "\n"
+            row = [i , j]
+            table_data.append(row)
+
+        table_message = f"<pre>{tabulate(table_data, headers='firstrow', tablefmt='grid')}</pre>"
+
         if receiver.member == message.from_user.id or group.start != 1:
             if len(users) % 2 == 0:
                 for i in range(0, len(users), 2):
@@ -280,10 +289,10 @@ async def list_members_func(message: Message, state: FSMContext):
                 for i in range(0, len(users) - 1, 2):
                     keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
                 keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_("⬅️Назад")))
-            await message.answer(text, reply_markup=keyboard)
+            await message.answer(table_message, reply_markup=keyboard, parse_mode=ParseMode.HTML)
             await state.set_state(CreateGroup.list_members_to)
         else:
-            await message.answer(text)
+            await message.answer(table_message, parse_mode=ParseMode.HTML)
             await state.set_state(CreateGroup.choose)
 
 
