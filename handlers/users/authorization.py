@@ -35,12 +35,14 @@ async def start(message: Message, state: FSMContext):
         await message.answer(_("📱Главное меню"), reply_markup=(menu()))
         await state.set_state(UserRegistry.choose)
     else:
-        await message.answer(_("🙂Добро пожаловать в “ЧЁРНАЯ КАССА”.\n" 
-                "😉Мы поможем вам сделать ваш “Ga’p” более удобным и безопасным!\n\n" 
-                "🙂“ЧЁРНАЯ КАССА” ga xush kelibsiz.\n"
-                "😉Biz sizga “Ga’p” ni qulayroq va xavfsizroq qilishingizga yordam beramiz!\n\n"
-                "🇷🇺Для начала выберите удобный вам язык!\n" 
-                "🇺🇿Ўзингизга қулай тилни танланг!\n"), reply_markup=get_language_keyboard())
+        await message.answer(("""🇷🇺🙂Добро пожаловать в “ЧЁРНУЮ КАССУ"!
+😉С нами "ЧЁРНАЯ КАССА" стала безопаснее и проще!
+
+🇺🇿🙂“ЧЁРНАЯ КАССА” ga xush kelibsiz.
+😉Biz sizga “Ga’p” ni qulayroq va xavfsizroq qilishingizga yordam beramiz!
+
+🇷🇺Для начала выберите удобный вам язык!
+🇺🇿Ўзингизга қулай тилни танланг!"""), reply_markup=get_language_keyboard())
         await state.update_data(user_id=message.from_user.id, nickname=message.from_user.username)
         await state.set_state(UserRegistry.user_name)
 
@@ -90,7 +92,7 @@ async def authorization_phone(message: Message, state: FSMContext):
     await message.answer(_("Ознакомьтесь с пользовательским соглашением и подтвердите его нажав на кнопку 'поделиться контактом'!\n"
                            "⚠️Предупреждение:подтверждая пользовательское соглашение вы принимаете на себя ответственность за свои действия!\n"
                            "📕Пользовательское соглашение:"))
-    await message.answer_document(open("ПОЛЬЗОВАТЕЛЬСКОЕ_СОГЛАШЕНИЕ_MATES.docx", 'rb'))
+    await message.answer_document(open("/home/documents/ПОЛЬЗОВАТЕЛЬСКОЕ_СОГЛАШЕНИЕ_ЧЁРНАЯ_КАССА.docx", 'rb'))
     await state.set_state(UserRegistry.user_approve)
 
 
