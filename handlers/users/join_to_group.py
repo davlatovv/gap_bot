@@ -2,7 +2,9 @@ import json
 import logging
 
 from aiogram.dispatcher import FSMContext
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup, \
+    ParseMode
+from tabulate import tabulate
 
 from keyboards.default.menu import menu_for_join, menu, menu_for_create, menu_for_create_without_start, join_choose
 from loader import dp, _, bot
@@ -104,10 +106,16 @@ async def join_list_members_func(message: Message, state: FSMContext):
     else:
         receiver = await DBCommands.get_queue_first(group_id=group_id)
         result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
-        text = "Получатель: " + result['receiver'] + "\n"
-        text += "Отправители     Статус\n"
+        table_data = [
+            ["ПОЛУЧАТЕЛЬ➡️",  result['receiver']],
+            ["ОТПРАВИТЕЛИ⬇️", "СТАТУС⬇️"]
+        ]
+
         for i, j in zip(result['names'], result['accepts']):
-            text += i + "    " + j + "\n"
+            row = [i , j]
+            table_data.append(row)
+        table_message = f"<pre>{tabulate(table_data, headers='firstrow', tablefmt='grid')}</pre>"
+
         if receiver.member == message.from_user.id or group.start != 1:
             if len(users) % 2 == 0:
                 for i in range(0, len(users), 2):
@@ -117,10 +125,10 @@ async def join_list_members_func(message: Message, state: FSMContext):
                 for i in range(0, len(users) - 1, 2):
                     keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
                 keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_("⬅️ Назад")))
-            await message.answer(text, reply_markup=keyboard)
+            await message.answer(table_message, reply_markup=keyboard, parse_mode=ParseMode.HTML)
             await state.set_state(JoinToGroup.list_members_to)
         else:
-            await message.answer(text)
+            await message.answer(table_message, parse_mode=ParseMode.HTML)
             await state.set_state(JoinToGroup.choose)
 
 
@@ -161,7 +169,7 @@ async def list_members_func_save(message: Message, state: FSMContext):
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
-        await do_confirmation(group_id)
+        # await do_confirmation(group_id)
         await message.answer(_("⚠️Вы подтвердили платеж"))
         for id in users_id:
             if id is not message.from_user.id:
@@ -171,11 +179,11 @@ async def list_members_func_save(message: Message, state: FSMContext):
         await message.answer(_("🛑Вы отменили платеж"))
     await state.set_state(JoinToGroup.list_members)
 
-async def do_confirmation(group_id):
-    start_date = await DBCommands.get_group_from_id(group_id)
-    confirmation = await DBCommands.get_confirmation_for_process(group_id, start_date.start_date)
-    if confirmation:
-        await DBCommands.create_new_confirmation(group_id)
+# async def do_confirmation(group_id):
+#     start_date = await DBCommands.get_group_from_id(group_id)
+#     confirmation = await DBCommands.get_confirmation_for_process(group_id, start_date.start_date)
+#     if confirmation:
+#         await DBCommands.create_new_confirmation(group_id)
 
 @dp.message_handler(state=JoinToGroup.info, text=_("📋Общая информация"))
 async def join_info_func(message: Message, state: FSMContext):

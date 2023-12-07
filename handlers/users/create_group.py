@@ -4,7 +4,9 @@ import secrets
 
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, ContentType, InlineKeyboardMarkup, \
-    InlineKeyboardButton
+    InlineKeyboardButton, ParseMode
+from aiogram.utils.markdown import hbold, hitalic
+from tabulate import tabulate
 
 from data.config import LANGUAGES
 from keyboards.default import get_language_keyboard
@@ -56,7 +58,7 @@ async def choose_money(message: Message, state: FSMContext):
     elif message.text.isdigit() or re.match(r'\d{1,3}.\d{1,3}.\d{3}', message.text) or re.match(r'\d{1,3}.\d{3}', message.text):
         await message.answer(_("🔢Введите цифрами количество участников вашего круга, пример: 5"), reply_markup=back_state())
         await state.update_data(money=message.text)
-        await state.set_state(CreateGroup.accept)
+        await state.set_state(CreateGroup.location)
     else:
         await message.answer(_("🔢Пожалуйста введите цифрами"))
         await state.set_state(CreateGroup.members)
@@ -68,138 +70,129 @@ async def go_back_to_members(message: Message, state: FSMContext):
     await state.set_state(CreateGroup.members)
 
 
-# @dp.message_handler(state=CreateGroup.location)
-# async def choose_members(message: Message, state: FSMContext):
-#     if message.text.isdigit():
-#         await message.answer(
-#             _("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."),
-#             reply_markup=location())
-#         await state.update_data(members=message.text)
-#         await state.set_state(CreateGroup.accept)
-#     else:
-#         await message.answer(_("🔢Пожалуйста введите цифрами"))
-#         await state.set_state(CreateGroup.location)
-
-#
-# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.link)
-# async def go_back_to_location(message: Message, state: FSMContext):
-#     await message.answer(_("🔢Введите цифрами количество участников вашего круга, пример: 5"), reply_markup=back_state())
-#     await state.set_state(CreateGroup.location)
+@dp.message_handler(state=CreateGroup.location)
+async def choose_members(message: Message, state: FSMContext):
+    if message.text.isdigit():
+        await message.answer(
+            _("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."),
+            reply_markup=location())
+        await state.update_data(members=message.text)
+        await state.set_state(CreateGroup.link)
+    else:
+        await message.answer(_("🔢Пожалуйста введите цифрами"))
+        await state.set_state(CreateGroup.location)
 
 
-# @dp.message_handler(state=CreateGroup.link, content_types=ContentType.ANY)
-# async def choose_location(message: Message, state: FSMContext):
-#     if not message.location:
-#         await message.answer(_("🛑Вы ввели неверно локацию"))
-#         await state.set_state(CreateGroup.link)
-#     else:
-#         await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
-#                                "для остальных отправьте нам ссылку на группу в которую они могут "
-#                                "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом⬇️"),
-#                              reply_markup=back_state())
-#         await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=2)
-#         await state.update_data(location=json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}))
-#         await state.set_state(CreateGroup.start)
-#
-#
-# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.start)
-# async def go_back_to_link(message: Message, state: FSMContext):
-#     await message.answer(_("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."), reply_markup=location())
-#     await state.set_state(CreateGroup.link)
-#
-#
-# @dp.message_handler(state=CreateGroup.start)
-# async def choose_start(message: Message, state: FSMContext):
-#     if "https://t.me" in message.text:
-#         await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
-#         await state.update_data(link=message.text)
-#         await state.set_state(CreateGroup.period)
-#     else:
-#         await message.answer(_("⚠️Пожалуйста, отправьте правильную ссылку на группу в телеграм."))
-#         await state.set_state(CreateGroup.start)
-#
-#
-# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.period)
-# async def go_back_to_start(message: Message, state: FSMContext):
-#     await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
-#                            "для остальных отправьте нам ссылку на группу в которую они могут "
-#                            "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом(видео записи "
-#                            "экрана, как пользователь копирует ссылку группы и отправляет ее боту"),
-#                          reply_markup=back_state())
-#     await state.set_state(CreateGroup.start)
-#
-#
-# @dp.message_handler(state=CreateGroup.period)
-# async def choose_period(message: Message, state: FSMContext):
-#     date_pattern = r'\d{2}/\d{2}/\d{4}'
-#     if re.match(date_pattern, message.text) and is_date_greater_than_today(message.text) is True:
-#         await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
-#         await state.update_data(start=message.text)
-#         await state.set_state(CreateGroup.private)
-#     else:
-#         await message.answer(_("🛑Неверная дата"))
-#
-#
-# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.private)
-# async def go_back_to_period(message: Message, state: FSMContext):
-#     await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
-#     await state.set_state(CreateGroup.period)
-#
-#
-# @dp.message_handler(state=CreateGroup.private)
-# async def choose_private(message: Message, state: FSMContext):
-#     if message.text in ["➡️Раз в неделю", "➡️Раз в месяц", "➡️Xaftada bir marotaba", "➡️Oyda bir marta"]:
-#         period = 7 if message.text in ["➡️Раз в неделю", "➡️Xaftada bir marotaba"] else 30
-#         await state.update_data(period=period)
-#         await message.answer(_("🔐Выберите статус приватности вашего круга:\n"
-#                                "⚠️Подсказка: если вы выберете открытый статус, то ваш круг будет виден в общем списке и любой желающий сможет вступить в него. Если вы выберите закрытый статус, для вступления в ваш круг пользователям нужен будет токен."),
-#                              reply_markup=private())
-#         await state.set_state(CreateGroup.accept)
-#     else:
-#         await message.answer(_("❇️Выберите одну из кнопок"))
-#         await state.set_state(CreateGroup.private)
-#
-#
-# @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.accept)
-# async def go_back_to_period(message: Message, state: FSMContext):
-#     await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
-#     await state.set_state(CreateGroup.private)
+@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.link)
+async def go_back_to_location(message: Message, state: FSMContext):
+    await message.answer(_("🔢Введите цифрами количество участников вашего круга, пример: 5"), reply_markup=back_state())
+    await state.set_state(CreateGroup.location)
+
+
+@dp.message_handler(state=CreateGroup.link, content_types=ContentType.ANY)
+async def choose_location(message: Message, state: FSMContext):
+    if not message.location:
+        await message.answer(_("🛑Вы ввели неверно локацию"))
+        await state.set_state(CreateGroup.link)
+    else:
+        await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
+                               "для остальных отправьте нам ссылку на группу в которую они могут "
+                               "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом⬇️"),
+                             reply_markup=back_state())
+        await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=2)
+        await state.update_data(location=json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}))
+        await state.set_state(CreateGroup.start)
+
+
+@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.start)
+async def go_back_to_link(message: Message, state: FSMContext):
+    await message.answer(_("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."), reply_markup=location())
+    await state.set_state(CreateGroup.link)
+
+
+@dp.message_handler(state=CreateGroup.start)
+async def choose_start(message: Message, state: FSMContext):
+    if "https://t.me" in message.text:
+        await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
+        await state.update_data(link=message.text)
+        await state.set_state(CreateGroup.period)
+    else:
+        await message.answer(_("⚠️Пожалуйста, отправьте правильную ссылку на группу в телеграм."))
+        await state.set_state(CreateGroup.start)
+
+
+@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.period)
+async def go_back_to_start(message: Message, state: FSMContext):
+    await message.answer(_("📲Создайте группу в телеграм и добавьте в нее участников, чьи контакты у вас уже имеются, "
+                           "для остальных отправьте нам ссылку на группу в которую они могут "
+                           "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом(видео записи "
+                           "экрана, как пользователь копирует ссылку группы и отправляет ее боту"),
+                         reply_markup=back_state())
+    await state.set_state(CreateGroup.start)
+
+
+@dp.message_handler(state=CreateGroup.period)
+async def choose_period(message: Message, state: FSMContext):
+    date_pattern = r'\d{2}/\d{2}/\d{4}'
+    if re.match(date_pattern, message.text) and is_date_greater_than_today(message.text) is True:
+        await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
+        await state.update_data(start=message.text)
+        await state.set_state(CreateGroup.private)
+    else:
+        await message.answer(_("🛑Неверная дата"))
+
+
+@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.private)
+async def go_back_to_period(message: Message, state: FSMContext):
+    await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
+    await state.set_state(CreateGroup.period)
+
+
+@dp.message_handler(state=CreateGroup.private)
+async def choose_private(message: Message, state: FSMContext):
+    if message.text in ["➡️Раз в неделю", "➡️Раз в месяц", "➡️Xaftada bir marotaba", "➡️Oyda bir marta"]:
+        period = 7 if message.text in ["➡️Раз в неделю", "➡️Xaftada bir marotaba"] else 30
+        await state.update_data(period=period)
+        await message.answer(_("🔐Выберите статус приватности вашего круга:\n"
+                               "⚠️Подсказка: если вы выберете открытый статус, то ваш круг будет виден в общем списке и любой желающий сможет вступить в него. Если вы выберите закрытый статус, для вступления в ваш круг пользователям нужен будет токен."),
+                             reply_markup=private())
+        await state.set_state(CreateGroup.accept)
+    else:
+        await message.answer(_("❇️Выберите одну из кнопок"))
+        await state.set_state(CreateGroup.private)
+
+
+@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.accept)
+async def go_back_to_period(message: Message, state: FSMContext):
+    await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
+    await state.set_state(CreateGroup.private)
 
 
 @dp.message_handler(state=CreateGroup.accept)
 async def validation(message: Message, state: FSMContext):
-    # if message.text in ["🔓Открытый", "🔒Закрытый", "🔒Yopiq", "🔓Ochiq"]:
-    #     private = 1 if message.text in ["🔒Закрытый", "🔒Yopiq"] else 0
-    #     await state.update_data(private=private)
-    data = await state.get_data()
-    if message.text.isdigit():
-            await message.answer(_("Название круга: ") + str(data.get('name')) + "\n" +
-                         _("Количество участников: ") + message.text + "\n" +
-                     _("Сумма взносов: ") + str(data.get('money')) + " сум\n")
-            await message.answer(
-                _("🎉Вы успешно создали круг\nПодтверждаете информацию если да то нажмите на галочку если нет то на крестик и вас перекинет к началу создания круга"),
-                reply_markup=accept())
-            random_token = secrets.token_hex(16)
-            await state.update_data(token=random_token, members=message.text)
-            await state.set_state(CreateGroup.token)
+    if message.text in ["🔓Открытый", "🔒Закрытый", "🔒Yopiq", "🔓Ochiq"]:
+        private = 1 if message.text in ["🔒Закрытый", "🔒Yopiq"] else 0
+        await state.update_data(private=private)
+        data = await state.get_data()
+        await message.answer(_("Название круга: ") + str(data.get('name')) + "\n" +
+                             _("Количество участников: ") + str(data.get('members')) + "\n" +
+                             _("Сумма взносов: ") + str(data.get('money')) + " сум\n" +
+                             _("Дата встречи: ") + str(data.get('start')) + "\n" +
+                             _("Периодичность: ") + str(data.get('period')) + "\n" +
+                             _("Ссылка на группу: ") + str(data.get('link')) + "\n" +
+                             _("Приватность: ") + message.text + "\n" +
+                             _("Локация: "))
+        await message.answer_location(latitude=float(json.loads(data.get('location'))["latitude"]),
+                                      longitude=float(json.loads(data.get('location'))["longitude"]))
+        await message.answer(
+            _("🎉Вы успешно создали круг\nПодтверждаете информацию если да то нажмите на галочку если нет то на крестик и вас перекинет к началу создания круга"),
+            reply_markup=accept())
+        random_token = secrets.token_hex(16)
+        await state.update_data(token=random_token)
+        await state.set_state(CreateGroup.token)
     else:
-        await message.answer(_("🔢Пожалуйста введите цифрами"))
+        await message.answer(_("❇️Выберите одну из кнопок"))
         await state.set_state(CreateGroup.accept)
-
-    # await message.answer(_("Название круга: ") + str(data.get('name')) + "\n" +
-    #                      _("Количество участников: ") + str(data.get('members')) + "\n" +
-    #                      _("Сумма взносов: ") + str(data.get('money')) + " сум\n"
-    #                      _("Дата встречи: ") + str(data.get('start')) + "\n" +
-    #                      _("Периодичность: ") + str(data.get('period')) + "\n" +
-    #                      _("Ссылка на группу: ") + str(data.get('link')) + "\n" +
-    #                      _("Приватность: ") + message.text + "\n" +
-    #                      _("Локация: "))
-    # await message.answer_location(latitude=float(json.loads(data.get('location'))["latitude"]),
-    #                               longitude=float(json.loads(data.get('location'))["longitude"]))
-
-    # else:
-    #     await message.answer(_("❇️Выберите одну из кнопок"))
-    #     await state.set_state(CreateGroup.accept)
 
 
 @dp.message_handler(state=CreateGroup.token)
@@ -213,11 +206,11 @@ async def get_token(message: Message, state: FSMContext):
                                       name=data.get('name'),
                                       members=int(data.get('members')),
                                       money=data.get('money'),
-                                      # location=data.get('location'),
-                                      # start_date=data.get('start'),
-                                      # period=int(data.get('period')),
-                                      # link=data.get('link'),
-                                      # private=data.get('private'),
+                                      location=data.get('location'),
+                                      start_date=data.get('start'),
+                                      period=int(data.get('period')),
+                                      link=data.get('link'),
+                                      private=data.get('private'),
                                       token=data.get('token')
                                       )
         group = await DBCommands.search_group(data.get('token'))
@@ -225,7 +218,12 @@ async def get_token(message: Message, state: FSMContext):
         await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=1)
         await message.answer(_("⚠️Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоединиться к вашему кругу:"))
         await message.answer(data.get('token'), reply_markup=menu_for_create())
-        await message.answer(_("➡️Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!"))
+        await message.answer(_("""⚠️Подсказка по кнопкам ниже:
+Старт-нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!
+📜Список участников- тут список участников круга с их статусом по оплатам. Также тут можно поменяться местами на получение денег с другими участниками. Если вы "Получатель Вознаграждения", то тут, вы можете отметить тех кто внес оплату.
+📋Общая информация- тут вся информация о вашем круге. Если вы создатель круга,то тут вы можете поменять дату и место встречи и т.д.
+🆘Пожаловаться- тут вы можете пожаловаться на участников, которые нарушают условия участия. 🔍Выбор круга-тут вы можете вступить в другие круги.
+👥Мои круги-тут находятся ваши круги и тут вы можете перейти в них."""))
         await state.reset_data()
         await state.set_state(CreateGroup.choose)
     else:
@@ -271,10 +269,17 @@ async def list_members_func(message: Message, state: FSMContext):
     else:
         receiver = await DBCommands.get_queue_first(group_id=group_id)
         result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
-        text = "Получатель: " + result['receiver'] + "\n"
-        text += "Отправители     Статус\n"
+        table_data = [
+            ["ПОЛУЧАТЕЛЬ➡️",  result['receiver']],
+            ["ОТПРАВИТЕЛИ⬇️", "СТАТУС⬇️"]
+        ]
+
         for i, j in zip(result['names'], result['accepts']):
-            text += i + "    " + j + "\n"
+            row = [i , j]
+            table_data.append(row)
+
+        table_message = f"<pre>{tabulate(table_data, headers='firstrow', tablefmt='grid')}</pre>"
+
         if receiver.member == message.from_user.id or group.start != 1:
             if len(users) % 2 == 0:
                 for i in range(0, len(users), 2):
@@ -284,10 +289,10 @@ async def list_members_func(message: Message, state: FSMContext):
                 for i in range(0, len(users) - 1, 2):
                     keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
                 keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_("⬅️Назад")))
-            await message.answer(text, reply_markup=keyboard)
+            await message.answer(table_message, reply_markup=keyboard, parse_mode=ParseMode.HTML)
             await state.set_state(CreateGroup.list_members_to)
         else:
-            await message.answer(text)
+            await message.answer(table_message, parse_mode=ParseMode.HTML)
             await state.set_state(CreateGroup.choose)
 
 
@@ -312,11 +317,11 @@ async def list_members_func_to(message: Message, state: FSMContext):
         await state.set_state(CreateGroup.list_members_save)
     else:
         button_yes = InlineKeyboardButton(_("Да"), callback_data=str({"text": "yes",
-                                                                   "from_user": from_user.user_id,
-                                                                   "group": group.id}))
+                                                                      "from_user": from_user.user_id,
+                                                                      "group": group.id}))
         button_no = InlineKeyboardButton(_("Нет"), callback_data=str({"text": "no",
-                                                                   "from_user": from_user.user_id,
-                                                                   "group": group.id}))
+                                                                      "from_user": from_user.user_id,
+                                                                      "group": group.id}))
         keyboard = InlineKeyboardMarkup().add(button_yes, button_no)
         await bot.send_message(chat_id=to_user.user_id,
                                text="⚠️" + from_user.name + _(" 🔄 хочет поменяться с вами очередями на получение вознаграждения, хотите ли вы поменяться?\nЕго очередь: ") + str(user_queue.id_queue),
@@ -341,7 +346,6 @@ async def list_members_func_save(message: Message, state: FSMContext):
         keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_("⬅️Назад")))
     if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
-        await do_confirmation(group_id)
         await message.answer(_("⚠️Вы подтвердили платеж"), reply_markup=keyboard)
         await do_confirmation(group_id)
         for id in users_id:
@@ -352,11 +356,6 @@ async def list_members_func_save(message: Message, state: FSMContext):
         await message.answer(_("🛑Вы отменили платеж"), reply_markup=keyboard)
     await state.set_state(CreateGroup.list_members_to)
 
-async def do_confirmation(group_id):
-    start_date = await DBCommands.get_group_from_id(group_id)
-    confirmation = await DBCommands.get_confirmation_for_process(group_id, start_date.start_date)
-    if confirmation:
-        await DBCommands.create_new_confirmation(group_id)
 
 async def do_confirmation(group_id):
     start_date = await DBCommands.get_group_from_id(group_id)
@@ -373,30 +372,27 @@ async def info_func(message: Message, state: FSMContext):
     status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
     try:
         recieve = await DBCommands.get_member_recieve(group_id=group_id, date=group.start_date)
-        await message.answer(
-            _("Название круга: ") + group.name + "\n" +
-            _("Количество участников: ") + str(group.number_of_members) + "\n" +
-            _("Имя получателя: ") + str(recieve.name) + "\n" +
-            _("Сумма взносов: ") + str(group.amount) + " сум\n" +
-            _("Дата встречи: ") + (str(group.start_date) if group.start_date is not None else _("Нет данных")) + "\n" +
-            _("Периодичность: ") + (str(group.period) if group.period is not None else _("Нет данных")) + "\n" +
-            _("Ссылка на группу: ") + (group.link if group.link is not None else _("Нет данных")) + "\n" +
-            _("Приватность: ") + (status if status is not None else _("Нет данных")) + "\n" +
-            _("Токен: ") + group.token + "\n" +
-            _("Локация: ") + _("Нет данных") if group.location is None else " ")
+        await message.answer(_("Название круга: ") + group.name + "\n" +
+                             _("Количество участников: ") + str(group.number_of_members) + "\n" +
+                             _("Имя получателя: ") + str(recieve.name) + "\n" +
+                             _("Cумма взносов: ") + group.amount + "сум \n" +
+                             _("Дата встречи: ") + group.start_date + "\n" +
+                             _("Периодичность: ") + str(group.period) + "\n" +
+                             _("Ссылка на группу: ") + group.link + "\n" +
+                             _("Приватность: ") + status + "\n" +
+                             _("Токен: ") + group.token + "\n" +
+                             _("Локация: "))
     except Exception:
-        await message.answer(
-            _("Название круга: ") + group.name + "\n" +
-            _("Количество участников: ") + str(group.number_of_members) + "\n" +
-            _("Сумма взносов: ") + str(group.amount) + " сум\n" +
-            _("Дата встречи: ") + (str(group.start_date) if group.start_date is not None else _("Нет данных")) + "\n" +
-            _("Периодичность: ") + (str(group.period) if group.period is not None else _("Нет данных")) + "\n" +
-            _("Ссылка на группу: ") + (group.link if group.link is not None else _("Нет данных")) + "\n" +
-            _("Приватность: ") + (status if status is not None else _("Нет данных")) + "\n" +
-            _("Токен: ") + group.token + "\n" +
-            _("Локация: ") + _("Нет данных") if group.location is None else " ")
-    if group.location is not None:
-        await message.answer_location(latitude=float(json.loads(group.location)['latitude']), longitude=float(json.loads(group.location)['longitude']))
+        await message.answer(_("Название круга: ") + group.name + "\n" +
+                             _("Количество участников: ") + str(group.number_of_members) + "\n" +
+                             _("Cумма взносов: ") + group.amount + " сум\n" +
+                             _("Дата встречи: ") + group.start_date + "\n" +
+                             _("Периодичность: ") + str(group.period) + "\n" +
+                             _("Ссылка на группу: ") + group.link + "\n" +
+                             _("Приватность: ") + status + "\n" +
+                             _("Токен: ") + group.token + "\n" +
+                             _("Локация: "))
+    await message.answer_location(latitude=float(json.loads(group.location)['latitude']), longitude=float(json.loads(group.location)['longitude']))
     await state.set_state(CreateGroup.choose)
 
 
@@ -408,22 +404,20 @@ async def settings_func(message: Message, state: FSMContext):
     await state.update_data(group_id=group.id)
     status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
     reply_markup = setting() if user.language == 'ru' else setting_uz()
-    msg = (
+    await message.answer(
         _("Название круга: ") + group.name + "\n" +
         _("Количество участников: ") + str(group.number_of_members) + "\n" +
-        _("Сумма взносов: ") + str(group.amount) + " сум\n" +
-        _("Дата встречи: ") + (str(group.start_date) if group.start_date is not None else _("Нет данных")) + "\n" +
-        _("Периодичность: ") + (str(group.period) if group.period is not None else _("Нет данных")) + "\n" +
-        _("Ссылка на группу: ") + (group.link if group.link is not None else _("Нет данных")) + "\n" +
-        _("Приватность: ") + (status if status is not None else _("Нет данных")) + "\n" +
-        _("Локация: ") + _("Нет данных") if group.location is None else " ")
-    await message.answer(msg, reply_markup=reply_markup)
-    if group.location is not None:
-        await message.answer_location(
-            latitude=float(json.loads(group.location)['latitude']),
-            longitude=float(json.loads(group.location)['longitude'])
-        )
-
+        _("Сумма взносов: ") + group.amount + " сум\n" +
+        _("Дата встречи: ") + group.start_date + "\n" +
+        _("Периодичность: ") + str(group.period) + "\n" +
+        _("Ссылка на группу: ") + group.link + "\n" +
+        _("Приватность: ") + status + "\n" +
+        _("Локация: "), reply_markup=reply_markup
+    )
+    await message.answer_location(
+        latitude=float(json.loads(group.location)['latitude']),
+        longitude=float(json.loads(group.location)['longitude'])
+    )
     await state.set_state(CreateGroup.settings_to)
 
 
