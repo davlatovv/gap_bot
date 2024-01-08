@@ -1,0 +1,19 @@
+
+ypython:S1192»"YDefine a constant instead of duplicating this literal "ĞŸÑ€Ğ¸Ğ²Ğ°Ñ‚Ğ½Ğ¾ÑÑ‚ÑŒ: " 4 times.(úÒÔ÷8ÜÉÀ§Í1
+opython:S1192·"JDefine a constant instead of duplicating this literal " ÑÑƒĞ¼\n" 3 times.(Àø“²ıÿÿÿÿ8İÉÀ§Í1
+{python:S1192 "]Define a constant instead of duplicating this literal "ğŸ“±Ğ“Ğ»Ğ°Ğ²Ğ½Ğ¾Ğµ Ğ¼ĞµĞ½Ñ" 16 times.(î“ÙG8İÉÀ§Í1
+Ëpython:S1192t"¦Define a constant instead of duplicating this literal "ğŸ“†ĞÑ‚Ğ¿Ñ€Ğ°Ğ²ÑŒÑ‚Ğµ Ğ´Ğ°Ñ‚Ñƒ Ğ½Ğ°Ñ‡Ğ°Ğ»Ğ° Ğ² ÑĞ»ĞµĞ´ÑƒÑÑ‰ĞµĞ¼ Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ğµ Ğ”Ğ”/ĞœĞœ/Ğ“Ğ“Ğ“Ğ“:" 3 times.(ì®À¼şÿÿÿÿ8ïùÀ§Í1
+python:S1192¸"ZDefine a constant instead of duplicating this literal "Ğ”Ğ°Ñ‚Ğ° Ğ²ÑÑ‚Ñ€ĞµÑ‡Ğ¸: " 4 times.(ßşø¤ûÿÿÿÿ8İÉÀ§Í1
+ƒpython:S1192µ"^Define a constant instead of duplicating this literal "ĞĞ°Ğ·Ğ²Ğ°Ğ½Ğ¸Ğµ ĞºÑ€ÑƒĞ³Ğ°: " 4 times.(´õšãıÿÿÿÿ8İÉÀ§Í1
+‘python:S1192¶"lDefine a constant instead of duplicating this literal "ĞšĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ ÑƒÑ‡Ğ°ÑÑ‚Ğ½Ğ¸ĞºĞ¾Ğ²: " 4 times.(üÍ‡£ùÿÿÿÿ8İÉÀ§Í1
+—python:S1192¥"rDefine a constant instead of duplicating this literal "â‡ï¸Ğ’Ñ‹Ğ±ĞµÑ€Ğ¸Ñ‚Ğµ Ğ¾Ğ´Ğ½Ñƒ Ğ¸Ğ· ĞºĞ½Ğ¾Ğ¿Ğ¾Ğº" 8 times.(ÑÔ‰Ùùÿÿÿÿ8İÉÀ§Í1
+zpython:S1192±"UDefine a constant instead of duplicating this literal "ğŸ”“ĞÑ‚ĞºÑ€Ñ‹Ñ‚Ñ‹Ğ¹" 3 times.(øÌä„üÿÿÿÿ8İÉÀ§Í1
+€python:S1192º"aDefine a constant instead of duplicating this literal "Ğ¡ÑÑ‹Ğ»ĞºĞ° Ğ½Ğ° Ğ³Ñ€ÑƒĞ¿Ğ¿Ñƒ: " 4 times.(µÄŸc8ŞÉÀ§Í1
+}python:S1192¹"]Define a constant instead of duplicating this literal "ĞŸĞµÑ€Ğ¸Ğ¾Ğ´Ğ¸Ñ‡Ğ½Ğ¾ÑÑ‚ÑŒ: " 4 times.(ÊÿÃî8ŞÉÀ§Í1
+qpython:S1192""RDefine a constant instead of duplicating this literal "â¬…ï¸ĞĞ°Ğ·Ğ°Ğ´" 13 times.(Â¢¾Ê8ŞÉÀ§Í1
+zpython:S1192±"UDefine a constant instead of duplicating this literal "ğŸ”’Ğ—Ğ°ĞºÑ€Ñ‹Ñ‚Ñ‹Ğ¹" 4 times.(øÌä„üÿÿÿÿ8ŞÉÀ§Í1
+vpython:S1192¼"QDefine a constant instead of duplicating this literal "Ğ›Ğ¾ĞºĞ°Ñ†Ğ¸Ñ: " 4 times.(•ÖÖ÷ûÿÿÿÿ8ŞÉÀ§Í1
+kpython:S2208"GImport only needed names or import the module and then use its members.(¯º»æüÿÿÿÿ8ßÉÀ§Í1
+ypython:S3776‰"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(à¢¢ıÿÿÿÿ8ßÉÀ§Í1
+ypython:S3776Ğ"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ëÚú²ÿÿÿÿÿ8ßÉÀ§Í1
+Xpython:S1481Ã"3Replace unused local variable "new_state" with "_".(—ç§Šøÿÿÿÿ8ßÉÀ§Í1

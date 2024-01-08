@@ -17,7 +17,7 @@ async def handle_yes_button(callback_query: CallbackQuery):
         await bot.send_message(chat_id=int(from_user), text=_("🔄Вы успешно поменялись, теперь ваша очередь ") + str(to_user_queue.id_queue))
         await bot.delete_message(chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
     else:
-        await callback_query.answer(_("⚠️Что-то пошло не так: "))
+        await callback_query.answer(_("⚠️Что-то пошло не так"))
         await bot.delete_message(chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
 
 

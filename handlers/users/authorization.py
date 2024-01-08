@@ -8,7 +8,7 @@ from handlers.users.create_group import choose_name
 from keyboards.default import get_language_keyboard
 from keyboards.default.menu import *
 from states.states import UserRegistry, CreateGroup, JoinToGroup, Subscribe
-from loader import _, dp
+from loader import _, dp, bot
 from utils.db_api.db_commands import DBCommands
 
 
@@ -92,7 +92,7 @@ async def authorization_phone(message: Message, state: FSMContext):
     await message.answer(_("Ознакомьтесь с пользовательским соглашением и подтвердите его нажав на кнопку 'поделиться контактом'!\n"
                            "⚠️Предупреждение:подтверждая пользовательское соглашение вы принимаете на себя ответственность за свои действия!\n"
                            "📕Пользовательское соглашение:"))
-    await message.answer_document(open("ПОЛЬЗОВАТЕЛЬСКОЕ_СОГЛАШЕНИЕ_MATES.docx", 'rb'))
+    await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=4, reply_markup=contact_keyboard)
     await state.set_state(UserRegistry.user_approve)
 
 
@@ -109,6 +109,7 @@ async def approve(message: Message, state: FSMContext):
                   "Выберите 👥-создать круг- если вы хотите создать свой круг,\n" 
                   "или 👤-присоединиться- если вы хотите присоединиться к уже существующему кругу.\n"), reply_markup=menu())
     await state.set_state(UserRegistry.choose)
+
 
 @dp.message_handler(state=UserRegistry.choose)
 async def choose_menu(message: Message, state: FSMContext):

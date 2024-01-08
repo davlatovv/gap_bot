@@ -3,7 +3,7 @@ import logging
 
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup, \
-    ParseMode
+    ParseMode, CallbackQuery
 from tabulate import tabulate
 
 from keyboards.default.menu import menu_for_join, menu, menu_for_create, menu_for_create_without_start, join_choose
@@ -53,6 +53,7 @@ async def join_token(message: Message, state: FSMContext):
             if add_mem is True:
                 await DBCommands.update_user_in_group_id(message.from_user.id, group_id=group.id)
                 await message.answer(_("⚠️Вы вошли в круг"), reply_markup=menu_for_join())
+                await send_message_for_users_in_group(group.id, message.from_user.id)
                 await message.answer(_("""⚠️Подсказка по кнопкам ниже:
 📜Список участников- тут список участников круга с их статусом по оплатам. Также тут можно поменяться местами на получение денег с другими участниками. Если вы "Получатель Вознаграждения", то тут, вы можете отметить тех кто внес оплату.
 📋Общая информация- тут вся информация о вашем круге. Если вы создатель круга,то тут вы можете поменять дату и место встречи и т.д. 
@@ -65,6 +66,13 @@ async def join_token(message: Message, state: FSMContext):
         logging.error(_("Что-то пошло не так: ") + str(ex))
         await message.answer(_("⚠️Нет такого круга"), reply_markup=join_choose())
         await state.set_state(JoinToGroup.join)
+
+
+async def send_message_for_users_in_group(group_id, user_id):
+    user_name = await DBCommands.get_user(user_id)
+    users = await DBCommands.get_users_id_from_group_id(group_id, user_id)
+    for user in users:
+        await bot.send_message(chat_id=user, text=f"➡️ <b>{user_name.name}</b> присоеденился в круг.", parse_mode='html')
 
 
 @dp.message_handler(state=JoinToGroup.join_open)
@@ -152,9 +160,8 @@ async def list_members_func_to(message: Message, state: FSMContext):
         button_yes = InlineKeyboardButton(_("Да"), callback_data=str({"text": "yes",
                                                                    "from_user": from_user.user_id,
                                                                    "group": group.id}))
-        button_no = InlineKeyboardButton(_("Нет"), callback_data=str({"text": "no",
-                                                                   "from_user": from_user.user_id,
-                                                                   "group": group.id}))
+        print(str({"text": "yes","from_user": from_user.user_id,"group": group.id}))
+        button_no = InlineKeyboardButton(_("Нет"), callback_data="no")
         keyboard = InlineKeyboardMarkup().add(button_yes, button_no)
         await bot.send_message(chat_id=to_user.user_id,
                                text="⚠️" + from_user.name + _(" 🔄 хочет поменяться с вами очередями на получение вознаграждения, хотите ли вы поменяться?\nЕго очередь: ") + str(user_queue.id_queue),
