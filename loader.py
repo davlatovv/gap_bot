@@ -20,7 +20,7 @@ _ = i18n.gettext
 
 def is_date_greater_than_today(date_string):
     try:
-        input_date = datetime.strptime(date_string, "%d/%m/%Y").date()
+        input_date = datetime.strptime(date_string, "%d.%m.%Y").date()
         today = datetime.now().date()
         if input_date > today:
             return True

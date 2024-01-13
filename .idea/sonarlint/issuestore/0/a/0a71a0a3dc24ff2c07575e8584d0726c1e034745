@@ -1,4 +1,5 @@
 
-fpython:S1192
-"IDefine a constant instead of duplicating this literal '%d/%m/%Y' 4 times.(ô¥‡·øÿÿÿÿ
-dpython:S2208"GImport only needed names or import the module and then use its members.(ÅÙï„úÿÿÿÿ
+mpython:S1192
+"IDefine a constant instead of duplicating this literal '%d/%m/%Y' 4 times.(ô¥‡·øÿÿÿÿ8É¥ª—Ð1
+kpython:S2208"GImport only needed names or import the module and then use its members.(ÅÙï„úÿÿÿÿ8É¥ª—Ð1
+>python:S125Ô"Remove this commented out code.(ÿ“—½8É¥ª—Ð1

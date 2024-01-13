@@ -1,19 +1,12 @@
 
-ypython:S1192»"YDefine a constant instead of duplicating this literal "ÐŸÑ€Ð¸Ð²Ð°Ñ‚Ð½Ð¾ÑÑ‚ÑŒ: " 4 times.(úÒÔ÷8ÜÉÀ§Í1
-opython:S1192·"JDefine a constant instead of duplicating this literal " ÑÑƒÐ¼\n" 3 times.(Àø“²ýÿÿÿÿ8ÝÉÀ§Í1
-{python:S1192 "]Define a constant instead of duplicating this literal "ðŸ“±Ð“Ð»Ð°Ð²Ð½Ð¾Ðµ Ð¼ÐµÐ½ÑŽ" 16 times.(î“ÙG8ÝÉÀ§Í1
-Ëpython:S1192t"¦Define a constant instead of duplicating this literal "ðŸ“†ÐžÑ‚Ð¿Ñ€Ð°Ð²ÑŒÑ‚Ðµ Ð´Ð°Ñ‚Ñƒ Ð½Ð°Ñ‡Ð°Ð»Ð° Ð² ÑÐ»ÐµÐ´ÑƒÑŽÑ‰ÐµÐ¼ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ðµ Ð”Ð”/ÐœÐœ/Ð“Ð“Ð“Ð“:" 3 times.(ì®À¼þÿÿÿÿ8ïùÀ§Í1
-python:S1192¸"ZDefine a constant instead of duplicating this literal "Ð”Ð°Ñ‚Ð° Ð²ÑÑ‚Ñ€ÐµÑ‡Ð¸: " 4 times.(ßþø¤ûÿÿÿÿ8ÝÉÀ§Í1
-ƒpython:S1192µ"^Define a constant instead of duplicating this literal "ÐÐ°Ð·Ð²Ð°Ð½Ð¸Ðµ ÐºÑ€ÑƒÐ³Ð°: " 4 times.(´õšãýÿÿÿÿ8ÝÉÀ§Í1
-‘python:S1192¶"lDefine a constant instead of duplicating this literal "ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑƒÑ‡Ð°ÑÑ‚Ð½Ð¸ÐºÐ¾Ð²: " 4 times.(üÍ‡£ùÿÿÿÿ8ÝÉÀ§Í1
-—python:S1192¥"rDefine a constant instead of duplicating this literal "â‡ï¸Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð¾Ð´Ð½Ñƒ Ð¸Ð· ÐºÐ½Ð¾Ð¿Ð¾Ðº" 8 times.(ÑÔ‰Ùùÿÿÿÿ8ÝÉÀ§Í1
-zpython:S1192±"UDefine a constant instead of duplicating this literal "ðŸ”“ÐžÑ‚ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹" 3 times.(øÌä„üÿÿÿÿ8ÝÉÀ§Í1
-€python:S1192º"aDefine a constant instead of duplicating this literal "Ð¡ÑÑ‹Ð»ÐºÐ° Ð½Ð° Ð³Ñ€ÑƒÐ¿Ð¿Ñƒ: " 4 times.(µÄŸc8ÞÉÀ§Í1
-}python:S1192¹"]Define a constant instead of duplicating this literal "ÐŸÐµÑ€Ð¸Ð¾Ð´Ð¸Ñ‡Ð½Ð¾ÑÑ‚ÑŒ: " 4 times.(ÊÿÃî8ÞÉÀ§Í1
-qpython:S1192""RDefine a constant instead of duplicating this literal "â¬…ï¸ÐÐ°Ð·Ð°Ð´" 13 times.(Â¢¾Ê8ÞÉÀ§Í1
-zpython:S1192±"UDefine a constant instead of duplicating this literal "ðŸ”’Ð—Ð°ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹" 4 times.(øÌä„üÿÿÿÿ8ÞÉÀ§Í1
-vpython:S1192¼"QDefine a constant instead of duplicating this literal "Ð›Ð¾ÐºÐ°Ñ†Ð¸Ñ: " 4 times.(•ÖÖ÷ûÿÿÿÿ8ÞÉÀ§Í1
-kpython:S2208"GImport only needed names or import the module and then use its members.(¯º»æüÿÿÿÿ8ßÉÀ§Í1
-ypython:S3776‰"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(à¢¢ýÿÿÿÿ8ßÉÀ§Í1
-ypython:S3776Ð"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ëÚú²ÿÿÿÿÿ8ßÉÀ§Í1
-Xpython:S1481Ã"3Replace unused local variable "new_state" with "_".(—ç§Šøÿÿÿÿ8ßÉÀ§Í1
+tpython:S1192¿"TDefine a constant instead of duplicating this literal "ÐÐµÑ‚ Ð´Ð°Ð½Ð½Ñ‹Ñ…" 8 times.(¾û²Õ8„Ú›˜Ð1
+{python:S1192 "]Define a constant instead of duplicating this literal "ðŸ“±Ð“Ð»Ð°Ð²Ð½Ð¾Ðµ Ð¼ÐµÐ½ÑŽ" 16 times.(î“ÙG8„Ú›˜Ð1
+—python:S1192¨"rDefine a constant instead of duplicating this literal "â‡ï¸Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð¾Ð´Ð½Ñƒ Ð¸Ð· ÐºÐ½Ð¾Ð¿Ð¾Ðº" 8 times.(ÑÔ‰Ùùÿÿÿÿ8„Ú›˜Ð1
+Æpython:S1192w"¦Define a constant instead of duplicating this literal "ðŸ“†ÐžÑ‚Ð¿Ñ€Ð°Ð²ÑŒÑ‚Ðµ Ð´Ð°Ñ‚Ñƒ Ð½Ð°Ñ‡Ð°Ð»Ð° Ð² ÑÐ»ÐµÐ´ÑƒÑŽÑ‰ÐµÐ¼ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ðµ Ð”Ð”.ÐœÐœ.Ð“Ð“Ð“Ð“:" 3 times.(Ì“é±8„Ú›˜Ð1
+zpython:S1192´"UDefine a constant instead of duplicating this literal "ðŸ”“ÐžÑ‚ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹" 3 times.(øÌä„üÿÿÿÿ8„Ú›˜Ð1
+qpython:S1192""RDefine a constant instead of duplicating this literal "â¬…ï¸ÐÐ°Ð·Ð°Ð´" 12 times.(Â¢¾Ê8…Ú›˜Ð1
+zpython:S1192´"UDefine a constant instead of duplicating this literal "ðŸ”’Ð—Ð°ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹" 4 times.(øÌä„üÿÿÿÿ8…Ú›˜Ð1
+kpython:S2208"GImport only needed names or import the module and then use its members.(¯º»æüÿÿÿÿ8…Ú›˜Ð1
+>python:S125²"Remove this commented out code.(×â¸¡8…Ú›˜Ð1
+ypython:S3776Œ"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ëÚú²ÿÿÿÿÿ8…Ú›˜Ð1
+Xpython:S1481ÿ"3Replace unused local variable "new_state" with "_".(—ç§Šøÿÿÿÿ8…Ú›˜Ð1

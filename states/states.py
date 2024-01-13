@@ -15,6 +15,7 @@ class CreateGroup(StatesGroup):
     location = State()
     link = State()
     start = State()
+    start_date = State()
     period = State()
     private = State()
     accept = State()

@@ -61,3 +61,9 @@ Q.idea/sonarlint/securityhotspotstore/3/c/3c84dcdc6bbe3d7817c49dcdc327b926fea180
 Q.idea/sonarlint/securityhotspotstore/6/6/66ec0b8f4bae4daf3962a9eae7882107bd832361,5\0\502aff969840435ee930752073652faf7061ec74
 w
 G.idea/sonarlint/issuestore/3/c/3c84dcdc6bbe3d7817c49dcdc327b926fea1808a,1\5\15ab6acc17bd4f2d048dc50beb0dfeb0086a0c18
+M
+locales/ru/LC_MESSAGES/bot.po,1\3\13edbc47ff471e628f87cdf74a4eda3fd6413bc4
+9
+	loader.py,e\6\e68c7038f2b85fbb069640297b92d55ed2d4c60a
+F
+utils/db_api/models.py,f\b\fbcbea937f8bf1abb7297029ea3824b6975c99c5

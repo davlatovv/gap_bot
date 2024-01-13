@@ -1,7 +1,6 @@
 
-zpython:S1192"\Define a constant instead of duplicating this literal "ğŸ“±Ğ“Ğ»Ğ°Ğ²Ğ½Ğ¾Ğµ Ğ¼ĞµĞ½Ñ" 8 times.(î“ÙG8Óæ†ĞÍ1
-qpython:S1192"RDefine a constant instead of duplicating this literal "â¬…ï¸ ĞĞ°Ğ·Ğ°Ğ´" 9 times.(Â¢¾Ê8Ôæ†ĞÍ1
-spython:S3776i"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(÷¾É×8Ôæ†ĞÍ1
-Lpython:S1481°",Remove the unused local variable "group_id".(ú³ã8Ôæ†ĞÍ1
->python:S125½"Remove this commented out code.(êŞí8Ôæ†ĞÍ1
-Xpython:S1481­"3Replace unused local variable "new_state" with "_".(¯¬¸ÿÿÿÿÿÿ8Ôæ†ĞÍ1
+tpython:S1192Î"TDefine a constant instead of duplicating this literal "ĞĞµÑ‚ Ğ´Ğ°Ğ½Ğ½Ñ‹Ñ…" 9 times.(¾û²Õ8±ÔíĞ1
+zpython:S1192"\Define a constant instead of duplicating this literal "ğŸ“±Ğ“Ğ»Ğ°Ğ²Ğ½Ğ¾Ğµ Ğ¼ĞµĞ½Ñ" 8 times.(î“ÙG8±ÔíĞ1
+qpython:S1192"RDefine a constant instead of duplicating this literal "â¬…ï¸ ĞĞ°Ğ·Ğ°Ğ´" 9 times.(Â¢¾Ê8±ÔíĞ1
+spython:S3776i"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(÷¾É×8±ÔíĞ1
+Xpython:S1481³"3Replace unused local variable "new_state" with "_".(¯¬¸ÿÿÿÿÿÿ8±ÔíĞ1

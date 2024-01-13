@@ -114,15 +114,15 @@ async def join_list_members_func(message: Message, state: FSMContext):
     else:
         receiver = await DBCommands.get_queue_first(group_id=group_id)
         result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
-        table_data = [
-            ["ПОЛУЧАТЕЛЬ➡️",  result['receiver']],
-            ["ОТПРАВИТЕЛИ⬇️", "СТАТУС⬇️"]
-        ]
+
+        table = [["ОТПРАВИТЕЛИ⬇️", "СТАТУС⬇️"]]
 
         for i, j in zip(result['names'], result['accepts']):
-            row = [i , j]
-            table_data.append(row)
-        table_message = f"<pre>{tabulate(table_data, headers='firstrow', tablefmt='grid')}</pre>"
+            table.append([i, j])
+
+        receiver_table = [["ПОЛУЧАТЕЛЬ➡️", result['receiver']]]
+        column_widths = [max(len(row[0]) for row in table), max(len(row[1]) for row in table)]
+        table_message = f"<pre>{tabulate(table + receiver_table, headers='firstrow', tablefmt='rst', maxcolwidths=column_widths)}</pre>"
 
         if receiver.member == message.from_user.id or group.start != 1:
             if len(users) % 2 == 0:
@@ -173,10 +173,8 @@ async def list_members_func_to(message: Message, state: FSMContext):
 async def list_members_func_save(message: Message, state: FSMContext):
     data = await state.get_data()
     users_id = await DBCommands.get_users_id_from_group_id(group_id=data['group_id'], user_id=message.from_user.id)
-    group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     if message.text == "✅":
         await DBCommands.update_status(user_id=data['status_user'], group_id=data['group_id'], date=data['date'], status=1)
-        # await do_confirmation(group_id)
         await message.answer(_("⚠️Вы подтвердили платеж"))
         for id in users_id:
             if id is not message.from_user.id:
@@ -186,29 +184,37 @@ async def list_members_func_save(message: Message, state: FSMContext):
         await message.answer(_("🛑Вы отменили платеж"))
     await state.set_state(JoinToGroup.list_members)
 
-# async def do_confirmation(group_id):
-#     start_date = await DBCommands.get_group_from_id(group_id)
-#     confirmation = await DBCommands.get_confirmation_for_process(group_id, start_date.start_date)
-#     if confirmation:
-#         await DBCommands.create_new_confirmation(group_id)
 
 @dp.message_handler(state=JoinToGroup.info, text=_("📋Общая информация"))
 async def join_info_func(message: Message, state: FSMContext):
     await state.reset_state()
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
-    recieve = await DBCommands.get_member_recieve(group_id=group_id, date=group.start_date)
+    receive = await DBCommands.get_member_receive(group_id=group_id)
     status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
-    await message.answer("Имя круга: " + group.name + "\n" +
-                         "Число участников: " + str(group.number_of_members) + "\n" +
-                         "Имя получателя: " + str(recieve.name) + "\n" +
-                         "Сумма: " + group.amount + "\n" +
-                         "Дата начала: " + group.start_date + "\n" +
-                         "Периодичность: " + str(group.period) + "\n" +
-                         "Линк: " + group.link + "\n" +
-                         "Приватность: " + status + "\n" +
-                         "Токен: " + group.token + "\n" +
-                         "Локация: ")
+    await message.answer(
+        "Имя круга: {}\n"
+        "Число участников: {}\n"
+        "Имя получателя: {}\n"
+        "Сумма: {}\n"
+        "Дата начала: {}\n"
+        "Периодичность: {}\n"
+        "Линк: {}\n"
+        "Приватность: {}\n"
+        "Токен: <pre>{}</pre>\n"
+        "Локация: {}".format(
+            group.name or "Нет данных",
+            group.number_of_members or "Нет данных",
+            receive.name or "Нет данных",
+            group.amount or "Нет данных",
+            group.start_date or "Нет данных",
+            group.period or "Нет данных",
+            group.link or "Нет данных",
+            status or "Нет данных",
+            group.token or "Нет данных",
+            ""
+        ), parse_mode=ParseMode.HTML
+    )
     await message.answer_location(latitude=float(json.loads(group.location)['latitude']),
                                   longitude=float(json.loads(group.location)['longitude']))
     await state.set_state(JoinToGroup.choose)

@@ -39,9 +39,12 @@ async def go_back_to_name(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CreateGroup.money)
 async def choose_money(message: Message, state: FSMContext):
-    await message.answer(_("💰Выберите сумму взносов( эту сумму,каждый из участников будет отдавать получателю вознаграждения:"), reply_markup=money())
-    await state.update_data(name=message.text)
-    await state.set_state(CreateGroup.members)
+    if await DBCommands.validate_group_name(message.text):
+        await state.update_data(name=message.text)
+        await message.answer(_("💰Выберите сумму взносов( эту сумму,каждый из участников будет отдавать получателю вознаграждения:"), reply_markup=money())
+        await state.set_state(CreateGroup.members)
+    else:
+        await message.answer(_("Такое название круга уже существует, пожалуйста выберите другое"))
 
 
 @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.members)
@@ -101,28 +104,28 @@ async def choose_location(message: Message, state: FSMContext):
                              reply_markup=back_state().add(_("↩️Пропустить")))
         await bot.copy_message(chat_id=message.from_user.id, from_chat_id=-1001920204197, message_id=2)
         await state.update_data(location=json.dumps({'latitude': message.location.latitude, 'longitude': message.location.longitude}))
-        await state.set_state(CreateGroup.start)
+        await state.set_state(CreateGroup.start_date)
 
 
-@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.start)
+@dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.start_date)
 async def go_back_to_link(message: Message, state: FSMContext):
     await message.answer(_("📍Отправьте локацию места, где вы планируете собираться с участниками:\n⚠️Cовет:вы можете выбрать локацию вручную или же переслать ее из другого чата."), reply_markup=location())
     await state.set_state(CreateGroup.link)
 
 
-@dp.message_handler(state=CreateGroup.start)
+@dp.message_handler(state=CreateGroup.start_date)
 async def choose_start(message: Message, state: FSMContext):
     if message.text == "↩️Пропустить" or message.text == "↩️O'tqazib yuborish":
-        await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
+        await message.answer(_("📆Отправьте дату начала в следующем формате ДД.ММ.ГГГГ:"), reply_markup=back_state())
         await state.update_data(link=None)
         await state.set_state(CreateGroup.period)
     elif "https://t.me" in message.text:
-        await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
+        await message.answer(_("📆Отправьте дату начала в следующем формате ДД.ММ.ГГГГ:"), reply_markup=back_state())
         await state.update_data(link=message.text)
         await state.set_state(CreateGroup.period)
     else:
         await message.answer(_("⚠️Пожалуйста, отправьте правильную ссылку на группу в телеграм."))
-        await state.set_state(CreateGroup.start)
+        await state.set_state(CreateGroup.start_date)
 
 
 @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.period)
@@ -132,12 +135,12 @@ async def go_back_to_start(message: Message, state: FSMContext):
                            "вступить.\n⚠️Совет:ссылку на группу вы можете найти следующим способом(видео записи "
                            "экрана, как пользователь копирует ссылку группы и отправляет ее боту"),
                          reply_markup=back_state())
-    await state.set_state(CreateGroup.start)
+    await state.set_state(CreateGroup.start_date)
 
 
 @dp.message_handler(state=CreateGroup.period)
 async def choose_period(message: Message, state: FSMContext):
-    date_pattern = r'\d{2}/\d{2}/\d{4}'
+    date_pattern = r'\d{2}.\d{2}.\d{4}'
     if re.match(date_pattern, message.text) and is_date_greater_than_today(message.text) is True:
         await message.answer(_("📆Выберите, как часто вы планируете собираться:"), reply_markup=period())
         await state.update_data(start=message.text)
@@ -148,7 +151,7 @@ async def choose_period(message: Message, state: FSMContext):
 
 @dp.message_handler(text=[_("⬅️Назад"), _("⬅️Orqaga")], state=CreateGroup.private)
 async def go_back_to_period(message: Message, state: FSMContext):
-    await message.answer(_("📆Отправьте дату начала в следующем формате ДД/ММ/ГГГГ:"), reply_markup=back_state())
+    await message.answer(_("📆Отправьте дату начала в следующем формате ДД.ММ.ГГГГ:"), reply_markup=back_state())
     await state.set_state(CreateGroup.period)
 
 
@@ -221,7 +224,7 @@ async def get_token(message: Message, state: FSMContext):
         await DBCommands.update_user_in_group_id(user_id=message.from_user.id, group_id=group.id)
         await DBCommands.add_member(member=message.from_user.id, group_id=group.id, id_queue=1)
         await message.answer(_("⚠️Это ваш токен для приглашения,отправьте его друзьям чтобы они смогли присоединиться к вашему кругу:"))
-        await message.answer(data.get('token'), reply_markup=menu_for_create())
+        await message.answer(f"<pre>{data.get('token')}</pre>",parse_mode=ParseMode.HTML, reply_markup=menu_for_create())
         await message.answer(_("""<b>⚠️Подсказка по кнопкам ниже:</b>\n
 ➡️<b>Старт</b> - <i>нажав на эту кнопку вы запустите свой круг. Перед нажатием, убедитесь, что все участники вступили в круг и определились с очередностью!</i>
 📜<b>Список участников</b> - <i>тут список участников круга с их статусом по оплатам. Также тут можно поменяться местами на получение денег с другими участниками. Если вы "Получатель Вознаграждения", то тут, вы можете отметить тех кто внес оплату.</i>
@@ -247,6 +250,7 @@ async def start_func(message: Message, state: FSMContext):
             await bot.send_message(chat_id=user, text=_("👤Создатель круга ") + group.name + _(" стартовал"))
         if group.start != 1:
             await DBCommands.start_button(group_id)
+            await DBCommands.start_process(group_id, group.start_date)
             # await message.answer(_("🎉Поздравляю, ваш круг стартовал!\n"
             #                        "⚠️Подсказка по кнопкам ниже:\n"
             #                        "📜Список участников - тут список участников со статусом оплаты\n"
@@ -268,37 +272,89 @@ async def list_members_func(message: Message, state: FSMContext):
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
+    receiver = await DBCommands.get_member_receive(group_id)
+
     if not users:
         await message.answer(_("🛑Нет участников"))
-        await state.set_state(CreateGroup.choose)
+        return
+
+    if group.start == 0:
+        members = await DBCommands.get_members_name(group_id=group_id)
+        table = [["ОЧЕРЕДЬ⬇️", "УЧАСТНИКИ⬇️"]] + [[str(queue), member] for queue, member in enumerate(members, start=1)]
+        receiver_table = [["ПОЛУЧАТЕЛЬ➡️", members[0]]]
+        column_widths = [max(len(row[0]) for row in table), max(len(row[1]) for row in table)]
+        table_message = f"<pre>{tabulate(table + receiver_table, headers='firstrow', tablefmt='rst', maxcolwidths=column_widths)}</pre>"
     else:
-        receiver = await DBCommands.get_queue_first(group_id=group_id)
         result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
-        table_data = [
-            ["ПОЛУЧАТЕЛЬ➡️",  result['receiver']],
-            ["ОТПРАВИТЕЛИ⬇️", "СТАТУС⬇️"]
-        ]
+        table = [["ОТПРАВИТЕЛИ⬇️", "СТАТУС⬇️"]] + [[i, j] for i, j in zip(result['names'], result['accepts'])]
+        receiver_table = [["ПОЛУЧАТЕЛЬ➡️", result['receiver']]]
+        column_widths = [max(len(row[0]) for row in table), max(len(row[1]) for row in table)]
+        table_message = f"<pre>{tabulate(table + receiver_table, headers='firstrow', tablefmt='rst', maxcolwidths=column_widths)}</pre>"
 
-        for i, j in zip(result['names'], result['accepts']):
-            row = [i    , j]
-            table_data.append(row)
+    if receiver.user_id == message.from_user.id or group.start != 1:
+        keyboard_buttons = [KeyboardButton(users[i]) for i in range(0, len(users), 2)] + \
+                   [KeyboardButton(users[-1])] if len(users) % 2 != 0 else \
+                   [KeyboardButton(users[i]) for i in range(0, len(users), 2)]
+        keyboard_buttons.append(KeyboardButton(_("⬅️Назад")))
+        keyboard.add(*keyboard_buttons)
+        await state.set_state(CreateGroup.list_members_to)
+    else:
+        await state.set_state(CreateGroup.choose)
 
-        table_message = f"<pre>{tabulate(table_data, headers='firstrow', tablefmt='grid')}</pre>"
+    await message.answer(table_message, reply_markup=keyboard, parse_mode=ParseMode.HTML)
 
-        if receiver.member == message.from_user.id or group.start != 1:
-            if len(users) % 2 == 0:
-                for i in range(0, len(users), 2):
-                    keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
-                keyboard.add(KeyboardButton(_("⬅️Назад")))
-            else:
-                for i in range(0, len(users) - 1, 2):
-                    keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
-                keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_("⬅️Назад")))
-            await message.answer(table_message, reply_markup=keyboard, parse_mode=ParseMode.HTML)
-            await state.set_state(CreateGroup.list_members_to)
-        else:
-            await message.answer(table_message, parse_mode=ParseMode.HTML)
-            await state.set_state(CreateGroup.choose)
+# @dp.message_handler(state=CreateGroup.list_members, text=[_("📜Список участников"), _("📜Davrangiz a'zolari")])
+# async def list_members_func(message: Message, state: FSMContext):
+#     await state.reset_state()
+#     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+#     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
+#     users = await DBCommands.get_users_name_from_group_id(group_id=group_id, user_id=message.from_user.id)
+#     group = await DBCommands.get_group_from_id(group_id)
+#     reciever = None
+#     table_message = ""
+#
+#     if not users:
+#         await message.answer(_("🛑Нет участников"))
+#     elif group.start == 0:
+#         members = await DBCommands.get_members_name(group_id=group_id)
+#         table = [["ОЧЕРЕДЬ⬇️", "УЧАСТНИКИ⬇️"]]
+#         receiver_table = []
+#
+#         for queue, member in enumerate(members):
+#             if queue == 0:
+#                 receiver_table.append([["ПОЛУЧАТЕЛЬ➡️"], members[queue]])
+#                 reciever += members[queue]
+#             else:
+#                 table.append([str(queue), member])
+#
+#         column_widths = [max(len(row[0]) for row in table), max(len(row[1]) for row in table)]
+#         table_message.join(f"<pre>{tabulate(table + receiver_table, headers='firstrow', tablefmt='rst', maxcolwidths=column_widths)}</pre>")
+#     else:
+#         result = await DBCommands.get_confirmation(group_id=group_id, start_date=group.start_date)
+#         table = [["ОТПРАВИТЕЛИ⬇️", "СТАТУС⬇️"]]
+#
+#         for i, j in zip(result['names'], result['accepts']):
+#             table.append([i, j])
+#
+#         receiver_table = [["ПОЛУЧАТЕЛЬ➡️", result['receiver']]]
+#         reciever += int(result['receiver'])
+#         column_widths = [max(len(row[0]) for row in table), max(len(row[1]) for row in table)]
+#         table_message.join(f"<pre>{tabulate(table + receiver_table, headers='firstrow', tablefmt='rst', maxcolwidths=column_widths)}</pre>")
+#
+#     if reciever == message.from_user.id or group.start != 1:
+#         if len(users) % 2 == 0:
+#             for i in range(0, len(users), 2):
+#                 keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
+#             keyboard.add(KeyboardButton(_("⬅️Назад")))
+#         else:
+#             for i in range(0, len(users) - 1, 2):
+#                 keyboard.add(KeyboardButton(users[i]), KeyboardButton(users[i + 1]))
+#             keyboard.add(KeyboardButton(users[-1]), KeyboardButton(_("⬅️Назад")))
+#         await message.answer(table_message, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+#         await state.set_state(CreateGroup.list_members_to)
+#     else:
+#         await message.answer(table_message, parse_mode=ParseMode.HTML)
+#         await state.set_state(CreateGroup.choose)
 
 
 @dp.message_handler(state=CreateGroup.list_members_to)
@@ -363,8 +419,8 @@ async def list_members_func_save(message: Message, state: FSMContext):
 
 
 async def do_confirmation(group_id):
-    start_date = await DBCommands.get_group_from_id(group_id)
-    confirmation = await DBCommands.get_confirmation_for_process(group_id, start_date.start_date)
+    date = await DBCommands.get_group_from_id(group_id)
+    confirmation = await DBCommands.get_confirmation_for_process(group_id, date=date)
     if confirmation:
         await DBCommands.create_new_confirmation(group_id)
 
@@ -372,32 +428,36 @@ async def do_confirmation(group_id):
 @dp.message_handler(state=CreateGroup.info, text=[_("📋Общая информация"), _("📋Umumiy ma'lumot")])
 async def info_func(message: Message, state: FSMContext):
     await state.reset_state()
+    user = await DBCommands.get_user(message.from_user.id)
     group_id = await DBCommands.select_user_in_group_id(message.from_user.id)
     group = await DBCommands.get_group_from_id(group_id)
+    receive = await DBCommands.get_member_receive(group_id=group_id)
     status = _("🔒Закрытый") if group.private == 1 else _("🔓Открытый")
-    try:
-        recieve = await DBCommands.get_member_recieve(group_id=group_id, date=group.start_date)
-        await message.answer(_("Название круга: ") + group.name + "\n" +
-                             _("Количество участников: ") + str(group.number_of_members) + "\n" +
-                             _("Имя получателя: ") + str(recieve.name) + "\n" +
-                             _("Cумма взносов: ") + group.amount + "сум \n" +
-                             _("Дата встречи: ") + group.start_date + "\n" +
-                             _("Периодичность: ") + str(group.period) + "\n" +
-                             _("Ссылка на группу: ") + group.link + "\n" +
-                             _("Приватность: ") + status + "\n" +
-                             _("Токен: ") + group.token + "\n" +
-                             _("Локация: "))
-    except Exception:
-        await message.answer(_("Название круга: ") + group.name + "\n" +
-                             _("Количество участников: ") + str(group.number_of_members) + "\n" +
-                             _("Cумма взносов: ") + group.amount + " сум\n" +
-                             _("Дата встречи: ") + group.start_date + "\n" +
-                             _("Периодичность: ") + str(group.period) + "\n" +
-                             _("Ссылка на группу: ") + group.link + "\n" +
-                             _("Приватность: ") + status + "\n" +
-                             _("Токен: ") + group.token + "\n" +
-                             _("Локация: "))
-    await message.answer_location(latitude=float(json.loads(group.location)['latitude']), longitude=float(json.loads(group.location)['longitude']))
+    await message.answer(
+        "Имя круга: {}\n"
+        "Число участников: {}\n"
+        "Имя получателя: {}\n"
+        "Сумма: {}\n"
+        "Дата начала: {}\n"
+        "Периодичность: {}\n"
+        "Линк: {}\n"
+        "Приватность: {}\n"
+        "Токен: <pre>{}</pre>\n"
+        "Локация: {}".format(
+            group.name or "Нет данных",
+            group.number_of_members or "Нет данных",
+            receive.name if receive else user.name,
+            group.amount or "Нет данных",
+            group.start_date or "Нет данных",
+            group.period or "Нет данных",
+            group.link or "Нет данных",
+            status or "Нет данных",
+            group.token or "Нет данных",
+            ""
+        ), parse_mode=ParseMode.HTML
+    )
+    await message.answer_location(latitude=float(json.loads(group.location)['latitude']),
+                                  longitude=float(json.loads(group.location)['longitude']))
     await state.set_state(CreateGroup.choose)
 
 

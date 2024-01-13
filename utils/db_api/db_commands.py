@@ -59,6 +59,22 @@ class DBCommands:
                 await confirm.create()
 
     @staticmethod
+    async def get_confirmation_for_process(group_id, date):
+        confirmations = await Confirmation.query.where(and_(Confirmation.group_id == group_id, Confirmation.date == date)).gino.all()
+        for confirm in confirmations:
+            if confirm.accept != 1:
+                return false
+        return true
+
+    @staticmethod
+    async def validate_group_name(name):
+        group = await Group.query.where(Group.name == name).gino.first()
+        if group is not None:
+            return False
+        else:
+            return True
+
+    @staticmethod
     async def process_subscribe():
         from aiogram.dispatcher import FSMContext
         from aiogram.types import ReplyKeyboardMarkup
@@ -98,10 +114,20 @@ class DBCommands:
         return await confirmation.update(accept=status).apply()
 
     @staticmethod
-    async def get_member_recieve(group_id, date):
-        member = await Confirmation.query.where(and_(Confirmation.group_id == group_id, Confirmation.date == date)).gino.first()
-        user = await DBCommands.get_user(member.member_recieve)
-        return user
+    async def get_member_receive(group_id):
+        member = await Confirmation.query.where(and_(Member.group_id == group_id, Member.id_queue == 1)).gino.first()
+        if member:
+            user = await DBCommands.get_user(member.member_recieve)
+            return user
+
+    @staticmethod
+    async def get_members_name(group_id):
+        members = await Member.query.where(Member.group_id == group_id).order_by(asc(Member.id_queue)).gino.all()
+        result = []
+        for member in members:
+            user = await DBCommands.get_user(member.member)
+            result.append(user.name)
+        return result
 
     @staticmethod
     async def change_queue(user_id_from, user_id_to, group_id):
@@ -183,10 +209,10 @@ class DBCommands:
         if members is None or validate.number_of_members > members:
             member_obj = Member(member=member, group_id=group_id, id_queue=id_queue)
             await member_obj.create()
-            if validate.user_id != member:
-                confirm = Confirmation(group_id=group_id, member_recieve=validate.user_id, member_get=member,
-                                       date=validate.start_date, accept=0)
-                await confirm.create()
+            # if validate.user_id != member:
+            #     confirm = Confirmation(group_id=group_id, member_recieve=validate.user_id, member_get=member,
+            #                            date=validate.start_date, accept=0)
+            #     await confirm.create()
             return True
         else:
             return False
@@ -274,6 +300,17 @@ class DBCommands:
         group = await Group.query.where(Group.id == group_id).gino.first()
         await group.update(start=1).apply()
         return group
+
+    @staticmethod
+    async def start_process(group_id, date):
+        members = await Member.query.where(Member.group_id == group_id).gino.all()
+        receiver = members[0]
+        for member in members:
+            if member.member != receiver.member:
+                confirmation = Confirmation(group_id=group_id, member_recieve=receiver.member, member_get=member.id,
+                                          accept=0, date=date)
+                confirmation.create()
+
 
     @staticmethod
     async def get_confirmation(group_id, start_date):
