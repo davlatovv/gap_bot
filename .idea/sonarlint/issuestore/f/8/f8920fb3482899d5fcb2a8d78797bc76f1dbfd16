@@ -1,0 +1,18 @@
+
+rpython:S1192·"YDefine a constant instead of duplicating this literal "ĞŸÑ€Ğ¸Ğ²Ğ°Ñ‚Ğ½Ğ¾ÑÑ‚ÑŒ: " 4 times.(úÒÔ÷
+hpython:S1192³"JDefine a constant instead of duplicating this literal " ÑÑƒĞ¼\n" 3 times.(Àø“²ıÿÿÿÿ
+tpython:S1192 "]Define a constant instead of duplicating this literal "ğŸ“±Ğ“Ğ»Ğ°Ğ²Ğ½Ğ¾Ğµ Ğ¼ĞµĞ½Ñ" 16 times.(î“ÙG
+xpython:S1192´"ZDefine a constant instead of duplicating this literal "Ğ”Ğ°Ñ‚Ğ° Ğ²ÑÑ‚Ñ€ĞµÑ‡Ğ¸: " 4 times.(ßşø¤ûÿÿÿÿ
+|python:S1192±"^Define a constant instead of duplicating this literal "ĞĞ°Ğ·Ğ²Ğ°Ğ½Ğ¸Ğµ ĞºÑ€ÑƒĞ³Ğ°: " 4 times.(´õšãıÿÿÿÿ
+Špython:S1192²"lDefine a constant instead of duplicating this literal "ĞšĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ ÑƒÑ‡Ğ°ÑÑ‚Ğ½Ğ¸ĞºĞ¾Ğ²: " 4 times.(üÍ‡£ùÿÿÿÿ
+python:S1192¡"rDefine a constant instead of duplicating this literal "â‡ï¸Ğ’Ñ‹Ğ±ĞµÑ€Ğ¸Ñ‚Ğµ Ğ¾Ğ´Ğ½Ñƒ Ğ¸Ğ· ĞºĞ½Ğ¾Ğ¿Ğ¾Ğº" 8 times.(ÑÔ‰Ùùÿÿÿÿ
+spython:S1192­"UDefine a constant instead of duplicating this literal "ğŸ”“ĞÑ‚ĞºÑ€Ñ‹Ñ‚Ñ‹Ğ¹" 3 times.(øÌä„üÿÿÿÿ
+ypython:S1192¶"aDefine a constant instead of duplicating this literal "Ğ¡ÑÑ‹Ğ»ĞºĞ° Ğ½Ğ° Ğ³Ñ€ÑƒĞ¿Ğ¿Ñƒ: " 4 times.(µÄŸc
+vpython:S1192µ"]Define a constant instead of duplicating this literal "ĞŸĞµÑ€Ğ¸Ğ¾Ğ´Ğ¸Ñ‡Ğ½Ğ¾ÑÑ‚ÑŒ: " 4 times.(ÊÿÃî
+jpython:S1192""RDefine a constant instead of duplicating this literal "â¬…ï¸ĞĞ°Ğ·Ğ°Ğ´" 13 times.(Â¢¾Ê
+spython:S1192­"UDefine a constant instead of duplicating this literal "ğŸ”’Ğ—Ğ°ĞºÑ€Ñ‹Ñ‚Ñ‹Ğ¹" 4 times.(øÌä„üÿÿÿÿ
+opython:S1192¸"QDefine a constant instead of duplicating this literal "Ğ›Ğ¾ĞºĞ°Ñ†Ğ¸Ñ: " 4 times.(•ÖÖ÷ûÿÿÿÿ
+dpython:S2208"GImport only needed names or import the module and then use its members.(¯º»æüÿÿÿÿ
+rpython:S3776„"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(à¢¢ıÿÿÿÿ
+rpython:S3776Ë"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ëÚú²ÿÿÿÿÿ
+Qpython:S1481¾"3Replace unused local variable "new_state" with "_".(—ç§Šøÿÿÿÿ
