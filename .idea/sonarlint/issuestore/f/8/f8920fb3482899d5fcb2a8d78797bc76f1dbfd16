@@ -1,12 +1,12 @@
 
-tpython:S1192¿"TDefine a constant instead of duplicating this literal "ÐÐµÑ‚ Ð´Ð°Ð½Ð½Ñ‹Ñ…" 8 times.(¾û²Õ8„Ú›˜Ð1
-{python:S1192 "]Define a constant instead of duplicating this literal "ðŸ“±Ð“Ð»Ð°Ð²Ð½Ð¾Ðµ Ð¼ÐµÐ½ÑŽ" 16 times.(î“ÙG8„Ú›˜Ð1
-—python:S1192¨"rDefine a constant instead of duplicating this literal "â‡ï¸Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð¾Ð´Ð½Ñƒ Ð¸Ð· ÐºÐ½Ð¾Ð¿Ð¾Ðº" 8 times.(ÑÔ‰Ùùÿÿÿÿ8„Ú›˜Ð1
-Æpython:S1192w"¦Define a constant instead of duplicating this literal "ðŸ“†ÐžÑ‚Ð¿Ñ€Ð°Ð²ÑŒÑ‚Ðµ Ð´Ð°Ñ‚Ñƒ Ð½Ð°Ñ‡Ð°Ð»Ð° Ð² ÑÐ»ÐµÐ´ÑƒÑŽÑ‰ÐµÐ¼ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ðµ Ð”Ð”.ÐœÐœ.Ð“Ð“Ð“Ð“:" 3 times.(Ì“é±8„Ú›˜Ð1
-zpython:S1192´"UDefine a constant instead of duplicating this literal "ðŸ”“ÐžÑ‚ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹" 3 times.(øÌä„üÿÿÿÿ8„Ú›˜Ð1
-qpython:S1192""RDefine a constant instead of duplicating this literal "â¬…ï¸ÐÐ°Ð·Ð°Ð´" 12 times.(Â¢¾Ê8…Ú›˜Ð1
-zpython:S1192´"UDefine a constant instead of duplicating this literal "ðŸ”’Ð—Ð°ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹" 4 times.(øÌä„üÿÿÿÿ8…Ú›˜Ð1
-kpython:S2208"GImport only needed names or import the module and then use its members.(¯º»æüÿÿÿÿ8…Ú›˜Ð1
->python:S125²"Remove this commented out code.(×â¸¡8…Ú›˜Ð1
-ypython:S3776Œ"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ëÚú²ÿÿÿÿÿ8…Ú›˜Ð1
-Xpython:S1481ÿ"3Replace unused local variable "new_state" with "_".(—ç§Šøÿÿÿÿ8…Ú›˜Ð1
+tpython:S1192¿"TDefine a constant instead of duplicating this literal "ÐÐµÑ‚ Ð´Ð°Ð½Ð½Ñ‹Ñ…" 8 times.(¾û²Õ8§¿çÕÝ1
+{python:S1192 "]Define a constant instead of duplicating this literal "ðŸ“±Ð“Ð»Ð°Ð²Ð½Ð¾Ðµ Ð¼ÐµÐ½ÑŽ" 16 times.(î“ÙG8ª¿çÕÝ1
+—python:S1192¨"rDefine a constant instead of duplicating this literal "â‡ï¸Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð¾Ð´Ð½Ñƒ Ð¸Ð· ÐºÐ½Ð¾Ð¿Ð¾Ðº" 8 times.(ÑÔ‰Ùùÿÿÿÿ8ª¿çÕÝ1
+Æpython:S1192w"¦Define a constant instead of duplicating this literal "ðŸ“†ÐžÑ‚Ð¿Ñ€Ð°Ð²ÑŒÑ‚Ðµ Ð´Ð°Ñ‚Ñƒ Ð½Ð°Ñ‡Ð°Ð»Ð° Ð² ÑÐ»ÐµÐ´ÑƒÑŽÑ‰ÐµÐ¼ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ðµ Ð”Ð”.ÐœÐœ.Ð“Ð“Ð“Ð“:" 3 times.(Ì“é±8«¿çÕÝ1
+zpython:S1192´"UDefine a constant instead of duplicating this literal "ðŸ”“ÐžÑ‚ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹" 3 times.(øÌä„üÿÿÿÿ8«¿çÕÝ1
+qpython:S1192""RDefine a constant instead of duplicating this literal "â¬…ï¸ÐÐ°Ð·Ð°Ð´" 12 times.(Â¢¾Ê8¬¿çÕÝ1
+zpython:S1192´"UDefine a constant instead of duplicating this literal "ðŸ”’Ð—Ð°ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹" 4 times.(øÌä„üÿÿÿÿ8¬¿çÕÝ1
+kpython:S2208"GImport only needed names or import the module and then use its members.(¯º»æüÿÿÿÿ8¬¿çÕÝ1
+>python:S125²"Remove this commented out code.(×â¸¡8¬¿çÕÝ1
+rpython:S3776Œ"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ëÚú²ÿÿÿÿÿ
+Qpython:S1481ÿ"3Replace unused local variable "new_state" with "_".(—ç§Šøÿÿÿÿ
